@@ -39,7 +39,6 @@ body {
 
 a {
 	text-decoration: none;
-	color: #424242;
 }
 
 #leafletMap {
@@ -271,6 +270,7 @@ button#loginButton{
 	height: 50px;
 	margin-top: 10px;
 	background-color: #000066;
+	font-size: 22px;
 }
 
 button#logout {
@@ -365,7 +365,7 @@ h1#titleLoginHidden {
 }
 
 
-@media screen and (max-width: 1600px) {
+@media screen and (max-width: 1500px) {
   .sidebar {
     position: absolute;
 	height: 231px;
@@ -403,6 +403,7 @@ h1#titleLoginHidden {
   
 div#loRight {
   width: 100% !important;
+  padding-top: 30px;
   float: none;
   heigth: 100%;
   postion: fixed;
@@ -603,9 +604,6 @@ color: white;
 .blue    { background-color: #1c567d; }
 .blue select    { color: #fff; }
 
-a#loginContact{
-	text-decoration: none;
-}
 
 #ngSelecter{
 	color: #1c567d;

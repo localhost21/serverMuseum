@@ -55,7 +55,7 @@
 		 <div ng-repeat="receivedMarkers in h | myFilter track by $index" id="godzilla" style="display:none;">{{receivedMarkers.blup}}</div>
 
 			<span class="btn btn-default" id="toggler" uib-dropdown>
-    <a uib-dropdown-toggle>gespeicherte Standorte <span class="caret"></span></a>
+    <a uib-dropdown-toggle style="color: #424242;">gespeicherte Standorte <span class="caret"></span></a>
     <ul uib-dropdown-menu>
         <li id="markers" ng-repeat="receivedMarkers in h track by $index" ng-click="loadMarkers(receivedMarkers._id, $index)">{{receivedMarkers.name}}</li>
     </ul>

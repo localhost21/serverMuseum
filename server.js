@@ -29,7 +29,7 @@ app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.json());
 app.use(function(req, res, next){
 	res.header('Access-Control-Allow-Origin', '*'); 
-	res.header('Access-Control-Allow-Methods','GET,PUT,POST,DELETE'); 
+	res.header('Access-Control-Allow-Methods','GET,PUT,POST,DELETE,OPTIONS'); 
 	res.header('Access-Control-Allow-Headers', 'Content-Type'); 
 	next();
 })
@@ -38,7 +38,7 @@ app.use(function(req, res, next){
 // server listens to get request
 app.get('/backend', function(req,res){
 	res.header('Access-Control-Allow-Origin', '*'); 
-	res.header('Access-Control-Allow-Methods','GET,PUT,POST,DELETE'); 
+	res.header('Access-Control-Allow-Methods','GET,PUT,POST,DELETE,OPTIONS'); 
 	res.header('Access-Control-Allow-Headers', 'Content-Type'); 
 	db.backend.find(function(err,docs){
 		res.json(docs);	
@@ -83,7 +83,7 @@ app.post('/markersNew', function(req,res){
 
 app.get('/markers', function(req,res){
 	res.header('Access-Control-Allow-Origin', '*'); 
-	res.header('Access-Control-Allow-Methods','GET,PUT,POST,DELETE'); 
+	res.header('Access-Control-Allow-Methods','GET,PUT,POST,DELETE,OPTIONS'); 
 	res.header('Access-Control-Allow-Headers', 'Content-Type'); 
 	db.markers.find(function(err,docs){
 		res.json(docs);	
@@ -101,7 +101,7 @@ app.post('/museum', function(req,res){
 
 app.get('/museum', function(req,res){
 	res.header('Access-Control-Allow-Origin', '*'); 
-	res.header('Access-Control-Allow-Methods','GET,PUT,POST,DELETE'); 
+	res.header('Access-Control-Allow-Methods','GET,PUT,POST,DELETE,OPTIONS'); 
 	res.header('Access-Control-Allow-Headers', 'Content-Type'); 
 	db.museum.find(function(err,docs){
 		res.json(docs);	
@@ -114,7 +114,7 @@ app.get('/credentials/:id', function(req,res){
 	
 	
 	res.header('Access-Control-Allow-Origin', '*'); 
-	res.header('Access-Control-Allow-Methods','GET,PUT,POST,DELETE'); 
+	res.header('Access-Control-Allow-Methods','GET,PUT,POST,DELETE,OPTIONS'); 
 	res.header('Access-Control-Allow-Headers', 'Content-Type'); 
 	
 	
@@ -182,7 +182,7 @@ app.post('/archiveMarkers',function(req,res){
 
 app.get('/archiveMarkers',function(req,res){
 	res.header('Access-Control-Allow-Origin', '*'); 
-	res.header('Access-Control-Allow-Methods','GET,PUT,POST,DELETE'); 
+	res.header('Access-Control-Allow-Methods','GET,PUT,POST,DELETE,OPTIONS'); 
 	res.header('Access-Control-Allow-Headers', 'Content-Type'); 
 	db.archive.find(function(err,docs){
 		var a = JSON.stringify(docs);
@@ -194,7 +194,7 @@ app.get('/archiveMarkers',function(req,res){
 app.get('/archiveMarkers/:id', function(req, res){
 	var id = req.params.id;
 	res.header('Access-Control-Allow-Origin', '*'); 
-	res.header('Access-Control-Allow-Methods','GET,PUT,POST,DELETE'); 
+	res.header('Access-Control-Allow-Methods','GET,PUT,POST,DELETE,OPTIONS'); 
 	res.header('Access-Control-Allow-Headers', 'Content-Type'); 
 	db.archive.findOne({_id: mongojs.ObjectId(id)},
 	function(err,doc){
@@ -237,7 +237,7 @@ function(err,doc){
 app.get('/backend/:id', function(req, res){
 	var id = req.params.id;
 	res.header('Access-Control-Allow-Origin', '*'); 
-	res.header('Access-Control-Allow-Methods','GET,PUT,POST,DELETE'); 
+	res.header('Access-Control-Allow-Methods','GET,PUT,POST,DELETE,OPTIONS'); 
 	res.header('Access-Control-Allow-Headers', 'Content-Type'); 
 	db.backend.findOne({_id: mongojs.ObjectId(id)},
 	function(err,doc){
@@ -248,7 +248,7 @@ app.get('/backend/:id', function(req, res){
 		
 app.get('/backend:count', function(req,res){
 	res.header('Access-Control-Allow-Origin', '*'); 
-	res.header('Access-Control-Allow-Methods','GET,PUT,POST,DELETE'); 
+	res.header('Access-Control-Allow-Methods','GET,PUT,POST,DELETE,OPTIONS'); 
 	res.header('Access-Control-Allow-Headers', 'Content-Type'); 
 	db.backend.count(function(err,docs){
 		res.json(docs);	
@@ -258,7 +258,7 @@ app.get('/backend:count', function(req,res){
 
 app.get('/deutsch', function(req,res){
 	res.header('Access-Control-Allow-Origin', '*'); 
-	res.header('Access-Control-Allow-Methods','GET,PUT,POST,DELETE'); 
+	res.header('Access-Control-Allow-Methods','GET,PUT,POST,DELETE,OPTIONS'); 
 	res.header('Access-Control-Allow-Headers', 'Content-Type'); 
 	db.backend.find({"sprache": "DE", "aktion":true},
 	function(err,doc){
@@ -269,7 +269,7 @@ app.get('/deutsch', function(req,res){
 
 app.get('/english', function(req,res){
 	res.header('Access-Control-Allow-Origin', '*'); 
-	res.header('Access-Control-Allow-Methods','GET,PUT,POST,DELETE'); 
+	res.header('Access-Control-Allow-Methods','GET,PUT,POST,DELETE,OPTIONS'); 
 	res.header('Access-Control-Allow-Headers', 'Content-Type'); 
 	db.backend.find({"sprache": "EN","aktion":true},
 	function(err,doc){
@@ -289,7 +289,7 @@ app.put('/backend/:id', function(req,res){
 
 app.get('/getBeacons', function(req, res){
 	res.header('Access-Control-Allow-Origin', '*'); 
-	res.header('Access-Control-Allow-Methods','GET,PUT,POST,DELETE'); 
+	res.header('Access-Control-Allow-Methods','GET,PUT,POST,DELETE,OPTIONS'); 
 	res.header('Access-Control-Allow-Headers', 'Content-Type');
 
 	var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
