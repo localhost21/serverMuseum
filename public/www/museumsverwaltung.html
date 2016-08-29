@@ -1,0 +1,132 @@
+<html lang="de">
+<head>
+	<meta charset="UTF-8">
+	<title>Museumsverwaltung</title>
+	
+</head>
+
+<body >
+
+
+	
+	
+	
+	
+	
+	<div id="dialogoverlay"></div>
+		<div id="dialogbox">
+			<div ng-controller="AppCtrl">
+				<div id="dialogboxhead"></div>
+				<div id="dialogboxbody"></div>
+				<div id="dialogboxfoot"></div>
+			</div>
+		</div>
+	
+	<div id="container">
+		<div class="sidebar">
+			<ul id="nav">
+				<li><a href="/#/museumsverwaltung" class="selected">Home</a></li>
+				<li><a href="/#/getbeacons">Beacons</a></li>
+				<li><a href="/#/custo" >Customizing</a></li>
+				<li><a href="/#/hilfe" >Hilfe</a></li>
+				
+			</ul>
+		</div>
+			
+		
+		<div class="content">
+		<div id="box">
+			<div class="box-top">
+			Anzahl Exponate
+			<div class="box-panel">{{number}}</div>
+			</div>
+		</div>
+		
+			
+		<h1>Verf&uumlgbare Exponate</h1>
+		<p>Folgende Exponate stehen zur Verf&uumlgung: </p>		
+		
+		
+		
+		
+		
+		<br><br>
+		<input id="productMenuBar" class="form-control has-header"  placeholder="Suche nach Exponatnummer" ng-model="filterer" id="input_ea30_0"></input>
+		
+		<table class="table" style="margin-top: 20px;">
+			<thead>
+				<tr>
+					<th ><button class="tableButton" href="#" ng-click="sortType = 'ide'; sortReverse = !sortReverse">
+					Exponat-Nr.<span ng-show="sortType == 'ide' && !sortReverse" class="fa fa-caret-down"></span><span ng-show="sortType == 'ide' && sortReverse" class="fa fa-caret-up"></span> </button></th>
+					<th style="width: 30%;">Bild</th>					
+					<th style="width: 30%;"><button class="tableButton" href="#" ng-click="sortType = 'name'; sortReverse = !sortReverse">
+					Exponatname<span ng-show="sortType == 'name' && !sortReverse" class="fa fa-caret-down"></span><span ng-show="sortType == 'name' && sortReverse" class="fa fa-caret-up"></span> </button></th>
+					 </button></th>					
+					<th><button class="tableButton" href="#" ng-click="sortType = 'position'; sortReverse = !sortReverse">
+					Position <span ng-show="sortType == 'position' && !sortReverse" class="fa fa-caret-down"></span><span ng-show="sortType == 'position' && sortReverse" class="fa fa-caret-up"></span> </button></th>
+					 </button></th>
+					<th><button class="tableButton" href="#" ng-click="sortType = 'theme'; sortReverse = !sortReverse">
+					Themennummer <span ng-show="sortType == 'theme' && !sortReverse" class="fa fa-caret-down"></span><span ng-show="sortType == 'theme' && sortReverse" class="fa fa-caret-up"></span> </button></th>
+					 </button></th>
+					<th>Audiofile</th>
+					<th><button class="tableButton" href="#" ng-click="sortType = 'aktion'; sortReverse = !sortReverse">
+					Aktiv <span ng-show="sortType == 'aktion' && !sortReverse" class="fa fa-caret-down"></span><span ng-show="sortType == 'aktion' && sortReverse" class="fa fa-caret-up"></span> </button></th>
+					 </button></th>
+					 <th>Sprache</th>
+					<th>Action</th>
+					<th>&nbsp;</th>
+				</tr>
+			</thead>
+			
+			
+			<tbody>
+			<tr>
+				<td><input id="ide" class="form-control" placeholder="ID" ng-model="exponat.ide"  ></td>
+				<td><input class="form-control" placeholder='Bild-URL' ng-model="exponat.bild"></td>
+				<td><input class="form-control" ng-model="exponat.name" placeholder="Name"></td>
+				<td><input class="form-control" ng-model="exponat.position"></td>
+				<td><input class="form-control" ng-model="exponat.theme" placeholder="Themen-ID"></td>
+				<td><input class="form-control" placeholder="Audiofile-URL" ng-model="exponat.audio"></td>
+				<td><input type="checkbox" ng-model="exponat.aktion"></td>
+				<td>
+				<select ng-model="exponat.sprache" class="styled-select blue semi-square">
+					<option >EN</option>
+					<option selected="selected">DE</option>
+				</select>
+				</td>
+				<td><button id="hinzufügen" class="btn btn-primary" ng-click="addexponat()">Hinzufügen </button></td>
+				<td><button class="btn btn-info" ng-click="update()">Update </button>&nbsp;&nbsp;</td>
+				<td><button class="btn btn-info" ng-click="deselect()">Leeren</button></td>
+			</tr>
+			
+		
+			
+			
+			<!-- ng-repeat copies content into seperate rows -->
+				<tr ng-repeat="exponat in backend | orderBy:sortType:sortReverse | filter: {'ide': filterer}">
+				
+					<td>{{exponat.ide}}</td>
+					<td class="item"><img ng-src="{{exponat.bild}}" style="max-width: 40px; z-index: 50;"></img></td>
+					<td>{{exponat.name}}</td>
+					<td>{{exponat.position}}</td>
+					<td>{{exponat.theme}}</td>
+					<td><audio controls  ng-src="{{exponat.audio}}">	</audio> </td>
+					<td>{{exponat.aktion}}</td>
+					<td>{{exponat.sprache}}</td>
+					<td><button class="btn btn-danger" ng-click="remove(exponat._id)">L&ouml;schen</button></td>
+					<td><button class="btn btn-warning" ng-click="edit(exponat._id)">&Auml;ndern </button></td>
+				</tr>
+			</tbody>
+		</table>
+				</div>
+		
+	</div>
+	
+	
+	<div id="header">
+	<div class="logo"><a href="/#/museumsverwaltung">Museumsverwaltung-<span>Software</span></a> </div>
+	
+	<a href="/#/"><img id="logout" src="/www/img/logout.png"/></a></div>
+
+</body>
+</html>

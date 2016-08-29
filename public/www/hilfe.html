@@ -1,0 +1,84 @@
+
+<html>
+<head lang="de">
+<title>Museumsverwaltung</title>
+
+</head>
+
+<body>
+
+	<div id="header">
+	<div class="logo"><a href="/#/museumsverwaltung">Museumsverwaltung-<span>Software</span></a> </div>
+	<a href="/#/"><img id="logout" src="/www/img/logout.png"/></a>
+	</div>
+	
+	<div id="container">
+		<div class="sidebar">
+			<ul id="nav">
+				<li><a href="/#/museumsverwaltung" >Home</a></li>
+				<li><a href="/#/getbeacons">Beacons</a></li>
+				<li><a href="/#/custo" >Customizing</a></li>
+				<li><a href="/#/hilfe" class="selected">Hilfe</a></li>
+				
+			</ul>
+		</div>
+		<div class="content">
+		<h1>Hilfestellung und Dokumentation</h1>
+		<p>Hier wird die Dokumentation zur Software sowie Kontaktdaten für Supportanfragen preisgegeben. Springen Sie direkt zu dem gewünschten Beitrag:</p>
+		<ul id="inhalt">
+		<li><a ng-click="scrollTo('exponatverwaltung')">Exponatverwaltung</a></li>
+		<li><a ng-click="scrollTo('beacon')">Beaconsverwaltung</a></li>
+		<li><a ng-click="scrollTo('custo')">Customizing</a></li>
+		<li><a ng-click="scrollTo('contact')">Kontaktdaten</a></li>
+		</ul>
+		
+		<div id="area">
+          <h2 id="custo" style="text-align: center; font-size: 24px; color: #666666;"><div id="exponatverwaltung"/><i>Exponatverwaltung</i></h2>
+          <br>
+		  <p id="frage"> Lässt sich die Exponatsübersicht sortieren?</p>
+		  <p id="antwort"> Ja, diese kann nach Exponatname, Nummer, Standort oder Themennummer sortiert werden. Wählen Sie dazu die Tabellenüberschrift an. Sofern diese sich grau verfärbt, lässt sich die Liste gemäss Auswahl sortieren.</p>
+        </div>
+		
+		<div id="area">
+          <h2 id="custo" style="text-align: center; font-size: 24px;color: #666666;"><div id="beacons"/><i>Beaconsverwaltung</i></h2>
+          <br> 
+		  <p id="frage"> Können die Beacons direkt aus dem Verwaltungtool angepasst werden?</p>
+		  <p id="antwort"> Zurzeit werden Ihre Beacons lediglich in Echtzeit angezeigt - somit lässt sich deren Status erfragen. Aktuell bietet der Beacon hersteller noch keine Möglichkeit, die Verwaltung extern durchzuführen - sollte allerdings bald folgen. Um die Beacon-Einstellungen anzupassen, wählen Sie ein Beacon an und Sie werden auf die Webseite des Herstellers weitergeleitet.</p>
+        </div>
+		
+		
+		<div id="area">
+          <h2 id="custo" style="text-align: center; font-size: 24px;color: #666666;"><div id="custo"/><i>Customizing</i></h2>
+          <br>
+		  <p id="frage"> Gibt es weitere Customizing- Einstellungen?</p>
+		  <p id="antwort"> Aktuell lässt sich nur das Logo sowie die Karte des Museums anpassen. Wenn Sie weitere Anpassungswünsche haben, kontaktieren Sie mich bitte.</p>
+        </div>
+		
+		
+		<div id="area">
+          <h2 id="custo" style="text-align: center; font-size: 24px;color: #666666;"><div id="contact"/><i>Kontaktdaten</i></h2>
+          <br>
+		  <p> 
+		  <ul id="inhalt">
+              <li class="ng-binding">medignition AG</li>
+			  <li class="ng-binding">Herr Alexander Horst</li>
+              <li class="ng-binding">Verena Conzett-Strasse 9</li>
+              <li class="ng-binding">8004 Zürich, Schweiz</li>
+          </ul>
+          <ul id="contact">
+               <li><a href="tel://+41417104747">+41 41 710 47 47</a></li>
+               <li><a href="mailto:info@medignition.ch?subject=Kontakt medignition.ch">info@medignition.ch</a></li>
+               <li><a href="https://medignition.com/">www.medignition.com</a></li>
+           </ul>
+			</p>
+        </div>
+
+
+		
+		
+				</div>
+		
+	</div>
+
+</body>
+</html>

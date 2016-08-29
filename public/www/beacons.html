@@ -1,0 +1,75 @@
+<html lang="de">
+
+  <head >
+    <title>Museumsverwaltung</title>
+    
+  </head>
+
+  <body>
+  
+  <div id="box">
+			<div class="box-top">
+			Anzahl Beacons
+			<div class="box-panel">{{i}}</div>
+			</div>
+		</div>	
+
+
+    <div id="header">
+      <div class="logo"><a href="/#/museumsverwaltung">Museumsverwaltung-<span>Software</span></a> </div><a href="/#/"><img id="logout" src="/www/img/logout.png"/></a>
+	  
+    </div>
+
+    <div id="container">
+      <div class="sidebar">
+        <ul id="nav">
+          <li><a href="/#/museumsverwaltung" >Home</a></li>
+				<li><a href="/#/getbeacons" class="selected">Beacons</a></li>
+				<li><a href="/#/custo" >Customizing</a></li>
+				<li><a href="/#/hilfe" >Hilfe</a></li>
+				
+        </ul>
+      </div>
+
+
+      <div class="content" onclick="window.location='https://cloud.estimote.com/'">
+        <h1>Beacon- &Uumlbersicht</h1>
+       <p> Hier können die Einstellungen der Verfügbaren Beacons geändert werden. </p>
+       <table class="table" style="margin-top: 50px;">
+          <thead>
+            <tr>
+				<th>Name</th>
+				<th>Major</th>
+				<th>Minor</th>
+				<th>UUI (AnwendungsID)</th>
+				<th>RSSI-Stärke</th>
+                <th>Sendeinterval</th>
+                <th>Batterielaufzeit in Tagen</th>
+				<th>Farbe</th>
+            </tr>
+          </thead>
+
+
+          <tbody>
+			<tr ng-repeat="beacon in data track by $index">
+				<td>{{beacon.shadow.name}}</td>
+				<td ng-repeat="ibeacon in beacon.settings.advertisers.ibeacon">{{ibeacon.major}}</td>
+				<td ng-repeat="ibeacon in beacon.settings.advertisers.ibeacon">{{ibeacon.minor}}</td>
+				<td ng-repeat="ibeacon in beacon.settings.advertisers.ibeacon">{{ibeacon.uuid}}</td>
+				<td ng-repeat="ibeacon in beacon.settings.advertisers.ibeacon">{{ibeacon.power}}</td>
+				<td ng-repeat="ibeacon in beacon.settings.advertisers.ibeacon">{{ibeacon.interval}}</td>
+				<td>{{beacon.status_report.estimated_battery_lifetime}}</td>
+				<td>{{beacon.color}}</td>
+            
+			</tr>
+          </tbody>
+        </table>
+		
+
+      </div>
+
+    </div>
+
+  </body>
+
+</html>

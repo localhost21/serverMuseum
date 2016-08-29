@@ -1,0 +1,112 @@
+<html>
+
+  <head lang="de">
+    <title>Museumsverwaltung</title>
+
+  </head>
+
+  <body>
+
+
+
+    <div id="container">
+      <div class="sidebar">
+        <ul id="nav">
+          <li><a href="/#/museumsverwaltung">Home</a></li>
+          <li><a href="/#/getbeacons">Beacons</a></li>
+          <li><a href="/#/custo" class="selected">Customizing</a></li>
+          <li><a href="/#/hilfe">Hilfe</a></li>
+
+        </ul>
+      </div>
+      <div class="content">
+        <h1>Customizing</h1>
+        <p>Hier können Sie die den Audioguide nach Ihren Bedürfnissen anpassen.</p>
+
+		
+		
+		<div id="area">
+          <h2 id="custo">Name Ihres Museums: </h2> 
+		  
+		  <div style="max-width: 300px;margin: 0 auto;">
+		 <div ng-controller="custoCtrl"><label style="width: 300px;"> Aktueller Name: <br><input ng-repeat="mn in datalicous" type="text" class="form-control" placeholder="{{mn.museumsname}}" disabled=true  /></div>
+		</label>
+		  
+              <label style="margin-top: 30px; width: 300px;">Neuer Name:<input type="text" class="form-control" ng-model="museumsname.museumsname"/> <br></label>
+			  <button class="btn btn-default" ng-click="uploadName()"> Hochladen</button>
+		  
+		  </div>
+        </div>
+
+        
+
+
+        <div id="area1" data-tap-disabled="true">
+          <h2 id="custo">Aktuelle Karte:</h2>
+          <div ng-controller="AppCtrl">
+
+            <leaflet defaults="defaults" legend="legend" layers="layers" maxBounds="maxBounds" markers="markers" event-broadcast="events" height="400px" width="600px" style="margin: 0 auto;"></leaflet>
+            <br>
+          </div>
+
+		  <button class="btn btn-default btn-file" ng-click="deleteMarkers()">Standorte löschen</button>
+		  <button class="btn btn-default btn-file" ng-click="archiveMarkerJSON()">Standorte abspeichern</button>
+		  
+		 <div ng-repeat="receivedMarkers in h | myFilter track by $index" id="godzilla" style="display:none;">{{receivedMarkers.blup}}</div>
+		  
+		  gespeicherte Standorte anzeigen: 
+		 <!-- <select  class="styled-select blue semi-square" style="width: 250px;">
+					 <option ng-repeat="receivedMarkers in h track by $index" ng-click="loadMarkers(receivedMarkers._id, $index)" value="">{{receivedMarkers.name}}</option>
+			<select>-->
+			
+			<!--<ng-select id="ngSelecter" style="width: 250px;">
+					 <option ng-repeat="receivedMarkers in h track by $index" ng-click="loadMarkers(receivedMarkers._id, $index)" value="">{{receivedMarkers.name}}</option>
+			<ng-select>-->
+			
+			
+			<select class="styled-select blue semi-square" style="width: 250px;">
+  <option ng-repeat="receivedMarkers in h track by $index" ng-click="loadMarkers(receivedMarkers._id, $index)" value="">{{receivedMarkers.name}}</option>  
+</select>
+		  
+		  
+          <form id="uploadForm" enctype="multipart/form-data" action="/api/photo" method="post">
+            <label class="btn btn-default btn-file" style="margin-top: 30px;">
+              <input type="file" name="map"/> 
+            </label>
+            <label class="btn btn-default btn-file" style="margin-top: 30px;">
+              <input type="submit" value="Upload Image" name="submit" style="display: none"> Hochladen
+            </label>
+          </form>
+          
+        </div>
+		
+		<div id="area">
+          <h2 id="custo">Aktuelles Logo: </h2><img style="max-width: 150px;" src='{{logo}}' />
+          <br>
+		  
+		  
+           <form id="uploadForm" enctype="multipart/form-data" action="/api/photo" method="post">
+            <label class="btn btn-default btn-file" style="margin-top: 30px;">
+              <input type="file" name="logo"/> 
+            </label>
+            <label class="btn btn-default btn-file" style="margin-top: 30px;">
+              <input type="submit" value="Upload Image" name="submit" style="display: none"> Hochladen
+            </label>
+          </form>
+		  
+		  
+		  
+          </label>
+        </div>
+
+
+      </div>
+
+    </div>
+    <div id="header">
+      <div class="logo"><a href="/#/museumsverwaltung">Museumsverwaltung-<span>Software</span></a> </div>
+      <a href="/#/"><img id="logout" src="/www/img/logout.png" /></a>
+    </div>
+  </body>
+
+</html>
