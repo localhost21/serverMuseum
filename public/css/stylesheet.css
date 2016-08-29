@@ -12,7 +12,7 @@ html, body, .ng-scope {
 .item {
   position: relative;
   margin: 2%;
-  width: 540px;
+  max-width: 40px; 
   
 }
 
@@ -20,20 +20,31 @@ html, body, .ng-scope {
   -moz-transition: all 0.3s;
   -webkit-transition: all 0.3s;
   transition: all 0.3s;
+  max-width: 40px; 
+  z-index: 500;
+  
 }
 
 .item:hover img {
   -moz-transform: scale(8);
   -webkit-transform: scale(8);
-  transform: scale(8);
-  z-index: 1000;
+  transform: scale(8);  
   position: relative;
+  z-index: 1000;
 }
 
 body {
   font-family: 'Open Sans';
 }
 
+a {
+	text-decoration: none;
+	color: #424242;
+}
+
+#leafletMap {
+	margin: 0 auto; height: 400px; width: 600px;
+}
 
 a:hover {
 	text-decoration: none !important;
@@ -90,7 +101,7 @@ div#container {
   float: left;
   height: inherit;
   position: fixed;
-  z-index: 2;
+  z-index: 3;
 }
 
 .content {
@@ -101,7 +112,7 @@ div#container {
   padding: 15px;
   margin-top: 50px;
   scrollable: true;
-  z-index: 1; position: relative;
+  position: relative;
  
 }
 
@@ -322,6 +333,14 @@ div#area1 {
 	z-index: 1; position: relative;
 }
 
+h1#titleLoginHidden {
+	color: grey;
+	text-align: center;
+	font-size: 26px;
+	padding-top: 30px;
+	display: none;
+}
+
 
 
 @media screen and (max-width: 500px) {
@@ -329,11 +348,24 @@ div#area1 {
 	  float: none;
 	  margin: 0 auto;	  
   }
+  
+  div#dialogbox {
+	  max-width: 350px;
+  }
+  
+  div#dialogbox1 {
+	  max-width: 350px;
+  }
+  
+  #leafletMap {
+	height: 200px;
+	width: 300px;
+}
 
 }
 
 
-@media screen and (max-width: 1290px) {
+@media screen and (max-width: 1600px) {
   .sidebar {
     position: absolute;
 	height: 231px;
@@ -343,6 +375,10 @@ div#area1 {
 	z-index: 2;
 	
   }
+  
+  h1#titleLoginHidden {
+	display: block;
+}
   div#header{
 	  z-index: 11000;
   }
@@ -363,20 +399,17 @@ div#area1 {
   div#loLeft {
   display: none;
 }
-
-
-div#merger {
-	padding-top: 60px;
-	float: none;
-	text-align: center;
-	max-width: 350px;
-	float:right;
+  
+  
+div#loRight {
+  width: 100% !important;
+  float: none;
+  heigth: 100%;
+  postion: fixed;
 }
 
-
-button#loginButton{
-	width: 350px;
-	float: none;
+div#merger {
+	padding-top: 40px;
 }
 
   
@@ -384,20 +417,30 @@ button#loginButton{
 
 div#loRight {
   padding-top: 100px;
-  width: 60%;
+  width: 75%;
   float: right;
   heigth: 100%;
   background-color: #fff;
   postion: fixed;
 }
 
-div#loLeft {
-  padding-top: 300px;
-  width: 40%;
+div#loLeft{
+  width: 32%;
   float: left;
   heigth: 100%;
+  postion: relative;
+  margin-left: -200px;
+  overflow: hide;
+}
+
+div#lo {
+  width: 130%;
+  height: 100%;
+  -webkit-transform: skew(20deg);
+  -moz-transform: skew(20deg);
+  -o-transform: skew(20deg);
   background-color: #1c567d;
-  postion: fixed;
+  z-index: 1;
 }
 
 
@@ -458,6 +501,8 @@ h2#custo {
 	font-size: 18px;
 	text-align: left;
 }
+
+
 
 ul#inhalt {
 	font-size: 16px;

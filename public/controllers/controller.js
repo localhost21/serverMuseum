@@ -1,4 +1,4 @@
-var myApp = angular.module('myApp', ['ngRoute', 'ui-leaflet', 'app.routes', 'app.directives']).config(function($sceDelegateProvider) {
+var myApp = angular.module('myApp', ['ngRoute', 'ui-leaflet', 'ui.bootstrap', 'app.routes', 'app.directives']).config(function($sceDelegateProvider) {
   $sceDelegateProvider.resourceUrlWhitelist([
     // Allow same origin resource loads.
     'self',
@@ -63,7 +63,7 @@ myApp.controller('loginCtrl', function($scope, $http, $timeout, $location, acces
       var dialogbox = document.getElementById('dialogbox1');
       dialogoverlay.style.display = "block";
       dialogoverlay.style.height = winH + "px";
-      dialogbox.style.left = (winW / 2) - (550 * .5) + "px";
+      dialogbox.style.left = (winW / 2) - (350 * .5) + "px";
       dialogbox.style.top = "100px";
       dialogbox.style.display = "block";
       document.getElementById('dialogboxhead1').innerHTML = "Fehlermeldung!";
@@ -369,7 +369,7 @@ myApp.controller('AppCtrl',  function($scope, $http, $location, $anchorScroll) {
         var dialogbox = document.getElementById('dialogbox');
         dialogoverlay.style.display = "block";
         dialogoverlay.style.height = winH + "px";
-        dialogbox.style.left = (winW / 2) - (550 * .5) + "px";
+        dialogbox.style.left = (winW / 2) - (350 * .5) + "px";
         dialogbox.style.top = "100px";
         dialogbox.style.display = "block";
         document.getElementById('dialogboxhead').innerHTML = "Fehlermeldung!";

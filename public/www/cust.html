@@ -45,7 +45,7 @@
           <h2 id="custo">Aktuelle Karte:</h2>
           <div ng-controller="AppCtrl">
 
-            <leaflet defaults="defaults" legend="legend" layers="layers" maxBounds="maxBounds" markers="markers" event-broadcast="events" height="400px" width="600px" style="margin: 0 auto;"></leaflet>
+            <leaflet defaults="defaults" legend="legend" layers="layers" maxBounds="maxBounds" markers="markers" event-broadcast="events" id="leafletMap"></leaflet>
             <br>
           </div>
 
@@ -53,20 +53,19 @@
 		  <button class="btn btn-default btn-file" ng-click="archiveMarkerJSON()">Standorte abspeichern</button>
 		  
 		 <div ng-repeat="receivedMarkers in h | myFilter track by $index" id="godzilla" style="display:none;">{{receivedMarkers.blup}}</div>
-		  
-		  gespeicherte Standorte anzeigen: 
-		 <!-- <select  class="styled-select blue semi-square" style="width: 250px;">
-					 <option ng-repeat="receivedMarkers in h track by $index" ng-click="loadMarkers(receivedMarkers._id, $index)" value="">{{receivedMarkers.name}}</option>
-			<select>-->
+
+			<span class="btn btn-default" id="toggler" uib-dropdown>
+    <a uib-dropdown-toggle>gespeicherte Standorte <span class="caret"></span></a>
+    <ul uib-dropdown-menu>
+        <li id="markers" ng-repeat="receivedMarkers in h track by $index" ng-click="loadMarkers(receivedMarkers._id, $index)">{{receivedMarkers.name}}</li>
+    </ul>
+</span>
+
+
+
+
 			
-			<!--<ng-select id="ngSelecter" style="width: 250px;">
-					 <option ng-repeat="receivedMarkers in h track by $index" ng-click="loadMarkers(receivedMarkers._id, $index)" value="">{{receivedMarkers.name}}</option>
-			<ng-select>-->
 			
-			
-			<select class="styled-select blue semi-square" style="width: 250px;">
-  <option ng-repeat="receivedMarkers in h track by $index" ng-click="loadMarkers(receivedMarkers._id, $index)" value="">{{receivedMarkers.name}}</option>  
-</select>
 		  
 		  
           <form id="uploadForm" enctype="multipart/form-data" action="/api/photo" method="post">

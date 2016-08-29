@@ -6,11 +6,11 @@
 <body>
 
 	<div id="loLeft">
-		<h1 id="titleLogin"> Login Museumsverwaltung </h1><br>
+	<h1 id="titleLogin" style="padding: 15%; padding-top: 20%; z-index: 200; color: white; position: fixed; float: left;"> Login <br> Museumsverwaltung </h1>
+	<div id="lo">dsa</div>
 	</div>
-
+	
 <div id="loRight">
-
 	<div id="dialogoverlay1"></div>
 	<div id="dialogbox1">
 		<div ng-controller="AppCtrl">
@@ -22,12 +22,13 @@
 
 	<div ng-controller="loginCtrl" >
 	<img src="/www/img/thumbnail.png" id="thumbnail"></img>
+	<h1 id="titleLoginHidden"> Login Museumsverwaltung </h1>
 
 		<div id="merger">
 			<form action="/" id="myLogin" >
 				<input type="text"  class="form-control" id="username" ng-model="username" placeholder="username"/><br>
 				</p> <input type="password" class="form-control" id="password" ng-model="password" placeholder="password"/><br>
-				<button id="loginButton" style="float: right" type="button" class="btn btn-primary" ng-click="getAccess()" >Login</button>	
+				<button id="loginButton" type="button" class="btn btn-primary" ng-click="getAccess()" >Login</button>	
 			</form>
 			
 		<a id="loginContact" href="mailto:info@medignition.ch?subject=Kontakt medignition.ch">kontakieren Sie uns</a>
