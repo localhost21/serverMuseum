@@ -21,7 +21,7 @@ var sha256 = require('js-sha256').sha256;
 var databaseUrl = "mongodb://admin:admin@ds019816.mlab.com:19816/heroku_9ch385nb"; //db login heroku
 //var databaseUrl = "login"; //login local
 var collections = ['credentials'];
-var db = mongojs(databaseUrl, collections);
+var db = mongojs(databaseUrl, ['credentials']);
 
 app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.json());
@@ -37,17 +37,18 @@ app.get('/credentials/:id', function(req,res){
 	res.header('Access-Control-Allow-Headers', 'Content-Type'); 	
 	console.log("paramsid: "+req.params.id);
 	var hashedValue= sha256(req.params.id);
-	
+	databaseUrl = "mongodb://admin:admin@ds019816.mlab.com:19816/heroku_9ch385nb";
+	db = mongojs(databaseUrl, ['credentials']);
 	
 	db.credentials.find({"login": hashedValue}, function(err,doc){		
 		if(err){
-			//todo: errorlog
+			
 		}else if(doc != ""){	
 			var helper = doc[0].org;
 			console.log(helper);
 			if(helper==="MoneyMuseum"){
-				databaseUrl = "mongodb://admin:admin@ds019076.mlab.com:19076/heroku_bj4gkw7j" //MoneyMuseum
-				//databaseUrl = "backend"; //--> local
+				//databaseUrl = "mongodb://admin:admin@ds019076.mlab.com:19076/heroku_bj4gkw7j" //MoneyMuseum
+				databaseUrl = "backend"; //--> local
 				collections = ["backend", "markers", "museum","archive"]; //"credentials",
 				db= mongojs(databaseUrl, collections);				
 				console.log("been 1");

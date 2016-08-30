@@ -43,7 +43,7 @@ myApp.controller('loginCtrl', function($scope, $http, $timeout, $location, $wind
   });
 		
 	$timeout(function(){
-		
+	console.log($scope.answer);	
 	 
     if ($scope.answer === "true") {
 		accessFac.getPermission(); //call the method in acccessFac to allow the user permission.
