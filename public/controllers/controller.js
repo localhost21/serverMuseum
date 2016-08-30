@@ -24,16 +24,16 @@ myApp.factory('accessFac', function() {
   var obj = {}
   obj.access = true;
   obj.getPermission = function() { //set the permission to true
-    console.log("access granted");
     obj.access = true;
   }
   obj.checkPermission = function() {
+	  console.log(obj.access);
     return obj.access; //returns the users permission level
   }
   return obj;
 });
 
-myApp.controller('loginCtrl', function($scope, $http, $timeout, $location, accessFac) {
+myApp.controller('loginCtrl', function($scope, $http, $timeout, $location, $window, accessFac) {
   $scope.getAccess = function() {
 	var creds = $scope.username +":" + $scope.password;
 	
@@ -44,10 +44,14 @@ myApp.controller('loginCtrl', function($scope, $http, $timeout, $location, acces
 		
 	$timeout(function(){
 		
-	
+	 
     if ($scope.answer === "true") {
-      accessFac.getPermission(); //call the method in acccessFac to allow the user permission.
-      $location.path('museumsverwaltung');
+		accessFac.getPermission(); //call the method in acccessFac to allow the user permission.
+		$timeout(function(){
+			$window.location.href = "/#/museumsverwaltung";
+			window.location.reload(true);
+		},1000);
+
     } else {
       Alert.render("Falsche Zugangsdaten!");
     }}, 1000);
@@ -408,7 +412,7 @@ myApp.controller('beaconsCtrl', function($scope, $http){
 
 
 
-myApp.controller('exponatCtrl', function($scope, $http, $location, $anchorScroll){
+myApp.controller('exponatCtrl', function($scope, $http, $location, $anchorScroll, $timeout){
 	
 	$scope.top = function() {
       // set the location.hash to the id of
@@ -437,7 +441,9 @@ myApp.controller('exponatCtrl', function($scope, $http, $location, $anchorScroll
         });
       });
     }
-    refresh();
+	refresh();
+
+   
 		
     $scope.addexponat = function() {
       if (3 > document.getElementById('ide').value.length) {

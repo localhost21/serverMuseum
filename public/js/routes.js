@@ -6,10 +6,10 @@ angular.module('app.routes', [])
 	})
 	.when('/museumsverwaltung', {
 		templateUrl: '/www/museumsverwaltung.html',
-		controller: 'exponatCtrl'
-		,resolve: {
+		controller: 'exponatCtrl',
+		resolve: {
 			"check": function(accessFac){
-				if(accessFac.checkPermission()==true){    //check if the user has permission -- This happens before the page loads
+				if(accessFac.checkPermission()===true){    //check if the user has permission -- This happens before the page loads
 				}else{
 					window.location="/";
 				}

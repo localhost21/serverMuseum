@@ -17,13 +17,11 @@ var upload = multer({ storage : storage}).fields([{
          }]);
 
 var mongojs = require('mongojs');
-
-var databaseUrl = "mongodb://admin:admin@ds019076.mlab.com:19076/heroku_bj4gkw7j"
-//var databaseUrl = "backend"; //--> local
-var collections = ["backend", "markers", "credentials","museum","archive"];
-var db = mongojs(databaseUrl, collections);
 var sha256 = require('js-sha256').sha256;
-
+var databaseUrl = "mongodb://admin:admin@ds019816.mlab.com:19816/heroku_9ch385nb"; //db login heroku
+//var databaseUrl = "login"; //login local
+var collections = ['credentials'];
+var db = mongojs(databaseUrl, collections);
 
 app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.json());
@@ -33,6 +31,88 @@ app.use(function(req, res, next){
 	res.header('Access-Control-Allow-Headers', 'Content-Type'); 
 	next();
 })
+app.get('/credentials/:id', function(req,res){	
+	res.header('Access-Control-Allow-Origin', '*'); 
+	res.header('Access-Control-Allow-Methods','GET,PUT,POST,DELETE,OPTIONS'); 
+	res.header('Access-Control-Allow-Headers', 'Content-Type'); 	
+	console.log("paramsid: "+req.params.id);
+	var hashedValue= sha256(req.params.id);
+	databaseUrl = "login";
+	db = mongojs(databaseUrl, ['credentials']);
+	
+	db.credentials.find({"login": hashedValue}, function(err,doc){		
+		if(err){
+			//todo: errorlog
+		}else if(doc != ""){	
+			var helper = doc[0].org;
+			console.log(helper);
+			if(helper==="MoneyMuseum"){
+				databaseUrl = "mongodb://admin:admin@ds019076.mlab.com:19076/heroku_bj4gkw7j" //MoneyMuseum
+				//databaseUrl = "backend"; //--> local
+				collections = ["backend", "markers", "museum","archive"]; //"credentials",
+				db= mongojs(databaseUrl, collections);				
+				console.log("been 1");
+			}else if(helper==="newCompany"){
+				databaseUrl = "mongodb://admin:admin@ds019076.mlab.com:19076/heroku_7gqs453c" //newCompany
+				//databaseUrl = "newCompany"; //--> local
+				collections = ["backend", "markers", "museum","archive"]; //"credentials",
+				db= mongojs(databaseUrl, collections);
+				console.log("been 2");
+			}else{
+				console.log("error at login");
+			}			
+		res.json("true");	
+		}else{			
+			res.json("false");
+		}	
+	});		
+});
+
+app.get('/login', function(req,res){	
+	res.header('Access-Control-Allow-Origin', '*'); 
+	res.header('Access-Control-Allow-Methods','GET,PUT,POST,DELETE,OPTIONS'); 
+	res.header('Access-Control-Allow-Headers', 'Content-Type'); 	
+	databaseUrl = "login";
+	db = mongojs(databaseUrl, ['credentials','avMuseums']);	
+	db.avMuseums.find(function(err,doc){		
+		res.json(doc);
+	});		
+});
+
+app.get('/login/:id', function(req,res){	
+	res.header('Access-Control-Allow-Origin', '*'); 
+	res.header('Access-Control-Allow-Methods','GET,PUT,POST,DELETE,OPTIONS'); 
+	res.header('Access-Control-Allow-Headers', 'Content-Type'); 	
+	var name= req.params.id;
+	databaseUrl = "login";
+	db = mongojs(databaseUrl, ['credentials']);
+	 
+	db.credentials.find({"org": name}, function(err,doc){		
+		if(err){
+			//todo: errorlog
+		}else if(doc != ""){	
+			console.log(name);
+			if(name==="MoneyMuseum"){
+				//var databaseUrl = "mongodb://admin:admin@ds019076.mlab.com:19076/heroku_bj4gkw7j"
+				db.close();
+				databaseUrl = "backend"; //--> local
+				collections = ["backend", "markers", "museum","archive"]; //"credentials",
+				db= mongojs(databaseUrl, collections);
+			}else if(name==="newCompany"){
+				//var databaseUrl = "mongodb://admin:admin@ds019076.mlab.com:19076/heroku_bj4gkw7j"
+				db.close();
+				databaseUrl = "newCompany"; //--> local
+				collections = ["backend", "markers", "museum","archive"]; //"credentials",
+				db= mongojs(databaseUrl, collections);
+			}else{
+				console.log("error at login");
+			}			
+		res.json("true");	
+		}else{			
+			res.json("false");
+		}	
+	});		
+});
 
 //'/backend' is the route where the data is from
 // server listens to get request
@@ -140,30 +220,7 @@ app.get('/museum', function(req,res){
 		
 });
 
-app.get('/credentials/:id', function(req,res){
-	
-	
-	
-	res.header('Access-Control-Allow-Origin', '*'); 
-	res.header('Access-Control-Allow-Methods','GET,PUT,POST,DELETE,OPTIONS'); 
-	res.header('Access-Control-Allow-Headers', 'Content-Type'); 
-	
-	
-	console.log("paramsid: "+req.params.id);
-	var hashedValue= sha256(req.params.id);
-	
-	db.credentials.find({"login": hashedValue}, function(err,doc){
-		if(err){
-			//todo: errorlog
-		}else if(doc != ""){
-			res.json("true");
-		}else{
-			res.json("false");
-		}
-		
-		
-	});		
-});
+
 
 app.delete('/markers', function(req, res){	
 	db.markers.remove();
