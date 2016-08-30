@@ -37,8 +37,7 @@ app.get('/credentials/:id', function(req,res){
 	res.header('Access-Control-Allow-Headers', 'Content-Type'); 	
 	console.log("paramsid: "+req.params.id);
 	var hashedValue= sha256(req.params.id);
-	databaseUrl = "login";
-	db = mongojs(databaseUrl, ['credentials']);
+	
 	
 	db.credentials.find({"login": hashedValue}, function(err,doc){		
 		if(err){
