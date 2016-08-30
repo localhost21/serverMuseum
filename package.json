@@ -9,12 +9,23 @@
   "author": "Alexander Horst",
   "license": "ISC",
   "dependencies": {
-    "async": "^2.0.1",
-    "express": "4.14.0",
-    "jade": "^1.11.0",
-    "mongodb": "^2.2.9",
-    "rjs": "^4.0.2",
-    "underscore": "^1.8.3"
-  },"engine": {
-  "node":"^4.5.0"}
+    "async": "*",
+    "body-parser": "^1.15.2",
+    "express": "*",
+    "jade": "*",
+    "js-sha256": "*",
+    "mongodb": "*",
+    "mongojs": "*",
+    "multer": "*",
+    "node": "*",
+    "request": "*",
+    "restify": "^4.1.1",
+    "rjs": "*",
+    "underscore": "*",
+    "xhr": "*",
+    "xmlhttprequest": "*"
+  },
+  "engine": {
+    "node": "^4.5.0"
+  }
 }
