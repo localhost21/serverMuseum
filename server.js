@@ -47,8 +47,8 @@ app.get('/credentials/:id', function(req,res){
 			var helper = doc[0].org;
 			console.log(helper);
 			if(helper==="MoneyMuseum"){
-				//databaseUrl = "mongodb://admin:admin@ds019076.mlab.com:19076/heroku_bj4gkw7j" //MoneyMuseum
-				databaseUrl = "backend"; //--> local
+				databaseUrl = "mongodb://admin:admin@ds019076.mlab.com:19076/heroku_bj4gkw7j" //MoneyMuseum
+				//databaseUrl = "backend"; //--> local
 				collections = ["backend", "markers", "museum","archive"]; //"credentials",
 				db= mongojs(databaseUrl, collections);				
 				console.log("been 1");
