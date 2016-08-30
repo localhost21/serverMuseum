@@ -26,16 +26,39 @@
 		
 		
 		<div id="area">
-          <h2 id="custo">Name Ihres Museums: </h2> 
+          <h2 id="custo">Allgemeine Angaben: </h2> 
 		  
 		  <div style="max-width: 300px;margin: 0 auto;">
 		 <div ng-controller="custoCtrl"><label style="width: 300px;"> Aktueller Name: <br><input ng-repeat="mn in datalicous" type="text" class="form-control" placeholder="{{mn.museumsname}}" disabled=true  /></div>
 		</label>
 		  
-              <label style="margin-top: 30px; width: 300px;">Neuer Name:<input type="text" class="form-control" ng-model="museumsname.museumsname"/> <br></label>
+              <label style="margin-top: 30px; width: 300px;">Neuer Name:<input type="text" class="form-control" ng-model="newName"/> <br></label>
 			  <button class="btn btn-default" ng-click="uploadName()"> Hochladen</button>
 		  
 		  </div>
+		  
+		  
+		  
+		  
+		  <!--
+		<label> Aktueller Museumsbeschrieb, deutsch: <br>
+		<p>{{mn.beschrieb}}</p>
+		</label>
+		  <br>
+        <label>Neuer Museumsbeschrieb, deutsch: <br>
+		<textarea rows="4" cols="50" class="form-control">Beschreiben Sie hier Ihr Museum - der Inhalt wird in der Über Uns- Rubrik des Audioguides erscheinen.</textarea><br></label>
+		<button class="btn btn-default" ng-click="uploadName()"> Hochladen</button> 
+		</label>
+		  -->
+		  
+		  
+		  <h1>Editor <span>{{version}}</span></h1>
+        <div text-angular="text-angular" name="htmlcontent" ng-model="htmlcontent" ta-disabled='disabled'></div>
+        <button class="btn btn-default" ng-click="uploadText(htmlcontent)"> Hochladen</button> 
+		
+		
+		  
+		  
         </div>
 
         

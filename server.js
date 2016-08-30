@@ -90,13 +90,44 @@ app.get('/markers', function(req,res){
 	});
 		
 });
-
+/*
 app.post('/museum', function(req,res){
 	db.museum.remove();
 	db.museum.insert(req.body,function(err,doc){
 		res.json(doc);
 	});
+});*/
+
+
+app.put('/museumDE/:id', function(req,res){
+	var id= req.params.id;
+	db.museum.findAndModify({query: {_id: mongojs.ObjectId(id)},
+		update: {$set: {de: req.body.de  }},
+	nex: true}, function(err,doc){
+		res.json(doc);
+	});	
 });
+
+app.put('/museumEN/:id', function(req,res){
+	var id= req.params.id;
+	db.museum.findAndModify({query: {_id: mongojs.ObjectId(id)},
+		update: {$set: {en: req.body.en  }},
+	nex: true}, function(err,doc){
+		res.json(doc);
+	});	
+});
+
+
+app.put('/museumName/:id', function(req,res){
+	var id= req.params.id;
+	db.museum.findAndModify({query: {_id: mongojs.ObjectId(id)},
+		update: {$set: {museumsname: req.body.museumsname  }},
+	nex: true}, function(err,doc){
+		res.json(doc);
+	});		
+	
+});
+
 
 
 app.get('/museum', function(req,res){
@@ -152,23 +183,9 @@ app.post('/api/photo',function(req,res){
 });
 
 
-
-
-
-
-//[{"
-//"}]
-
-
 app.post('/archiveMarkers',function(req,res){
 	var date = new Date();
 	var blup = JSON.stringify(req.body);
-	//blup = blup.replace(/_id/g,"id");
-	//blup = blup.replace('[{"','"');
-	//blup = blup.replace('"}]','"');
-	//blup=JSON.stringify(blup);
-	//var markers= JSON.parse(blup);
-	
 	db.runCommand({
       insert: "archive",
       documents: [{"name":"markers-" + date.toDateString(), blup}],
@@ -198,7 +215,6 @@ app.get('/archiveMarkers/:id', function(req, res){
 	res.header('Access-Control-Allow-Headers', 'Content-Type'); 
 	db.archive.findOne({_id: mongojs.ObjectId(id)},
 	function(err,doc){
-		console.log(doc);
 		res.json(doc);
 		});
 	});	
@@ -306,11 +322,6 @@ app.get('/getBeacons', function(req, res){
 
 
 
-//app.listen(3000);
-//console.log("Server running on port 3000");
-
 app.listen(process.env.PORT || 3000, function(){
   console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
 });
-
-//start server: node server

@@ -1,4 +1,4 @@
-var myApp = angular.module('myApp', ['ngRoute', 'ui-leaflet', 'ui.bootstrap', 'app.routes', 'app.directives']).config(function($sceDelegateProvider) {
+var myApp = angular.module('myApp', ['ngRoute', 'ui-leaflet','textAngular', 'ui.bootstrap','app.routes', 'app.directives']).config(function($sceDelegateProvider) {
   $sceDelegateProvider.resourceUrlWhitelist([
     // Allow same origin resource loads.
     'self',
@@ -80,28 +80,40 @@ myApp.controller('loginCtrl', function($scope, $http, $timeout, $location, acces
 
 
 
-myApp.controller('custoCtrl', function($scope, $timeout, $location, $http, leafletData, leafletBoundsHelpers,shareClickedId) {
-
-  
-  
-  
-  
-  
-   $http.get('/museum', {
+myApp.controller('custoCtrl', function($scope, $timeout, $location, $http, leafletData, leafletBoundsHelpers,shareClickedId,textAngularManager) {
+	 $http.get('/museum', {
         cache: true
       }).success(function(response) {
-        $scope.datalicous = response;
-		$scope.mn = "";
+			$scope.datalicous = response;
+			$scope.mn = "";
+			angular.forEach($scope.datalicous, function(mn) {
+				$scope.id = mn._id;
+				$scope.orightml = mn.de;
+				$scope.museumsname = mn.museumsname;
+			});
+			$scope.htmlcontent = $scope.orightml;
       });
-  
+	 
+  $scope.uploadText = function(hi) {
+     /*
+        $http.post('/museumDE', $scope.museumsname).success(function(response) {
+          window.location.reload('custo');
+        });
+		*/
+		
+		$http.put('/museumDE/' + $scope.id, {"de":$scope.htmlcontent}).success(function(response) {
+        console.log("de beschreib hochgeladen");
+		window.location.reload('custo');
+      });
+		
+    };
   
   
   $scope.uploadName = function() {
-     
-		//console.log($scope.museumsname);
-        $http.post('/museum', $scope.museumsname).success(function(response) {
-          window.location.reload('custo');
-        });
+		$http.put('/museumName/' + $scope.id, {"museumsname":$scope.newName}).success(function(response) {
+		window.location.reload('custo');
+      });
+		
     }
 
  $http.get('/api/photo/logo', {
@@ -396,7 +408,16 @@ myApp.controller('beaconsCtrl', function($scope, $http){
 
 
 
-myApp.controller('exponatCtrl', function($scope, $http){
+myApp.controller('exponatCtrl', function($scope, $http, $location, $anchorScroll){
+	
+	$scope.top = function() {
+      // set the location.hash to the id of
+      // the element you wish to scroll to.
+      $location.hash('top');
+
+      // call $anchorScroll()
+      $anchorScroll();
+    };
 	
 	var refresh = function() {
       //'/backend' is the route where the data is from
