@@ -51,13 +51,11 @@ app.get('/credentials/:id', function(req,res){
 				//databaseUrl = "backend"; //--> local
 				collections = ["backend", "markers", "museum","archive"]; //"credentials",
 				db= mongojs(databaseUrl, collections);				
-				console.log("been 1");
 			}else if(helper==="newCompany"){
 				databaseUrl = "mongodb://admin:admin@ds019076.mlab.com:19076/heroku_7gqs453c" //newCompany
 				//databaseUrl = "newCompany"; //--> local
 				collections = ["backend", "markers", "museum","archive"]; //"credentials",
 				db= mongojs(databaseUrl, collections);
-				console.log("been 2");
 			}else{
 				console.log("error at login");
 			}			
@@ -72,7 +70,8 @@ app.get('/login', function(req,res){
 	res.header('Access-Control-Allow-Origin', '*'); 
 	res.header('Access-Control-Allow-Methods','GET,PUT,POST,DELETE,OPTIONS'); 
 	res.header('Access-Control-Allow-Headers', 'Content-Type'); 	
-	databaseUrl = "login";
+	//databaseUrl = "login"; //local
+	databaseUrl = "mongodb://admin:admin@ds019816.mlab.com:19816/heroku_9ch385nb"; //db login heroku
 	db = mongojs(databaseUrl, ['credentials','avMuseums']);	
 	db.avMuseums.find(function(err,doc){		
 		res.json(doc);
@@ -84,7 +83,8 @@ app.get('/login/:id', function(req,res){
 	res.header('Access-Control-Allow-Methods','GET,PUT,POST,DELETE,OPTIONS'); 
 	res.header('Access-Control-Allow-Headers', 'Content-Type'); 	
 	var name= req.params.id;
-	databaseUrl = "login";
+	//databaseUrl = "login"; //local
+	databaseUrl = "mongodb://admin:admin@ds019816.mlab.com:19816/heroku_9ch385nb"; //db login heroku
 	db = mongojs(databaseUrl, ['credentials']);
 	 
 	db.credentials.find({"org": name}, function(err,doc){		
@@ -93,15 +93,13 @@ app.get('/login/:id', function(req,res){
 		}else if(doc != ""){	
 			console.log(name);
 			if(name==="MoneyMuseum"){
-				//var databaseUrl = "mongodb://admin:admin@ds019076.mlab.com:19076/heroku_bj4gkw7j"
-				db.close();
-				databaseUrl = "backend"; //--> local
+				databaseUrl = "mongodb://admin:admin@ds019076.mlab.com:19076/heroku_bj4gkw7j" //db MoneyMuseum
+				//databaseUrl = "backend"; //--> local
 				collections = ["backend", "markers", "museum","archive"]; //"credentials",
 				db= mongojs(databaseUrl, collections);
 			}else if(name==="newCompany"){
-				//var databaseUrl = "mongodb://admin:admin@ds019076.mlab.com:19076/heroku_bj4gkw7j"
-				db.close();
-				databaseUrl = "newCompany"; //--> local
+				databaseUrl = "mongodb://admin:admin@ds019076.mlab.com:19076/heroku_bj4gkw7j" //db newCompany				
+				//databaseUrl = "newCompany"; //--> local
 				collections = ["backend", "markers", "museum","archive"]; //"credentials",
 				db= mongojs(databaseUrl, collections);
 			}else{
