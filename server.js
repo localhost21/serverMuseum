@@ -93,12 +93,12 @@ app.get('/login/:id', function(req,res){
 		}else if(doc != ""){	
 			console.log(name);
 			if(name==="MoneyMuseum"){
-				databaseUrl = "mongodb://admin:admin@ds019076.mlab.com:19076/heroku_bj4gkw7j" //db MoneyMuseum
+				databaseUrl = "mongodb://admin:admin@ds019076.mlab.com:19076/heroku_bj4gkw7j"; //db MoneyMuseum
 				//databaseUrl = "backend"; //--> local
 				collections = ["backend", "markers", "museum","archive"]; //"credentials",
 				db= mongojs(databaseUrl, collections);
 			}else if(name==="newCompany"){
-				databaseUrl = "mongodb://admin:admin@ds019076.mlab.com:19076/heroku_bj4gkw7j" //db newCompany				
+				databaseUrl = "mongodb://admin:admin@ds019076.mlab.com:19076/heroku_7gqs453c"; //db newCompany				
 				//databaseUrl = "newCompany"; //--> local
 				collections = ["backend", "markers", "museum","archive"]; //"credentials",
 				db= mongojs(databaseUrl, collections);
