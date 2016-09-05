@@ -9,8 +9,7 @@ angular.module('app.routes', [])
 		controller: 'exponatCtrl',
 		resolve: {
 			"check": function(accessFac){
-				if(accessFac.checkPermission()===true){    //check if the user has permission -- This happens before the page loads
-				}else{
+				if(accessFac.getToken()===""){    //check if the user has permission -- This happens before the page loads
 					window.location="/";
 				}
 			}
@@ -18,19 +17,11 @@ angular.module('app.routes', [])
 		
 	})
 	.when('/getbeacons', {
-		/*resolve: {
-			"check": function($location, $rootScope){
-				if(!$rootScope.loggedIn){
-					$location.path('/');
-				}
-			}
-		},*/
 		templateUrl: '/www/beacons.html',
 		controller: 'beaconsCtrl',
 		resolve: {
 			"check": function(accessFac){
-				if(accessFac.checkPermission()==true){    //check if the user has permission -- This happens before the page loads
-				}else{
+				if(accessFac.getToken()===""){    //check if the user has permission -- This happens before the page loads
 					window.location="/";
 				}
 			}
@@ -41,8 +32,10 @@ angular.module('app.routes', [])
 		controller: 'AppCtrl',
 		resolve: {
 			"check": function(accessFac){
-				if(accessFac.checkPermission()==true){    //check if the user has permission -- This happens before the page loads
-				}else{
+				/*if(accessFac.checkPermission()===false){    //check if the user has permission -- This happens before the page loads
+					window.location="/";
+				}*/
+				if(accessFac.getToken()===""){    //check if the user has permission -- This happens before the page loads
 					window.location="/";
 				}
 			}
@@ -53,8 +46,7 @@ angular.module('app.routes', [])
 		controller: 'custoCtrl',
 		resolve: {
 			"check": function(accessFac){
-				if(accessFac.checkPermission()==true){    //check if the user has permission -- This happens before the page loads
-				}else{
+				if(accessFac.getToken()===""){    //check if the user has permission -- This happens before the page loads
 					window.location="/";
 				}
 			}
@@ -62,17 +54,8 @@ angular.module('app.routes', [])
 	})
 	.when('/custoConfirm', {
 		templateUrl: '/www/confirm.html',
-		controller: 'AppCtrl',
-		resolve: {
-			"check": function(accessFac){
-				if(accessFac.checkPermission()==true){    //check if the user has permission -- This happens before the page loads
-				}else{
-					window.location="/";
-				}
-			}
-		}
+		controller: 'AppCtrl'
 	})
 	
 	
 });
-

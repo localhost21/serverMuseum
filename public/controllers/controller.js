@@ -1,5 +1,6 @@
 var myApp = angular.module('myApp', ['ngRoute', 'ui-leaflet','textAngular', 'ui.bootstrap','app.routes', 'app.directives']).config(function($sceDelegateProvider) {
-  $sceDelegateProvider.resourceUrlWhitelist([
+//'leaflet-directive', 'ui-leaflet'
+ $sceDelegateProvider.resourceUrlWhitelist([
     // Allow same origin resource loads.
     'self',
     // Allow loading from our assets domain.  Notice the difference between * and **.
@@ -18,19 +19,52 @@ var myApp = angular.module('myApp', ['ngRoute', 'ui-leaflet','textAngular', 'ui.
   ]);
 });
 
-var image = '/www/img/defaultPlan.png';
+	
+	
+	
 
-myApp.factory('accessFac', function() {
+myApp.factory('accessFac', function($window) {
   var obj = {}
-  obj.access = true;
-  obj.getPermission = function() { //set the permission to true
+  obj.access = false;
+  //obj.token = [];
+  var i = 0;
+  obj.image  = 'uploads/map-newCompany.png';
+ 
+ 
+  obj.getImage = function(){
+	  return obj.image;
+  }
+  
+  obj.setImage = function(image){
+	  obj.image = image;
+  }
+ 
+  obj.getPermission = function(helper) { //set the permission to true
     obj.access = true;
+	
+	 $window.localStorage['jwtToken'] = helper;
+	//console.log("accessFac, getPerm " + obj.token[i]);
+	i++;
+	
   }
   obj.checkPermission = function() {
-	  console.log(obj.access);
-    return obj.access; //returns the users permission level
+	return obj.access;
+    
+  }
+  obj.getToken = function(){
+	 return $window.localStorage['jwtToken'];//obj.token[i - 1];
   }
   return obj;
+});
+
+
+myApp.run(function($http, accessFac) {
+    $http.get('/orgName/' + accessFac.getToken()).success(function(response) {
+	 
+	  var image = "uploads/map-" + response + ".png";
+	  accessFac.setImage(image); 
+	  console.log("image " + image);
+  });  
 });
 
 myApp.controller('loginCtrl', function($scope, $http, $timeout, $location, $window, accessFac) {
@@ -39,22 +73,27 @@ myApp.controller('loginCtrl', function($scope, $http, $timeout, $location, $wind
 	
 	$http.get('/credentials/' + creds, {
   }).success(function(response) {
-	  $scope.answer = response;
+	  $scope.data = response;
+
   });
 		
 	$timeout(function(){
-	console.log($scope.answer);	
+	//console.log("loginCtrl token " + $scope.data.token);
+
 	 
-    if ($scope.answer === "true") {
-		accessFac.getPermission(); //call the method in acccessFac to allow the user permission.
+    if ($scope.data.status === "true") {
+		//console.log($scope.answer.status);
+		
+		accessFac.getPermission($scope.data.token); //call the method in acccessFac to allow the user permission.
+		$window.location.href = "/#/museumsverwaltung";
 		$timeout(function(){
-			$window.location.href = "/#/museumsverwaltung";
-			window.location.reload(true);
-		},1000);
+			
+			//$window.location.reload(true);
+		},100);
 
     } else {
       Alert.render("Falsche Zugangsdaten!");
-    }}, 1000);
+    }}, 2000);
   }
   
   
@@ -84,12 +123,12 @@ myApp.controller('loginCtrl', function($scope, $http, $timeout, $location, $wind
 
 
 
-myApp.controller('custoCtrl', function($scope, $timeout, $location, $http, leafletData, leafletBoundsHelpers,shareClickedId,textAngularManager) {
-	 $http.get('/museum', {
-        cache: true
-      }).success(function(response) {
+myApp.controller('custoCtrl', function($scope, $timeout, $location, $http, leafletData, leafletBoundsHelpers,shareClickedId,textAngularManager,accessFac) {
+
+var refresh = function(){
+	 $http.get('/museum/' + accessFac.getToken()).success(function(response) {
 			$scope.datalicous = response;
-			$scope.mn = "";
+			$scope.mn = "";						
 			angular.forEach($scope.datalicous, function(mn) {
 				$scope.id = mn._id;
 				$scope.orightml = mn.de;
@@ -97,38 +136,36 @@ myApp.controller('custoCtrl', function($scope, $timeout, $location, $http, leafl
 			});
 			$scope.htmlcontent = $scope.orightml;
       });
+	
 	 
   $scope.uploadText = function(hi) {
-     /*
-        $http.post('/museumDE', $scope.museumsname).success(function(response) {
-          window.location.reload('custo');
-        });
-		*/
-		
 		$http.put('/museumDE/' + $scope.id, {"de":$scope.htmlcontent}).success(function(response) {
-        console.log("de beschreib hochgeladen");
-		window.location.reload('custo');
+		refresh();
+		
       });
 		
     };
   
   
-  $scope.uploadName = function() {
-		$http.put('/museumName/' + $scope.id, {"museumsname":$scope.newName}).success(function(response) {
-		window.location.reload('custo');
-      });
+  $scope.uploadName = function() {		
+		$http.put('/museumName/' + $scope.id, {"museumsname":$scope.newName}).success(function(response) {});
+		
+			refresh();
+			
+			
 		
     }
 
- $http.get('/api/photo/logo', {
-    cache: true
-  }).success(function(response) {
-	  $scope.logo = response;
-  });  
+	$scope.image = accessFac.getImage();
 
+  $http.get('/orgName/' + accessFac.getToken()).success(function(response) {
+	  $scope.org = response;
+	  $scope.logo = "uploads/logo-" + $scope.org + ".png";
+  });  
+  
   
 
-var refresh = function(){
+
 	
 	
 
@@ -142,6 +179,7 @@ var refresh = function(){
       maxZoom: 2,
       zoom: -1,
     },
+	events: {},
     center: {
       lat: 0,
       lng: 0,
@@ -153,7 +191,8 @@ var refresh = function(){
         Gesamtansicht: {
           name: 'Gesamtansicht',
           type: 'imageOverlay',
-          url: image,
+		  doRefresh: true,
+          url: $scope.image,
           bounds: [
             [-100, -180],
             [100, 190]
@@ -161,6 +200,7 @@ var refresh = function(){
           layerParams: {
             showOnSelector: false,
             noWrap: true,
+			doRefresh: true
           }
         }
       }
@@ -170,15 +210,45 @@ var refresh = function(){
       colors: ['#1874cd'],
       labels: ['Exponatstandorte']
     },
-    markers: $scope.markers,
-    events: {}
+    markers: $scope.markers = []
+    
   });
   
-  $scope.markers = [];
+
+  $scope.$on("leafletDirectiveMap.leafletMap.click", function(event, args) {
+    var leafEvent = args.leafletEvent;
+    $scope.markers.push({
+      lat: leafEvent.latlng.lat,
+      lng: leafEvent.latlng.lng,
+      draggable: true,
+      focus: true,
+      getMessageScope: function() {
+        return $scope;
+      },
+      message: "<div ng-include src=\"'www/template.html'\"></div>"
+    });
+    $scope.uploadMarkers = function(messageR) {
+      $http.post('/markers/' + accessFac.getToken(), {
+        message: messageR.message,
+		name: messageR.name,
+        lat: leafEvent.latlng.lat,
+        lng: leafEvent.latlng.lng,
+        draggable: true,
+        focus: false,
+      }).success(function(response) {
+
+      });
+	  //window.location.reload('custo');
+	  refresh();
+    }
+
+  });
   
-  $http.get('/markers', {
-    cache: true
-  }).success(function(response) {
+  
+  
+  
+  
+  $http.get('/markers/' + accessFac.getToken()).success(function(response) {
     $scope.data = response;
     $scope.ma = "";
     angular.forEach($scope.data, function(ma) {
@@ -193,9 +263,19 @@ var refresh = function(){
     });
   });
   
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
   $scope.deleteMarkers = function(){
 	  
-	  $http.delete('/markers').success(function(response) {
+	  $http.delete('/markers/' + accessFac.getToken()).success(function(response) {
         
       });
 	  
@@ -211,33 +291,30 @@ var refresh = function(){
         opacity:0,
         icon:""});
 	 
-$http.post('/markersNew', markersInsert).success(function(response) {
-		window.location.reload('custo');
+$http.post('/markersNew/' + accessFac.getToken(), markersInsert).success(function(response) {
+		//window.location.reload('custo');
+		refresh();
       });
-	window.location.reload('custo');
+	//window.location.reload('custo');
+	refresh();
   };
   
   
   $scope.archiveMarkerJSON = function(){
-	$http.get('/markers', {
-    cache: true
-  }).success(function(response) {
+	$http.get('/markers').success(function(response) {
     $scope.data = response;
 	$scope.bi = "";
   });
   
-  $http.post('/archiveMarkers', $scope.data, {
-    cache: true
-  }).success(function(response) {
+  $http.post('/archiveMarkers/' + accessFac.getToken(), $scope.data).success(function(response) {
   });
-  window.location.reload('custo');
+  //window.location.reload('custo');
+  refresh();
   
   }
   
   
-  $http.get('/archiveMarkers', {
-      cache: true
-    }).success(function(response) {
+  $http.get('/archived/' + accessFac.getToken()).success(function(response) {
       $scope.h= response;
 	  $scope.receivedMarkers ="";
 	  //window.alert($scope.receivedMarkers.name);
@@ -250,9 +327,7 @@ $scope.loadMarkers = function(reqMarcID, index) {
 	shareClickedId.setId($scope.clickedID);
 	
 	 $timeout(function(){ 
-	$http.get('/archiveMarkers/' + $scope.clickedID, {
-      cache: true
-    }).success(function(response) {
+	$http.get('/archiveMarkers/' + $scope.clickedID).success(function(response) {
       $scope.h= response;
 	 
 	  $scope.receivedMarkers ="";
@@ -271,44 +346,20 @@ $scope.loadMarkers = function(reqMarcID, index) {
 	 markersInsert.push(document.getElementById('godzilla').innerHTML );
 	 markersInsert = JSON.parse(markersInsert);
 	 
-$http.post('/markersNew', markersInsert).success(function(response) {
-		window.location.reload('custo');
+$http.post('/markersNew/' + accessFac.getToken(), markersInsert).success(function(response) {
+		//window.location.reload('custo');
+		refresh();
       });
 	},1000);
 	  
   };
   
-  
-  
-  
+  document.getElementById("myFormLogo").action = "/api/photo/logo/" + accessFac.getToken();
+  document.getElementById("myFormMap").action = "/api/photo/map/" + accessFac.getToken();
+    
 
-  $scope.$on("leafletDirectiveMap.click", function(event, args) {
-    var leafEvent = args.leafletEvent;
-    $scope.markers.push({
-      lat: leafEvent.latlng.lat,
-      lng: leafEvent.latlng.lng,
-      draggable: true,
-      focus: true,
-      getMessageScope: function() {
-        return $scope;
-      },
-      message: "<div ng-include src=\"'www/template.html'\"></div>"
-    });
-    $scope.uploadMarkers = function(messageR) {
-      $http.post('/markers', {
-        message: messageR,
-        lat: leafEvent.latlng.lat,
-        lng: leafEvent.latlng.lng,
-        draggable: true,
-        focus: false,
-      }).success(function(response) {
 
-      });
-	  window.location.reload('custo');
-    }
-
-  });
-  
+ 
 };
 
 refresh();
@@ -363,14 +414,7 @@ myApp.controller('AppCtrl',  function($scope, $http, $location, $anchorScroll) {
       $anchorScroll();
    }
   
-	  $http.get('/api/photo/map', {
-    cache: true
-  }).success(function(response) {
-	  if(response!="/uploads/"){
-		  image = response;
-	  }
-
-  });  
+	
 	  
     function ok() {
       document.getElementById('dialogbox').style.display = 'none';
@@ -395,6 +439,8 @@ myApp.controller('AppCtrl',  function($scope, $http, $location, $anchorScroll) {
 
     }
     var Alert = new CustomAlert();
+	
+	
 });
 
 myApp.controller('beaconsCtrl', function($scope, $http){
@@ -412,22 +458,17 @@ myApp.controller('beaconsCtrl', function($scope, $http){
 
 
 
-myApp.controller('exponatCtrl', function($scope, $http, $location, $anchorScroll, $timeout){
+myApp.controller('exponatCtrl', function($scope, $http, $location, $anchorScroll, $timeout, accessFac){
 	
 	$scope.top = function() {
-      // set the location.hash to the id of
-      // the element you wish to scroll to.
       $location.hash('top');
-
-      // call $anchorScroll()
       $anchorScroll();
     };
 	
 	var refresh = function() {
       //'/backend' is the route where the data is from
-      $http.get('/backend', {
-        cache: true
-      }).success(function(response) {
+	  console.log(accessFac.getToken());
+      $http.get('/backend/'+ accessFac.getToken()).success(function(response) {
         $scope.backend = response;
         $scope.exponat = "";
         $scope.sortType = 'ide';
@@ -436,7 +477,7 @@ myApp.controller('exponatCtrl', function($scope, $http, $location, $anchorScroll
         angular.forEach($scope.backend, function(exponat) {
           exponat.ide = parseFloat(exponat.ide);
         });
-        $http.get('/backend:count').success(function(response) {
+        $http.get('/backend_count/'+accessFac.getToken()).success(function(response) {
           $scope.number = response;
         });
       });
@@ -450,21 +491,23 @@ myApp.controller('exponatCtrl', function($scope, $http, $location, $anchorScroll
         Alert.render("ID muss mindestens dreistellig sein");
       } else {
         var a = $scope.exponat.bild;
-        $scope.exponat.bild = a.replace(/www.dropbox/g, "dl.dropboxusercontent");
-        $http.post('/backend', $scope.exponat).success(function(response) {
-          
+		if(a!=""){
+			$scope.exponat.bild = a.replace(/www.dropbox/g, "dl.dropboxusercontent");
+		}        
+        $http.post('/backend/' + accessFac.getToken(), $scope.exponat).success(function(response) {
+			refresh();
         });
-		window.location.reload('museumsverwaltung');
+		//window.location.reload('museumsverwaltung');
       }
     }
     $scope.remove = function(id) {
       $http.delete('/backend/' + id).success(function(response) {
         refresh();
       });
-	  window.location.reload('museumsverwaltung');
+	  //window.location.reload('museumsverwaltung');
     }
     $scope.edit = function(id) {
-      $http.get('/backend/' + id).success(function(response) {
+      $http.get('/backendModify/' + id).success(function(response) {
         $scope.exponat = response;
         document.getElementById('hinzufügen').style = "display: none";
       });
@@ -474,7 +517,7 @@ myApp.controller('exponatCtrl', function($scope, $http, $location, $anchorScroll
         document.getElementById('hinzufügen').style = "display: inline-block";
         refresh();
       });
-	  window.location.reload('museumsverwaltung');
+	  //window.location.reload('museumsverwaltung');
     }
     $scope.deselect = function() {
       document.getElementById('hinzufügen').style = "display: inline-block";
@@ -510,9 +553,27 @@ myApp.controller('exponatCtrl', function($scope, $http, $location, $anchorScroll
             curtop += obj.y;
         return curtop;
     }
-	
+	    function CustomAlert() {
+      this.render = function(dialog) {
+        var winW = window.innerWidth;
+        var winH = window.innerHeight;
+        var dialogoverlay = document.getElementById('dialogoverlay');
+        var dialogbox = document.getElementById('dialogbox');
+        dialogoverlay.style.display = "block";
+        dialogoverlay.style.height = winH + "px";
+        dialogbox.style.left = (winW / 2) - (350 * .5) + "px";
+        dialogbox.style.top = "100px";
+        dialogbox.style.display = "block";
+        document.getElementById('dialogboxhead').innerHTML = "Fehlermeldung!";
+        document.getElementById('dialogboxbody').innerHTML = dialog;
+        document.getElementById('dialogboxfoot').innerHTML = '<a href="javascript:window.location.reload(true)" class="btn btn-primary"> ok</a>';
+      }
+
+    }
+    var Alert = new CustomAlert();
   
 	
 	
 	
 });
+

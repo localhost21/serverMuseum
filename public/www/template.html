@@ -1,6 +1,7 @@
 <div ng-controller="custoCtrl">
   <form novalidate>
-    Name: <input type="text" ng-model="markers.message" />
-    <button ng-click="uploadMarkers(markers.message)">Speichern</button>
+    Name: <input class="form-controll" type="text" ng-model="markers.message" /><br>
+	Beacon-Nr.<input class="form-controll" type="number" ng-model="markers.name" /><br>
+    <button ng-click="uploadMarkers(markers)">Speichern</button>
   </form>
 </div>

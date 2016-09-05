@@ -2,26 +2,33 @@ var express = require('express');
 var multer  =   require('multer');
 var app = express();
 var bodyParser = require('body-parser');
-var storage =   multer.diskStorage({
-  destination: function (req, file, callback) {
-    callback(null, './public/uploads');
-  },
-  filename: function (req, file, callback) {
-    callback(null, file.fieldname + ".png");
-  }
-});
-var upload = multer({ storage : storage}).fields([{
-           name: 'map', maxCount: 1
-         }, {
-           name: 'logo', maxCount: 1
-         }]);
+
+var multer  = require('multer');
+var upload = multer({ dest: 'public/uploads/'});
+var fs = require('fs');
+var type = upload.single('recfile');
+
 
 var mongojs = require('mongojs');
 var sha256 = require('js-sha256').sha256;
-var databaseUrl = "mongodb://admin:admin@ds019816.mlab.com:19816/heroku_9ch385nb"; //db login heroku
+//var databaseUrl = "mongodb://admin:admin@ds019816.mlab.com:19816/heroku_9ch385nb"; //db login heroku
+
+
+var databaseUrl = "mongodb://admin:admin@ds019076.mlab.com:19076/heroku_bj4gkw7j";
+var collections = ["credentials", "backend", "markers", "museum","archive","avMuseum"];
+
+var morgan      = require('morgan');
+var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
+
 //var databaseUrl = "login"; //login local
-var collections = ['credentials'];
-var db = mongojs(databaseUrl, ['credentials']);
+//var collections = ["credentials"];
+var db = mongojs(databaseUrl, collections);
+
+var apiRoutes = express.Router(); 
+
+
+
+
 
 app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.json());
@@ -31,35 +38,29 @@ app.use(function(req, res, next){
 	res.header('Access-Control-Allow-Headers', 'Content-Type'); 
 	next();
 })
+
+
 app.get('/credentials/:id', function(req,res){	
 	res.header('Access-Control-Allow-Origin', '*'); 
 	res.header('Access-Control-Allow-Methods','GET,PUT,POST,DELETE,OPTIONS'); 
 	res.header('Access-Control-Allow-Headers', 'Content-Type'); 	
 	console.log("paramsid: "+req.params.id);
 	var hashedValue= sha256(req.params.id);
-	databaseUrl = "mongodb://admin:admin@ds019816.mlab.com:19816/heroku_9ch385nb";
-	db = mongojs(databaseUrl, ['credentials']);
+	//databaseUrl = "mongodb://admin:admin@ds019816.mlab.com:19816/heroku_9ch385nb";
+	//db = mongojs(databaseUrl, ['credentials']);
 	
 	db.credentials.find({"login": hashedValue}, function(err,doc){		
 		if(err){
-			
+			console.log("error - no entries found")
 		}else if(doc != ""){	
 			var helper = doc[0].org;
-			console.log(helper);
-			if(helper==="MoneyMuseum"){
-				databaseUrl = "mongodb://admin:admin@ds019076.mlab.com:19076/heroku_bj4gkw7j" //MoneyMuseum
-				//databaseUrl = "backend"; //--> local
-				collections = ["backend", "markers", "museum","archive"]; //"credentials",
-				db= mongojs(databaseUrl, collections);				
-			}else if(helper==="newCompany"){
-				databaseUrl = "mongodb://admin:admin@ds019076.mlab.com:19076/heroku_7gqs453c" //newCompany
-				//databaseUrl = "newCompany"; //--> local
-				collections = ["backend", "markers", "museum","archive"]; //"credentials",
-				db= mongojs(databaseUrl, collections);
-			}else{
-				console.log("error at login");
-			}			
-		res.json("true");	
+			var token = jwt.sign(doc[0], helper, {
+				expiresIn : 60*60
+			});			
+			res.json({
+				"status":"true", 
+				"token": token
+			});			
 		}else{			
 			res.json("false");
 		}	
@@ -71,9 +72,9 @@ app.get('/login', function(req,res){
 	res.header('Access-Control-Allow-Methods','GET,PUT,POST,DELETE,OPTIONS'); 
 	res.header('Access-Control-Allow-Headers', 'Content-Type'); 	
 	//databaseUrl = "login"; //local
-	databaseUrl = "mongodb://admin:admin@ds019816.mlab.com:19816/heroku_9ch385nb"; //db login heroku
-	db = mongojs(databaseUrl, ['credentials','avMuseums']);	
-	db.avMuseums.find(function(err,doc){		
+	//databaseUrl = "mongodb://admin:admin@ds019816.mlab.com:19816/heroku_9ch385nb"; //db login heroku
+	//db = mongojs(databaseUrl, ['credentials','avMuseums']);	
+	db.museum.find(function(err,doc){		
 		res.json(doc);
 	});		
 });
@@ -81,13 +82,45 @@ app.get('/login', function(req,res){
 app.get('/login/:id', function(req,res){	
 	res.header('Access-Control-Allow-Origin', '*'); 
 	res.header('Access-Control-Allow-Methods','GET,PUT,POST,DELETE,OPTIONS'); 
-	res.header('Access-Control-Allow-Headers', 'Content-Type'); 	
-	var name= req.params.id;
+	res.header('Access-Control-Allow-Headers', 'Content-Type'); 
+	var org = req.params.id;
+	db.museum.find({"org": org}, function(err,doc){		
+		if(err){
+			console.log("error - no entries found")
+		}else if(doc != ""){	
+			var token = jwt.sign(doc[0], org, {
+				expiresIn : 60*60
+			});			
+			res.json({ 
+				"token": token
+			});			
+		}else{			
+			res.json("false");
+		}	
+	});		
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	//databaseUrl = "login"; //local
-	databaseUrl = "mongodb://admin:admin@ds019816.mlab.com:19816/heroku_9ch385nb"; //db login heroku
-	db = mongojs(databaseUrl, ['credentials']);
+	/*databaseUrl = "mongodb://admin:admin@ds019816.mlab.com:19816/heroku_9ch385nb"; //db login heroku
+	db = mongojs(databaseUrl, ['credentials']);*/
 	 
-	db.credentials.find({"org": name}, function(err,doc){		
+	/*db.credentials.find({"org": name}, function(err,doc){		
 		if(err){
 			//todo: errorlog
 		}else if(doc != ""){	
@@ -109,77 +142,269 @@ app.get('/login/:id', function(req,res){
 		}else{			
 			res.json("false");
 		}	
-	});		
+	});		*/
 });
+
 
 //'/backend' is the route where the data is from
 // server listens to get request
-app.get('/backend', function(req,res){
-	res.header('Access-Control-Allow-Origin', '*'); 
-	res.header('Access-Control-Allow-Methods','GET,PUT,POST,DELETE,OPTIONS'); 
-	res.header('Access-Control-Allow-Headers', 'Content-Type'); 
-	db.backend.find(function(err,docs){
-		res.json(docs);	
-	});
+app.get('/backend/:id', function(req,res){
+	var token = req.params.id;
+if(token===""){
+		response.writeHead(302);
+	response.end();
+
+}else{
+	
+	db.credentials.count(function(err, docs) {
+    var count = docs;
+setTimeout(function() {
+    db.credentials.find({"org": {$ne: null}}, function(err, doc) {
+      var org = [];
+      org = doc;
+	  
+	  //setTimeout(function() {},2);
+      for (i = 0; i < count; i++) {
+try{
+	var decode = jwt.decode(token, org[i].org, function(err_, decode) {
+          if (err) {
+            return console.error(err.name, err.message);
+          }
+        });
 		
+		decode = decode.org;
+		}catch(error){
+			console.log("error");
+		}
+       
+	  if (decode === org[i].org) {		 
+          db.backend.find({
+            org: decode
+          }, function(err, docs) {
+            res.json(docs);
+			
+          });
+		  break;
+        }
+      }	  
+    });
+	}, 100);
+  });	
+
+
+}	
+
+
 });
 
-app.post('/backend', function(req,res){
-	db.backend.insert(req.body,function(err,doc){
-		res.json(doc);
-	});
+
+
+
+app.post('/backend/:id', function(req,res){
+	var token = req.params.id;
+		if (token === "") {
+		  response.writeHead(302);
+		  response.end();
+		} else {
+		  db.credentials.count(function(err, docs) {
+		    var count = docs;
+		    setTimeout(function() {
+		      db.credentials.find({
+		        "org": {
+		          $ne: null
+		        }
+		      }, function(err, doc) {
+		        var org = [];
+		        org = doc;
+
+		        //setTimeout(function() {},2);
+		        for (i = 0; i < count; i++) {
+		          try {
+		            var decode = jwt.decode(token, org[i].org, function(err_, decode) {
+		              if (err) {
+		                return console.error(err.name, err.message);
+		              }
+		            });
+		            decode = decode.org;
+		          } catch (error) {
+		            console.log("error");
+		          }
+		          if (decode === org[i].org) {
+		            var request = JSON.stringify(req.body);
+		            var h = ',"org":"' + decode + '"}';
+		            var helper = request.replace("}", h);
+		            db.backend.insert(JSON.parse(helper), function(err, doc) {
+		              res.json(doc);
+		            });
+
+		            //
+		            break;
+		          }
+		        }
+		      });
+		    }, 100);
+		  });
+		}
 });
 
-app.post('/markers', function(req,res){
-	/*db.markers.insert(req.body,function(err,doc){
-		res.json(doc);
-	});*/
-	
-	var blup = req.body; 
-	
-	
-	db.runCommand({
+app.post('/markers/:id', function(req,res){
+var token = req.params.id;
+		if (token === "") {
+		  response.writeHead(302);
+		  response.end();
+		} else {
+		  db.credentials.count(function(err, docs) {
+		    var count = docs;
+		    setTimeout(function() {
+		      db.credentials.find({
+		        "org": {
+		          $ne: null
+		        }
+		      }, function(err, doc) {
+		        var org = [];
+		        org = doc;
+
+		        //setTimeout(function() {},2);
+		        for (i = 0; i < count; i++) {
+		          try {
+		            var decode = jwt.decode(token, org[i].org, function(err_, decode) {
+		              if (err) {
+		                return console.error(err.name, err.message);
+		              }
+		            });
+		            decode = decode.org;
+		          } catch (error) {
+		            console.log("error");
+		          }
+		          if (decode === org[i].org) {
+		            var request = JSON.stringify(req.body);
+		            var h = ',"org":"' + decode + '"}';
+		            var blup = request.replace("}", h);
+		            db.runCommand({
       insert: "markers",
-      documents: [blup],
+      documents: [JSON.parse(blup)],
       ordered: false,
       writeConcern: { w: "majority", wtimeout: 5000 }
    })
-	
-	
-	
+
+		            //
+		            break;
+		          }
+		        }
+		      });
+		    }, 100);
+		  });
+		}	
 });
 
 
 
-app.post('/markersNew', function(req,res){
-	db.markers.insert(req.body,function(err,doc){
-		res.json(doc);
-	});
+app.post('/markersNew/:id', function(req,res){
+	var token = req.params.id;
+		if (token === "") {
+		  response.writeHead(302);
+		  response.end();
+		} else {
+		  db.credentials.count(function(err, docs) {
+		    var count = docs;
+		    setTimeout(function() {
+		      db.credentials.find({
+		        "org": {
+		          $ne: null
+		        }
+		      }, function(err, doc) {
+		        var org = [];
+		        org = doc;
+
+		        //setTimeout(function() {},2);
+		        for (i = 0; i < count; i++) {
+		          try {
+		            var decode = jwt.decode(token, org[i].org, function(err_, decode) {
+		              if (err) {
+		                return console.error(err.name, err.message);
+		              }
+		            });
+		            decode = decode.org;
+		          } catch (error) {
+		            console.log("error");
+		          }
+		          if (decode === org[i].org) {
+		            var request = JSON.stringify(req.body);
+		            var h = ',"org":"' + decode + '"}';
+		            var helper = request.replace("}", h);
+		            db.markers.insert(JSON.parse(helper), function(err, doc) {
+		              res.json(doc);
+		            });
+
+		            //
+		            break;
+		          }
+		        }
+		      });
+		    }, 100);
+		  });
+		}
 	
 });
 
 
-app.get('/markers', function(req,res){
+app.get('/markers/:id', function(req,res){
 	res.header('Access-Control-Allow-Origin', '*'); 
 	res.header('Access-Control-Allow-Methods','GET,PUT,POST,DELETE,OPTIONS'); 
 	res.header('Access-Control-Allow-Headers', 'Content-Type'); 
-	db.markers.find(function(err,docs){
-		res.json(docs);	
-	});
+	var token = req.params.id;
+if(token===""){
+		response.writeHead(302);
+	response.end();
+
+}else{
+	
+	db.credentials.count(function(err, docs) {
+    var count = docs;
+setTimeout(function() {
+    db.credentials.find({"org": {$ne: null}}, function(err, doc) {
+      var org = [];
+      org = doc;
+	  
+	  //setTimeout(function() {},2);
+      for (i = 0; i < count; i++) {
+try{
+	var decode = jwt.decode(token, org[i].org, function(err_, decode) {
+          if (err) {
+            return console.error(err.name, err.message);
+          }
+        });
+		
+		decode = decode.org;
+		}catch(error){
+			console.log("error");
+		}
+       
+	  if (decode === org[i].org) {		 
+          db.markers.find({
+            org: decode
+          }, function(err, docs) {
+            res.json(docs);
+			
+          });
+		  break;
+        }
+      }	  
+    });
+	}, 100);
+  });	
+
+
+}	
+	
 		
 });
-/*
-app.post('/museum', function(req,res){
-	db.museum.remove();
-	db.museum.insert(req.body,function(err,doc){
-		res.json(doc);
-	});
-});*/
+
 
 
 app.put('/museumDE/:id', function(req,res){
 	var id= req.params.id;
-	db.museum.findAndModify({query: {_id: mongojs.ObjectId(id)},
+	db.museum.findAndModify({query: {_id: id},
 		update: {$set: {de: req.body.de  }},
 	nex: true}, function(err,doc){
 		res.json(doc);
@@ -188,7 +413,7 @@ app.put('/museumDE/:id', function(req,res){
 
 app.put('/museumEN/:id', function(req,res){
 	var id= req.params.id;
-	db.museum.findAndModify({query: {_id: mongojs.ObjectId(id)},
+	db.museum.findAndModify({query: {_id: id},
 		update: {$set: {en: req.body.en  }},
 	nex: true}, function(err,doc){
 		res.json(doc);
@@ -198,7 +423,7 @@ app.put('/museumEN/:id', function(req,res){
 
 app.put('/museumName/:id', function(req,res){
 	var id= req.params.id;
-	db.museum.findAndModify({query: {_id: mongojs.ObjectId(id)},
+	db.museum.findAndModify({query: {_id: id},
 		update: {$set: {museumsname: req.body.museumsname  }},
 	nex: true}, function(err,doc){
 		res.json(doc);
@@ -208,58 +433,290 @@ app.put('/museumName/:id', function(req,res){
 
 
 
-app.get('/museum', function(req,res){
+app.get('/museum/:id', function(req,res){
 	res.header('Access-Control-Allow-Origin', '*'); 
 	res.header('Access-Control-Allow-Methods','GET,PUT,POST,DELETE,OPTIONS'); 
 	res.header('Access-Control-Allow-Headers', 'Content-Type'); 
-	db.museum.find(function(err,docs){
-		res.json(docs);	
-	});
+	var token = req.params.id;
+if(token===""){
+	response.writeHead(302);
+	response.end();
+
+}else{
+	
+	db.credentials.count(function(err, docs) {
+    var count = docs;
+setTimeout(function() {
+    db.credentials.find({"org": {$ne: null}}, function(err, doc) {
+      var org = [];
+      org = doc;
+	  
+	  //setTimeout(function() {},2);
+      for (i = 0; i < count; i++) {
+try{
+	var decode = jwt.decode(token, org[i].org, function(err_, decode) {
+          if (err) {
+            return console.error(err.name, err.message);
+          }
+        });
 		
-});
-
-
-
-app.delete('/markers', function(req, res){	
-	db.markers.remove();
-});
-
-
-
-app.post('/api/photo',function(req,res){
-    upload(req,res,function(err) {
-        if(err) {
-            return res.end("Error uploading file.");
+		decode = decode.org;
+		
+	  if (decode === org[i].org) {		 
+          db.museum.find({
+            org: decode
+          }, function(err, docs) {
+            res.json(docs);
+			
+          });
+		  break;
         }
-		res.redirect('/#/custoConfirm');
-        res.end("File is uploaded");
-		
+		}catch(error){
+			console.log("error@/museum");
+		}
+      }	  
     });
+	}, 100);
+  });	
+
+
+}	
+		
 });
 
 
-app.post('/archiveMarkers',function(req,res){
-	var date = new Date();
-	var blup = JSON.stringify(req.body);
-	db.runCommand({
-      insert: "archive",
-      documents: [{"name":"markers-" + date.toDateString(), blup}],
-      ordered: false,
-      writeConcern: { w: "majority", wtimeout: 5000 }
-   })
-	
 
-	
+app.delete('/markers/:id', function(req, res){	
+	 var token = req.params.id;
+      if (token === "") {
+       
+      } else {
+        db.credentials.count(function(err, docs) {
+          var count = docs;
+          setTimeout(function() {
+            db.credentials.find({
+              "org": {
+                $ne: null
+              }
+            }, function(err, doc) {
+              var org = [];
+              org = doc;
+              for (i = 0; i < count; i++) {
+                try {
+                  var decode = jwt.decode(token, org[i].org, function(err_, decode) {
+                    if (err) {
+                      return console.error(err.name, err.message);
+                    }
+                  });
+                  decode = decode.org;
+                  if (decode === org[i].org) {
+                    db.markers.remove({"org":decode});
+                    break;
+                  }
+                } catch (error) {
+                  console.log("error@/museum");
+                }
+              }
+            });
+          }, 100);
+        });
+      }	
 });
 
-app.get('/archiveMarkers',function(req,res){
+
+
+app.post('/api/photo/logo/:id', type, function(req, res) {
+      var token = req.params.id;
+      console.log("token " + token);
+      var tmp_path = req.file.path;
+      console.log("tmp_path" + tmp_path);
+      if (token === "") {
+        response.writeHead(302);
+        response.end();
+      } else {
+        db.credentials.count(function(err, docs) {
+          var count = docs;
+          setTimeout(function() {
+            db.credentials.find({
+              "org": {
+                $ne: null
+              }
+            }, function(err, doc) {
+              var org = [];
+              org = doc;
+              for (i = 0; i < count; i++) {
+                try {
+                  var decode = jwt.decode(token, org[i].org, function(err_, decode) {
+                    if (err) {
+                      return console.error(err.name, err.message);
+                    }
+                  });
+                  decode = decode.org;
+                  if (decode === org[i].org) {
+                    var target_path = 'public/uploads/logo-' + org[i].org + '.png'; 
+                    var src = fs.createReadStream(tmp_path);
+                    var dest = fs.createWriteStream(target_path);
+                    src.pipe(dest);
+                    res.redirect('/#/custo');
+                    fs.unlink(tmp_path);
+                    break;
+                  }
+                } catch (error) {
+                  console.log("error@/museum");
+                }
+              }
+            });
+          }, 100);
+        });
+      }
+});
+
+
+
+app.post('/api/photo/map/:id', type, function(req, res) {
+      var token = req.params.id;
+      console.log("token " + token);
+      var tmp_path = req.file.path;
+      console.log("tmp_path" + tmp_path);
+      if (token === "") {
+        response.writeHead(302);
+        response.end();
+      } else {
+        db.credentials.count(function(err, docs) {
+          var count = docs;
+          setTimeout(function() {
+            db.credentials.find({
+              "org": {
+                $ne: null
+              }
+            }, function(err, doc) {
+              var org = [];
+              org = doc;
+              for (i = 0; i < count; i++) {
+                try {
+                  var decode = jwt.decode(token, org[i].org, function(err_, decode) {
+                    if (err) {
+                      return console.error(err.name, err.message);
+                    }
+                  });
+                  decode = decode.org;
+                  if (decode === org[i].org) {
+                    var target_path = 'public/uploads/map-' + org[i].org + '.png'; 
+                    var src = fs.createReadStream(tmp_path);
+                    var dest = fs.createWriteStream(target_path);
+                    src.pipe(dest);
+                    res.redirect('/#/custo');
+                    fs.unlink(tmp_path);
+                    break;
+                  }
+                } catch (error) {
+                  console.log("error@/museum");
+                }
+              }
+            });
+          }, 100);
+        });
+      }
+});
+
+
+
+
+
+
+app.post('/archiveMarkers/:id',function(req,res){
+	 var token = req.params.id;
+      if (token === "") {
+       
+      } else {
+        db.credentials.count(function(err, docs) {
+          var count = docs;
+          setTimeout(function() {
+            db.credentials.find({
+              "org": {
+                $ne: null
+              }
+            }, function(err, doc) {
+              var org = [];
+              org = doc;
+              for (i = 0; i < count; i++) {
+                try {
+                  var decode = jwt.decode(token, org[i].org, function(err_, decode) {
+                    if (err) {
+                      return console.error(err.name, err.message);
+                    }
+                  });
+                  decode = decode.org;
+                  if (decode === org[i].org) {
+                    var date = new Date();
+					var blup = JSON.stringify(req.body);
+					db.runCommand({
+						insert: "archive",
+						documents: [{"name":"markers-" + date.toDateString(),"org":decode, blup}],
+						ordered: false,
+						writeConcern: { w: "majority", wtimeout: 5000 }
+					})
+	
+                    break;
+                  }
+                } catch (error) {
+                  console.log("error@/museum");
+                }
+              }
+            });
+          }, 100);
+        });
+      }	
+});
+
+app.get('/archived/:id',function(req,res){
 	res.header('Access-Control-Allow-Origin', '*'); 
 	res.header('Access-Control-Allow-Methods','GET,PUT,POST,DELETE,OPTIONS'); 
 	res.header('Access-Control-Allow-Headers', 'Content-Type'); 
-	db.archive.find(function(err,docs){
+	var token = req.params.id;
+      if (token === "") {
+       
+      } else {
+        db.credentials.count(function(err, docs) {
+          var count = docs;
+          setTimeout(function() {
+            db.credentials.find({
+              "org": {
+                $ne: null
+              }
+            }, function(err, doc) {
+              var org = [];
+              org = doc;
+              for (i = 0; i < count; i++) {
+                try {
+                  var decode = jwt.decode(token, org[i].org, function(err_, decode) {
+                    if (err) {
+                      return console.error(err.name, err.message);
+                    }
+                  });
+                  decode = decode.org;
+                  if (decode === org[i].org) {
+                    db.archive.find({"org":decode}, function(err,docs){
 		var a = JSON.stringify(docs);
 		res.json(JSON.parse(a));	
 	});
+	
+                    break;
+                  }
+                } catch (error) {
+                  console.log("error@/museum");
+                }
+              }
+            });
+          }, 100);
+        });
+      }	
+	
+	
+	
+	
+	
+	
 });
 
 
@@ -268,7 +725,7 @@ app.get('/archiveMarkers/:id', function(req, res){
 	res.header('Access-Control-Allow-Origin', '*'); 
 	res.header('Access-Control-Allow-Methods','GET,PUT,POST,DELETE,OPTIONS'); 
 	res.header('Access-Control-Allow-Headers', 'Content-Type'); 
-	db.archive.findOne({_id: mongojs.ObjectId(id)},
+	db.archive.findOne({_id: id},
 	function(err,doc){
 		res.json(doc);
 		});
@@ -278,13 +735,95 @@ app.get('/archiveMarkers/:id', function(req, res){
 
 
 
-app.get('/api/photo/logo', function(req,res){
-	var helper = "/uploads/logo.png";
-	res.json(helper);
+app.get('/orgName/:id', function(req,res){
+	var token = req.params.id;
+if(token===""){
+		response.writeHead(302);
+	response.end();
+
+}else{
+	
+	db.credentials.count(function(err, docs) {
+    var count = docs;
+setTimeout(function() {
+    db.credentials.find({"org": {$ne: null}}, function(err, doc) {
+      var org = [];
+      org = doc;
+	  
+	  //setTimeout(function() {},2);
+      for (i = 0; i < count; i++) {
+try{
+	var decode = jwt.decode(token, org[i].org, function(err_, decode) {
+          if (err) {
+            return console.error(err.name, err.message);
+          }
+        });
+		
+		decode = decode.org;
+		
+       
+	  if (decode === org[i].org) {	
+		res.json(org[i].org);
+		break; 
+    };
+	}catch(error){
+			console.log("error");
+		}
+	  };
+	});
+}, 100);
+  });	
+
+
+}	
+	
 })
+app.get('/api/photo/logo/:id',  function(req, res) {
+      var token = req.params.id;
+     
+      if (token === "") {
+        response.writeHead(302);
+        response.end();
+      } else {
+        db.credentials.count(function(err, docs) {
+          var count = docs;
+          setTimeout(function() {
+            db.credentials.find({
+              "org": {
+                $ne: null
+              }
+            }, function(err, doc) {
+              var org = [];
+              org = doc;
+              for (i = 0; i < count; i++) {
+                try {
+                  var decode = jwt.decode(token, org[i].org, function(err_, decode) {
+                    if (err) {
+                      return console.error(err.name, err.message);
+                    }
+                  });
+                  decode = decode.org;
+				 
+                  if (decode === org[i].org) {
+                    var target_path = 'uploads/logo-' + org[i].org + '.png'; 
+                    res.json(target_path);
+                    break;
+                  }
+                } catch (error) {
+                  console.log("error@/logo");
+                }
+              }
+            });
+          }, 100);
+        });
+      }
+});
 
 
 
+
+
+/*
 app.get('/api/photo/map', function(req,res){
 	var helper = "/uploads/map.png";
 	res.json(helper);
@@ -294,64 +833,187 @@ app.get('/api/photo/map', function(req,res){
 app.get('/uploads/:id', function(req,res){
 	var helper = req.params.id;
 	res.json(helper);
-})
+})*/
 
 
 app.delete('/backend/:id', function(req, res){
 	var id = req.params.id;
-	db.backend.remove({_id: mongojs.ObjectId(id)}, 
+	db.backend.remove({_id: id}, 
 function(err,doc){
 		res.json(doc);
 	});
 });
 
-app.get('/backend/:id', function(req, res){
+app.get('/backendModify/:id', function(req, res){
 	var id = req.params.id;
 	res.header('Access-Control-Allow-Origin', '*'); 
 	res.header('Access-Control-Allow-Methods','GET,PUT,POST,DELETE,OPTIONS'); 
 	res.header('Access-Control-Allow-Headers', 'Content-Type'); 
-	db.backend.findOne({_id: mongojs.ObjectId(id)},
+	db.backend.findOne({_id: id},
 	function(err,doc){
 		res.json(doc);
 		});
 	});
 	
 		
-app.get('/backend:count', function(req,res){
+app.get('/backend_count/:id', function(req,res){
 	res.header('Access-Control-Allow-Origin', '*'); 
 	res.header('Access-Control-Allow-Methods','GET,PUT,POST,DELETE,OPTIONS'); 
 	res.header('Access-Control-Allow-Headers', 'Content-Type'); 
-	db.backend.count(function(err,docs){
+	var token = req.params.id;	 
+  db.credentials.count(function(err, docs) {
+    var count = docs;
+setTimeout(function() {
+    db.credentials.find({"org": {$ne: null}}, function(err, doc) {
+      var org = [];
+      org = doc;
+	  
+	  //setTimeout(function() {},2);
+      for (i = 0; i < count; i++) {
+
+        var decode = jwt.decode(token, org[i].org, function(err_, decode) {
+          if (err) {
+            return console.error(err.name, err.message);
+          }
+        });
+        decode = decode.org;
+	  if (decode === org[i].org) {		 
+          db.backend.count({org:decode},function(err,docs){
 		res.json(docs);	
 	});
+		  break;
+        }
+      }	  
+    });
+	}, 100); 
+  });
+	
 		
 });
 
-app.get('/deutsch', function(req,res){
+app.get('/deutsch/:id', function(req,res){
+	res.header('Access-Control-Allow-Origin', '*'); 
+	res.header('Access-Control-Allow-Methods','GET,PUT,POST,DELETE,OPTIONS'); 
+	res.header('Access-Control-Allow-Headers', 'Content-Type');
+
+var token = req.params.id;	 
+  db.credentials.count(function(err, docs) {
+    var count = docs;
+setTimeout(function() {
+    db.credentials.find({"org": {$ne: null}}, function(err, doc) {
+      var org = [];
+      org = doc;
+	  
+	  //setTimeout(function() {},2);
+      for (i = 0; i < count; i++) {
+
+        var decode = jwt.decode(token, org[i].org, function(err_, decode) {
+          if (err) {
+            return console.error(err.name, err.message);
+          }
+        });
+        decode = decode.org;
+	  if (decode === org[i].org) {		 
+          db.backend.find({"sprache": "DE", "aktion":true,"org":decode},
+	function(err,doc){
+		res.json(doc);
+		});
+		  break;
+        }
+      }	  
+    });
+	}, 100); 
+  });	
+	
+});
+
+app.get('/themenDE/:id', function(req,res){
 	res.header('Access-Control-Allow-Origin', '*'); 
 	res.header('Access-Control-Allow-Methods','GET,PUT,POST,DELETE,OPTIONS'); 
 	res.header('Access-Control-Allow-Headers', 'Content-Type'); 
-	db.backend.find({"sprache": "DE", "aktion":true},
+	var token = req.params.id;	 
+  db.credentials.count(function(err, docs) {
+    var count = docs;
+setTimeout(function() {
+    db.credentials.find({"org": {$ne: null}}, function(err, doc) {
+      var org = [];
+      org = doc;
+	  
+	  //setTimeout(function() {},2);
+      for (i = 0; i < count; i++) {
+
+        var decode = jwt.decode(token, org[i].org, function(err_, decode) {
+          if (err) {
+            return console.error(err.name, err.message);
+          }
+        });
+        decode = decode.org;
+	  if (decode === org[i].org) {		 
+         db.backend.find({"sprache": "DE", "position":{$ne : null}, "org":decode},
+	function(err,doc){
+		res.json(doc);
+		});
+		  break;
+        }
+      }	  
+    });
+	}, 100); 
+  });	
+	
+	
+	
+});
+//noch nicht benötigt
+app.get('/themenEN', function(req,res){
+	res.header('Access-Control-Allow-Origin', '*'); 
+	res.header('Access-Control-Allow-Methods','GET,PUT,POST,DELETE,OPTIONS'); 
+	res.header('Access-Control-Allow-Headers', 'Content-Type'); 
+	db.backend.find({"sprache": "EN", "position":{$ne : null}},
 	function(err,doc){
 		res.json(doc);
 		});
 });
 
 
-app.get('/english', function(req,res){
+app.get('/englisch/:id', function(req,res){
 	res.header('Access-Control-Allow-Origin', '*'); 
 	res.header('Access-Control-Allow-Methods','GET,PUT,POST,DELETE,OPTIONS'); 
-	res.header('Access-Control-Allow-Headers', 'Content-Type'); 
-	db.backend.find({"sprache": "EN","aktion":true},
+	res.header('Access-Control-Allow-Headers', 'Content-Type');
+
+var token = req.params.id;	 
+  db.credentials.count(function(err, docs) {
+    var count = docs;
+setTimeout(function() {
+    db.credentials.find({"org": {$ne: null}}, function(err, doc) {
+      var org = [];
+      org = doc;
+	  
+	  //setTimeout(function() {},2);
+      for (i = 0; i < count; i++) {
+
+        var decode = jwt.decode(token, org[i].org, function(err_, decode) {
+          if (err) {
+            return console.error(err.name, err.message);
+          }
+        });
+        decode = decode.org;
+	  if (decode === org[i].org) {		 
+          db.backend.find({"sprache": "EN", "aktion":true,"org":decode},
 	function(err,doc){
 		res.json(doc);
 		});
-		
+		  break;
+        }
+      }	  
+    });
+	}, 100); 
+  });	
+	
 });
-
+//done
 app.put('/backend/:id', function(req,res){
 	var id= req.params.id;
-	db.backend.findAndModify({query: {_id: mongojs.ObjectId(id)},
+	db.backend.findAndModify({query: {_id: id},
 		update: {$set: {ide: req.body.ide, bild: req.body.bild, name: req.body.name, position: req.body.position, theme: req.body.theme, audio: req.body.audio, aktion: req.body.aktion, sprache: req.body.sprache  }},
 	nex: true}, function(err,doc){
 		res.json(doc);
@@ -373,6 +1035,7 @@ app.get('/getBeacons', function(req, res){
 	
 	res.json(JSON.parse(xmlHttp.responseText));
 });
+
 
 
 
