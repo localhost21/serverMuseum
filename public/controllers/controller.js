@@ -43,7 +43,6 @@ myApp.factory('accessFac', function($window) {
     obj.access = true;
 	
 	 $window.localStorage['jwtToken'] = helper;
-	//console.log("accessFac, getPerm " + obj.token[i]);
 	i++;
 	
   }
@@ -63,7 +62,6 @@ myApp.run(function($http, accessFac) {
 	 
 	  var image = "uploads/map-" + response + ".png";
 	  accessFac.setImage(image); 
-	  console.log("image " + image);
   });  
 });
 
@@ -78,12 +76,8 @@ myApp.controller('loginCtrl', function($scope, $http, $timeout, $location, $wind
   });
 		
 	$timeout(function(){
-	//console.log("loginCtrl token " + $scope.data.token);
-
 	 
-    if ($scope.data.status === "true") {
-		//console.log($scope.answer.status);
-		
+    if ($scope.data.status === "true") {		
 		accessFac.getPermission($scope.data.token); //call the method in acccessFac to allow the user permission.
 		$window.location.href = "/#/museumsverwaltung";
 		$timeout(function(){
@@ -133,7 +127,6 @@ var refresh = function(){
 				$scope.id = mn._id;
 				$scope.de = mn.de;
 				$scope.en = mn.en;
-				console.log(mn.en);
 				$scope.museumsname = mn.museumsname;
 			});
 			
@@ -295,7 +288,6 @@ var refresh = function(){
         icon:""});
 	 
 $http.post('/markersNew/' + accessFac.getToken(), markersInsert).success(function(response) {
-		//window.location.reload('custo');
 		refresh();
       });
 	//window.location.reload('custo');
@@ -469,8 +461,6 @@ myApp.controller('exponatCtrl', function($scope, $http, $location, $anchorScroll
     };
 	
 	var refresh = function() {
-      //'/backend' is the route where the data is from
-	  console.log(accessFac.getToken());
       $http.get('/backend/'+ accessFac.getToken()).success(function(response) {
         $scope.backend = response;
         $scope.exponat = "";

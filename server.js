@@ -331,10 +331,7 @@ try{
         });
 		
 		decode = decode.org;
-		}catch(error){
-			console.log("error");
-		}
-       
+		
 	  if (decode === org[i].org) {		 
           db.markers.find({
             org: decode
@@ -344,10 +341,13 @@ try{
           });
 		  break;
         }
+		}catch(error){
+			console.log("error@/museum");
+		}
       }	  
     });
 	}, 100);
-  });	
+  });
 
 
 }	
@@ -774,7 +774,7 @@ app.get('/api/photo/logo/:id',  function(req, res) {
 
 
 
-/*
+
 app.get('/api/photo/map', function(req,res){
 	var helper = "/uploads/map.png";
 	res.json(helper);
@@ -784,7 +784,7 @@ app.get('/api/photo/map', function(req,res){
 app.get('/uploads/:id', function(req,res){
 	var helper = req.params.id;
 	res.json(helper);
-})*/
+})
 
 
 app.delete('/backend/:id', function(req, res){
