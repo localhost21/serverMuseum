@@ -13,8 +13,8 @@ var mongojs = require('mongojs');
 var sha256 = require('js-sha256').sha256;
 
 
-//var databaseUrl = "mongodb://admin:admin@ds019076.mlab.com:19076/heroku_bj4gkw7j";
-var databaseUrl = "allDB";
+var databaseUrl = "mongodb://admin:admin@ds019076.mlab.com:19076/heroku_bj4gkw7j";
+//var databaseUrl = "allDB";
 var collections = ["credentials", "backend", "markers", "museum","archive"];
 
 var morgan      = require('morgan');
