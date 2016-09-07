@@ -9,7 +9,7 @@ angular.module('app.routes', [])
 		controller: 'exponatCtrl',
 		resolve: {
 			"check": function(accessFac){
-				if(accessFac.checkPermission()===false){    //check if the user has permission -- This happens before the page loads
+				if(accessFac.getToken()===""){    //check if the user has permission -- This happens before the page loads
 					window.location="/";
 				}
 			}
@@ -21,7 +21,7 @@ angular.module('app.routes', [])
 		controller: 'beaconsCtrl',
 		resolve: {
 			"check": function(accessFac){
-				if(accessFac.checkPermission()===false){    //check if the user has permission -- This happens before the page loads
+				if(accessFac.getToken()===""){    //check if the user has permission -- This happens before the page loads
 					window.location="/";
 				}
 			}
@@ -35,7 +35,7 @@ angular.module('app.routes', [])
 				/*if(accessFac.checkPermission()===false){    //check if the user has permission -- This happens before the page loads
 					window.location="/";
 				}*/
-				if(accessFac.checkPermission()===false){    //check if the user has permission -- This happens before the page loads
+				if(accessFac.getToken()===""){    //check if the user has permission -- This happens before the page loads
 					window.location="/";
 				}
 			}
@@ -46,7 +46,7 @@ angular.module('app.routes', [])
 		controller: 'custoCtrl',
 		resolve: {
 			"check": function(accessFac){
-				if(accessFac.checkPermission()===false){    //check if the user has permission -- This happens before the page loads
+				if(accessFac.getToken()===""){    //check if the user has permission -- This happens before the page loads
 					window.location="/";
 				}
 			}

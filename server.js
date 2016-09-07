@@ -44,7 +44,6 @@ app.get('/credentials/:id', function(req,res){
 	res.header('Access-Control-Allow-Origin', '*'); 
 	res.header('Access-Control-Allow-Methods','GET,PUT,POST,DELETE,OPTIONS'); 
 	res.header('Access-Control-Allow-Headers', 'Content-Type'); 	
-	console.log("paramsid: "+req.params.id);
 	var hashedValue= sha256(req.params.id);
 	//databaseUrl = "mongodb://admin:admin@ds019816.mlab.com:19816/heroku_9ch385nb";
 	//db = mongojs(databaseUrl, ['credentials']);
@@ -98,51 +97,7 @@ app.get('/login/:id', function(req,res){
 			res.json("false");
 		}	
 	});		
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	//databaseUrl = "login"; //local
-	/*databaseUrl = "mongodb://admin:admin@ds019816.mlab.com:19816/heroku_9ch385nb"; //db login heroku
-	db = mongojs(databaseUrl, ['credentials']);*/
-	 
-	/*db.credentials.find({"org": name}, function(err,doc){		
-		if(err){
-			//todo: errorlog
-		}else if(doc != ""){	
-			console.log(name);
-			if(name==="MoneyMuseum"){
-				databaseUrl = "mongodb://admin:admin@ds019076.mlab.com:19076/heroku_bj4gkw7j"; //db MoneyMuseum
-				//databaseUrl = "backend"; //--> local
-				collections = ["backend", "markers", "museum","archive"]; //"credentials",
-				db= mongojs(databaseUrl, collections);
-			}else if(name==="newCompany"){
-				databaseUrl = "mongodb://admin:admin@ds019076.mlab.com:19076/heroku_7gqs453c"; //db newCompany				
-				//databaseUrl = "newCompany"; //--> local
-				collections = ["backend", "markers", "museum","archive"]; //"credentials",
-				db= mongojs(databaseUrl, collections);
-			}else{
-				console.log("error at login");
-			}			
-		res.json("true");	
-		}else{			
-			res.json("false");
-		}	
-	});		*/
+
 });
 
 
@@ -527,9 +482,7 @@ app.delete('/markers/:id', function(req, res){
 
 app.post('/api/photo/logo/:id', type, function(req, res) {
       var token = req.params.id;
-      console.log("token " + token);
       var tmp_path = req.file.path;
-      console.log("tmp_path" + tmp_path);
       if (token === "") {
         response.writeHead(302);
         response.end();
@@ -575,9 +528,7 @@ app.post('/api/photo/logo/:id', type, function(req, res) {
 
 app.post('/api/photo/map/:id', type, function(req, res) {
       var token = req.params.id;
-      console.log("token " + token);
       var tmp_path = req.file.path;
-      console.log("tmp_path" + tmp_path);
       if (token === "") {
         response.writeHead(302);
         response.end();
@@ -906,7 +857,7 @@ setTimeout(function() {
 	  
 	  //setTimeout(function() {},2);
       for (i = 0; i < count; i++) {
-
+try{
         var decode = jwt.decode(token, org[i].org, function(err_, decode) {
           if (err) {
             return console.error(err.name, err.message);
@@ -920,6 +871,9 @@ setTimeout(function() {
 		});
 		  break;
         }
+}catch(err){
+	console.log(err);
+}
       }	  
     });
 	}, 100); 
