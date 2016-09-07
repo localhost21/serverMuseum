@@ -39,22 +39,15 @@
 		  
 		  
 		  
-		  
-		  <!--
-		<label> Aktueller Museumsbeschrieb, deutsch: <br>
-		<p>{{mn.beschrieb}}</p>
-		</label>
-		  <br>
-        <label>Neuer Museumsbeschrieb, deutsch: <br>
-		<textarea rows="4" cols="50" class="form-control">Beschreiben Sie hier Ihr Museum - der Inhalt wird in der Über Uns- Rubrik des Audioguides erscheinen.</textarea><br></label>
-		<button class="btn btn-default" ng-click="uploadName()"> Hochladen</button> 
-		</label>
-		  -->
+		
 		  
 		  
-		  <h1>Editor <span>{{version}}</span></h1>
+		  <h1>Über uns- Text </span></h1>
         <div text-angular="text-angular" name="htmlcontent" ng-model="htmlcontent" ta-disabled='disabled'></div>
-        <button class="btn btn-default" ng-click="uploadText(htmlcontent)"> Hochladen</button> 
+        
+        <button class="btn btn-default" ng-click="htmlcontent=de; clickedLng='de'"> Deutscher Text</button> 
+        <button class="btn btn-default" ng-click="htmlcontent=en; clickedLng='en'"> Englischer Text</button> 
+		<button class="btn btn-default" ng-click="uploadText(htmlcontent)"> Hochladen</button> 
 		
 		
 		  

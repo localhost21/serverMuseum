@@ -11,11 +11,11 @@ var type = upload.single('recfile');
 
 var mongojs = require('mongojs');
 var sha256 = require('js-sha256').sha256;
-//var databaseUrl = "mongodb://admin:admin@ds019816.mlab.com:19816/heroku_9ch385nb"; //db login heroku
 
 
-var databaseUrl = "mongodb://admin:admin@ds019076.mlab.com:19076/heroku_bj4gkw7j";
-var collections = ["credentials", "backend", "markers", "museum","archive","avMuseum"];
+//var databaseUrl = "mongodb://admin:admin@ds019076.mlab.com:19076/heroku_bj4gkw7j";
+var databaseUrl = "allDB";
+var collections = ["credentials", "backend", "markers", "museum","archive"];
 
 var morgan      = require('morgan');
 var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens

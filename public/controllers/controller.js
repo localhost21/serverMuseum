@@ -131,19 +131,22 @@ var refresh = function(){
 			$scope.mn = "";						
 			angular.forEach($scope.datalicous, function(mn) {
 				$scope.id = mn._id;
-				$scope.orightml = mn.de;
+				$scope.de = mn.de;
+				$scope.en = mn.en;
+				console.log(mn.en);
 				$scope.museumsname = mn.museumsname;
 			});
-			$scope.htmlcontent = $scope.orightml;
+			
+			$scope.htmlcontent = $scope.de;
       });
-	
+  $scope.clickedLng = "de";	
 	 
   $scope.uploadText = function(hi) {
-		$http.put('/museumDE/' + $scope.id, {"de":$scope.htmlcontent}).success(function(response) {
-		refresh();
-		
-      });
-		
+	  if($scope.clickedLng==="de"){
+			$http.put('/museumDE/' + $scope.id, {"de":$scope.htmlcontent}).success(function(response) {refresh();});
+		}else if($scope.clickedLng==="en"){
+			$http.put('/museumEN/' + $scope.id, {"en":$scope.htmlcontent}).success(function(response) {refresh();});
+		}		
     };
   
   
