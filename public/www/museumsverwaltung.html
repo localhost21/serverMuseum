@@ -94,8 +94,8 @@
 				</select>
 				</td>
 				<td><button id="hinzufügen" class="btn btn-primary" ng-click="addexponat()">Hinzufügen </button></td>
-				<td><button class="btn btn-info" ng-click="update()">Update </button>&nbsp;&nbsp;</td>
-				<td><button class="btn btn-info" ng-click="deselect()">Leeren</button></td>
+				<td><button class="btn btn-dafault" ng-click="update()">Update </button>&nbsp;&nbsp;</td>
+				<td><button class="btn btn-default" ng-click="deselect()">Leeren</button></td>
 			</tr>
 			
 		
@@ -113,7 +113,7 @@
 					<td>{{exponat.aktion}}</td>
 					<td>{{exponat.sprache}}</td>
 					<td><button class="btn btn-danger" ng-click="remove(exponat._id)">L&ouml;schen</button></td>
-					<td><button class="btn btn-warning" ng-click="edit(exponat._id)">&Auml;ndern </button></td>
+					<td><button class="btn btn-default" ng-click="edit(exponat._id)">&Auml;ndern </button></td>
 				</tr>
 			</tbody>
 		</table>

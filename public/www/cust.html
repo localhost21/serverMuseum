@@ -32,22 +32,22 @@
 		 <div ng-controller="custoCtrl"><label style="width: 300px;"> Aktueller Name: <br><input id="inputName" ng-repeat="mn in datalicous" type="text" class="form-control" placeholder="{{museumsname}}" disabled=true  />
 		</label>
 		  
-              <label style="margin-top: 30px; width: 300px;">Neuer Name:<input type="text" class="form-control" ng-model="newName"/> <br></label>
-			  <button class="btn btn-default" ng-click="uploadName()"> Hochladen</button>
+              <label style="margin-top: 30px; width: 300px;">Neuer Name:<input type="text" class="form-control" ng-model="newName"/> </label>
+			  <button class="btn btn-default" ng-click="uploadName()"> Speichern</button>
 		  
-		  </div></div>
+		  </div></div><br><br>
 		  
 		  
 		  
 		
 		  
 		  
-		  <h1>Über uns- Text </span></h1>
+		  <label>Über uns- Text </label>
         <div text-angular="text-angular" name="htmlcontent" ng-model="htmlcontent" ta-disabled='disabled'></div>
-        
-        <button class="btn btn-default" ng-click="htmlcontent=de; clickedLng='de'"> Deutscher Text</button> 
-        <button class="btn btn-default" ng-click="htmlcontent=en; clickedLng='en'"> Englischer Text</button> 
-		<button class="btn btn-default" ng-click="uploadText(htmlcontent)"> Hochladen</button> 
+        <br>
+        <button class="btn btn-default" ng-click="htmlcontent=de; clickedLng='de'"> Deutsch</button> 
+        <button class="btn btn-default" ng-click="htmlcontent=en; clickedLng='en'"> Englisch</button> <br><br>
+		<button class="btn btn-default" ng-click="uploadText(htmlcontent)"> Speichern</button> 
 		
 		
 		  
@@ -62,15 +62,30 @@
 
             <leaflet defaults="defaults" legend="legend" layers="layers" maxBounds="maxBounds" markers="markers" event-broadcast="events" id="leafletMap"></leaflet>
             <br>
-          
+          <p> Fahren Sie mit der Maustaste über die einzelnen Positionen um den aktuellen Standort auf der Karte anzuzeigen</p>
+		  <table class="table" style="width: 80%; margin: 0 auto;font-size: 20px; ">
+			<thead>
+				<tr style="font-size: 22px; font-style: italic;">
+					<td>Beacon-Major Nummer</td>
+					<td>Name</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-mouseover="addHover(ma.name)" ng-mouseleave="removeHover(ma.name)" ng-repeat="ma in data|orderBy: predicate='name'|filter: greaterThan('name', 0)"> 
+					<td stlye="width: 30%;">{{ma.name}}</td>
+					<td stlye="width: 30%;">{{ma.message}}</td>
+				</tr>
+			</tbody> 
+		 </table>
+		  <br>
 
-		  <button class="btn btn-default btn-file" ng-click="deleteMarkers()">Standorte löschen</button>
-		  <button class="btn btn-default btn-file" ng-click="archiveMarkerJSON()">Standorte abspeichern</button>
+		  <button class="btn btn-default btn-file" ng-click="deleteMarkers()">Alle Standorte löschen</button>
+		  <button class="btn btn-default btn-file" ng-click="archiveMarkerJSON()">Standorte Archivieren</button>
 		  
 		 <div ng-repeat="receivedMarkers in h | myFilter track by $index" id="godzilla" style="display:none;">{{receivedMarkers.blup}}</div>
 
 			<span class="btn btn-default" id="toggler" uib-dropdown>
-    <a uib-dropdown-toggle style="color: #424242;">gespeicherte Standorte <span class="caret"></span></a>
+    <a uib-dropdown-toggle style="color: #424242;">archivierte Standorte <span class="caret"></span></a>
     <ul uib-dropdown-menu>
         <li id="markers" ng-repeat="receivedMarkers in h track by $index" ng-click="loadMarkers(receivedMarkers._id, $index)">{{receivedMarkers.name}}</li>
     </ul>
@@ -89,7 +104,7 @@
             </label>	
 	
      <label class="btn btn-default btn-file" style="margin-top: 30px;">
-        <input type="submit" name="submit" style="display: none;"> Hochladen
+        <input type="submit" name="submit" style="display: none;"> Speichern
      </label>
 </form>
           
@@ -108,7 +123,7 @@
             </label>	
 	
      <label class="btn btn-default btn-file" style="margin-top: 30px;">
-        <input type="submit" name="submit" style="display: none;"> Hochladen
+        <input type="submit" name="submit" style="display: none;"> Speichern
      </label>
 </form>
 		  

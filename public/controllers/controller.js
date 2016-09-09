@@ -28,7 +28,8 @@ myApp.factory('accessFac', function($window) {
   obj.access = false;
   //obj.token = [];
   var i = 0;
-  obj.image  = 'uploads/map-newCompany.png';
+  obj.image  = 'uploads/map-MoneyMuseum.png';
+  
  
  
   obj.getImage = function(){
@@ -157,6 +158,7 @@ var refresh = function(){
   $http.get('/orgName/' + accessFac.getToken()).success(function(response) {
 	  $scope.org = response;
 	  $scope.logo = "uploads/logo-" + $scope.org + ".png";
+	  $scope.map = "uploads/map-" + $scope.org + ".png";
   });  
   
   
@@ -201,12 +203,30 @@ var refresh = function(){
         }
       }
     },
+	defaultIcon: {},
+	hover: {
+       iconUrl: 'www/img/pos.png'
+    },
     legend: {
       position: 'bottomright',
       colors: ['#1874cd'],
       labels: ['Exponatstandorte']
     },
-    markers: $scope.markers = []
+    markers: $scope.markers = [],
+	addHover : function(name){
+		angular.forEach($scope.markers, function(ma) {			
+		if(ma.name===name){	
+		ma.icon = $scope.hover;
+		}
+	  }); 	
+	},
+	removeHover: function(name){
+		angular.forEach($scope.markers, function(ma) {			
+		if(ma.name===name){		
+		ma.icon = {};
+		}
+	  }); 	
+	}
     
   });
   
@@ -244,23 +264,33 @@ var refresh = function(){
   
   
   
+  
+  
   $http.get('/markers/' + accessFac.getToken()).success(function(response) {
     $scope.data = response;
     $scope.ma = "";
+	$scope.predicate = '-name';
     angular.forEach($scope.data, function(ma) {
+		ma.name = parseFloat(ma.name);
       $scope.markers.push({
+		name: ma.name,
         lat: ma.lat,
         lng: ma.lng,
         draggable: ma.draggable,
         focus: ma.focus,
         message: ma.message,
-		opacity: ma.opacity
+		opacity: ma.opacity,
+		icon: {}
       });
     });
   });
   
   
-  
+  $scope.greaterThan = function(prop, val){
+    return function(item){
+      return item[prop] > val;
+    }
+}
   
   
   
@@ -439,16 +469,44 @@ myApp.controller('AppCtrl',  function($scope, $http, $location, $anchorScroll) {
 });
 
 myApp.controller('beaconsCtrl', function($scope, $http){
-	$http.get('/getBeacons', {
-      cache: true
-    }).success(function(response) {
+var refresh = function(){
+	
+
+	$http.get('/getBeacons').success(function(response) {
       $scope.data = response;
       $scope.beacon = "";
       $scope.i = 0;
       angular.forEach($scope.data, function(beacon) {
         $scope.i++;
+		if(beacon.color==="blueberry"){
+			beacon.img = "www/img/violet.png";
+		}else if(beacon.color==="ice"){
+			beacon.img = "www/img/blue.png";
+		}else if(beacon.color==="mint"){
+			beacon.img = "www/img/mint.png";
+		}
       });
     });
+	
+	$scope.edit = function(id) {
+      $http.get('/beaconModify/' + id).success(function(response) {
+        $scope.beacon = response;
+      });
+    }
+	
+	$scope.deselect = function() {
+      $scope.beacon = "";
+    }
+	
+	$scope.saveBeaconSettings = function(){
+		$http.put('/setBeacons', $scope.beacon).success(function(response) {
+		});
+		$scope.beacon = "";
+		window.alert("Erfolgreich gespeichert, Daten werden demnächst aktualliert");
+	}
+	
+};
+refresh();	
 });
 
 
