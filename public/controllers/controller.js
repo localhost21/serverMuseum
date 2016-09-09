@@ -155,10 +155,14 @@ var refresh = function(){
 
 	$scope.image = accessFac.getImage();
 
-  $http.get('/orgName/' + accessFac.getToken()).success(function(response) {
-	  $scope.org = response;
-	  $scope.logo = "uploads/logo-" + $scope.org + ".png";
-	  $scope.map = "uploads/map-" + $scope.org + ".png";
+  $http.get('/museum/' + accessFac.getToken()).success(function(response) {
+	 $scope.museumData = response;
+	$scope.museumH = "";						
+	angular.forEach($scope.museumData, function(museumH) {
+		$scope.logo = museumH.logo;
+		accessFac.setImage(museumH.map);
+	});
+	console.log($scope.map);
   });  
   
   

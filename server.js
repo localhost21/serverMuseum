@@ -16,6 +16,7 @@ var morgan = require('morgan');
 var jwt = require('jsonwebtoken');
 var db = mongojs(databaseUrl, collections);
 var apiRoutes = express.Router();
+var cloudinary = require('cloudinary');
 
 app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.json());
@@ -25,6 +26,12 @@ app.use(function(req, res, next) {
   res.header('Access-Control-Allow-Headers', 'Content-Type');     
   next();
 })
+
+cloudinary.config({ 
+  cloud_name: 'hhrryft6i', 
+  api_key: '229498235345848', 
+  api_secret: 'p06oF8E-x9ngJYgBTgsW0dSRxFc' 
+});
 
 
 app.get('/credentials/:id', function(req, res) {    
@@ -462,12 +469,22 @@ app.post('/api/photo/logo/:id', type, function(req, res) {
               });
               decode = decode.org;
               if (decode === org[i].org) {
-                var target_path = 'uploads/logo-' + org[i].org + '.png';
-                var src = fs.createReadStream(tmp_path);
-                var dest = fs.createWriteStream(target_path);
-                src.pipe(dest);
-                res.redirect('/#/custo');
-                fs.unlink(tmp_path);
+				 cloudinary.uploader.upload(tmp_path, function(result) { 
+					var id = result.secure_url;
+					db.museum.findAndModify({
+						query: {
+						org: org[i].org
+						},
+						update: {
+						$set: {
+							logo: id
+						}
+						},
+						nex: true
+					}, function(err, doc) {
+						res.redirect('/#/custo');
+					});
+				}); 
                 break;
               }
             } catch (error) {
@@ -479,8 +496,6 @@ app.post('/api/photo/logo/:id', type, function(req, res) {
     });
   }
 });
-
-
 
 app.post('/api/photo/map/:id', type, function(req, res) {
   var token = req.params.id;
@@ -508,12 +523,22 @@ app.post('/api/photo/map/:id', type, function(req, res) {
               });
               decode = decode.org;
               if (decode === org[i].org) {
-                var target_path = 'uploads/map-' + org[i].org + '.png';
-                var src = fs.createReadStream(tmp_path);
-                var dest = fs.createWriteStream(target_path);
-                src.pipe(dest);
-                res.redirect('/#/custo');
-                fs.unlink(tmp_path);
+				 cloudinary.uploader.upload(tmp_path, function(result) { 
+					var id = result.secure_url;
+					db.museum.findAndModify({
+						query: {
+						org: org[i].org
+						},
+						update: {
+						$set: {
+							map: id
+						}
+						},
+						nex: true
+					}, function(err, doc) {
+						res.redirect('/#/custo');
+					});
+				}); 
                 break;
               }
             } catch (error) {
@@ -525,7 +550,6 @@ app.post('/api/photo/map/:id', type, function(req, res) {
     });
   }
 });
-
 app.post('/archiveMarkers/:id', function(req, res) {
   var token = req.params.id;
   if (token === "") {
