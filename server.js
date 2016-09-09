@@ -152,6 +152,7 @@ app.post('/backend/:id', function(req, res) {
               db.backend.insert(JSON.parse(helper), function(err, doc) {
                 res.json(doc);
               });
+			  
               break;
             }
           }
@@ -667,7 +668,7 @@ app.get('/orgName/:id', function(req, res) {
 app.delete('/backend/:id', function(req, res) {
   var id = req.params.id;
   db.backend.remove({
-      _id: id
+      name: id
     },
     function(err, doc) {
       res.json(doc);
@@ -677,7 +678,7 @@ app.delete('/backend/:id', function(req, res) {
 app.get('/backendModify/:id', function(req, res) {
   var id = req.params.id;    
   db.backend.findOne({
-      _id: id
+      name: id
     },
     function(err, doc) {
       res.json(doc);

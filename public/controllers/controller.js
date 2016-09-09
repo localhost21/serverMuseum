@@ -551,14 +551,14 @@ myApp.controller('exponatCtrl', function($scope, $http, $location, $anchorScroll
 		//window.location.reload('museumsverwaltung');
       }
     }
-    $scope.remove = function(id) {
-      $http.delete('/backend/' + id).success(function(response) {
+    $scope.remove = function(name) {
+      $http.delete('/backend/' + name).success(function(response) {
         refresh();
       });
 	  //window.location.reload('museumsverwaltung');
     }
-    $scope.edit = function(id) {
-      $http.get('/backendModify/' + id).success(function(response) {
+    $scope.edit = function(name) {
+      $http.get('/backendModify/' + name).success(function(response) {
         $scope.exponat = response;
         document.getElementById('hinzufügen').style = "display: none";
       });
