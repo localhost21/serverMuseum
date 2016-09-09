@@ -67,7 +67,7 @@
 			<td><button class="btn btn-default" ng-click="saveBeaconSettings()">Speichern</button>
 		  </tr>
 			<tr ng-repeat="beacon in data track by $index">
-				<td class="item"><img style=" max-height: 80px;" src={{beacon.img}} /></td>
+				<td class="item"><img style=" max-height: 80px;" ng-src='{{beacon.img}}' /></td>
 				<td>{{beacon.shadow.name}}</td>
 				<td ng-repeat="ibeacon in beacon.settings.advertisers.ibeacon">{{ibeacon.major}}</td>
 				<td ng-repeat="ibeacon in beacon.settings.advertisers.ibeacon">{{ibeacon.minor}}</td>

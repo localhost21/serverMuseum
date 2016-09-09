@@ -479,11 +479,11 @@ var refresh = function(){
       angular.forEach($scope.data, function(beacon) {
         $scope.i++;
 		if(beacon.color==="blueberry"){
-			beacon.img = "https://www.dropbox.com/s/i1zbzaudgg90mpe/violet.png?dl=0";
+			beacon.img = "https://dl.dropboxusercontent.com/s/i1zbzaudgg90mpe/violet.png?dl=0";
 		}else if(beacon.color==="ice"){
-			beacon.img = "https://www.dropbox.com/s/j0nohfh7easxsnj/blue.png?dl=0";
+			beacon.img = "https://dl.dropboxusercontent.com/s/j0nohfh7easxsnj/blue.png?dl=0";
 		}else if(beacon.color==="mint"){
-			beacon.img = "https://www.dropbox.com/s/q75k71vzwf9gdbu/mint.png?dl=0";
+			beacon.img = "https://dl.dropboxusercontent.com/s/q75k71vzwf9gdbu/mint.png?dl=0";
 		}
       });
     });
