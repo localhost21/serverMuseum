@@ -28,7 +28,7 @@ myApp.factory('accessFac', function($window) {
   obj.access = false;
   //obj.token = [];
   var i = 0;
-  obj.image  = 'uploads/map-MoneyMuseum.png';
+  obj.image  = 'https://res.cloudinary.com/hhrryft6i/image/upload/v1473452985/eca5sylefpmbwy9knkou.png';
   
  
  
@@ -55,6 +55,16 @@ myApp.factory('accessFac', function($window) {
 	 return $window.localStorage['jwtToken'];//obj.token[i - 1];
   }
   return obj;
+});
+
+myApp.run(function($http, accessFac){
+	$http.get('/museum/' + accessFac.getToken()).success(function(response) {
+	 var museumData = response;
+	 var museumH = "";						
+	angular.forEach( museumData, function(museumH) {
+		accessFac.setImage(museumH.map);
+	});
+  });  
 });
 
 
@@ -112,6 +122,15 @@ myApp.controller('loginCtrl', function($scope, $http, $timeout, $location, $wind
 
 myApp.controller('custoCtrl', function($scope, $timeout, $location, $http, leafletData, leafletBoundsHelpers,shareClickedId,textAngularManager,accessFac) {
 
+  $http.get('/museum/' + accessFac.getToken()).success(function(response) {
+	 $scope.museumData = response;
+	$scope.museumH = "";						
+	angular.forEach($scope.museumData, function(museumH) {
+		$scope.logo = museumH.logo;
+		accessFac.setImage(museumH.map);
+	});
+  });  
+  
 var refresh = function(){
 	 $http.get('/museum/' + accessFac.getToken()).success(function(response) {
 			$scope.datalicous = response;
@@ -145,17 +164,6 @@ var refresh = function(){
 		
     }
 
-	$scope.image = accessFac.getImage();
-
-  $http.get('/museum/' + accessFac.getToken()).success(function(response) {
-	 $scope.museumData = response;
-	$scope.museumH = "";						
-	angular.forEach($scope.museumData, function(museumH) {
-		$scope.logo = museumH.logo;
-		accessFac.setImage(museumH.map);
-	});
-	console.log($scope.map);
-  });  
   
   
 
@@ -186,7 +194,7 @@ var refresh = function(){
           name: 'Gesamtansicht',
           type: 'imageOverlay',
 		  doRefresh: true,
-          url: $scope.image,
+          url: accessFac.getImage(),
           bounds: [
             [-100, -180],
             [100, 190]
@@ -201,7 +209,7 @@ var refresh = function(){
     },
 	defaultIcon: {},
 	hover: {
-       iconUrl: 'www/img/pos.png'
+       iconUrl: 'https://www.dropbox.com/s/cyxel8hh3jddzqs/pos.png?dl=0'
     },
     legend: {
       position: 'bottomright',
@@ -498,7 +506,7 @@ var refresh = function(){
 		$http.put('/setBeacons', $scope.beacon).success(function(response) {
 		});
 		$scope.beacon = "";
-		window.alert("Erfolgreich gespeichert, Daten werden demnächst aktualliert");
+		window.alert("Erfolgreich gespeichert, Daten werden demnächst aktualiert");
 	}
 	
 };
@@ -508,10 +516,14 @@ refresh();
 
 
 myApp.controller('exponatCtrl', function($scope, $http, $location, $anchorScroll, $timeout, accessFac){
-	$http.get('/museum/' + accessFac.getToken()).success(function(response) {	 
-	  var map = response.map;
-	  accessFac.setImage(map); 
-  }); 
+	$http.get('/museum/' + accessFac.getToken()).success(function(response) {
+	 $scope.museumData = response;
+	$scope.museumH = "";						
+	angular.forEach($scope.museumData, function(museumH) {
+		$scope.logo = museumH.logo;
+		accessFac.setImage(museumH.map);
+	});
+  });  
 	$scope.top = function() {
       $location.hash('top');
       $anchorScroll();
