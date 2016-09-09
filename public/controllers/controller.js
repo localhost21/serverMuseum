@@ -58,14 +58,6 @@ myApp.factory('accessFac', function($window) {
 });
 
 
-myApp.run(function($http, accessFac) {
-    $http.get('/orgName/' + accessFac.getToken()).success(function(response) {
-	 
-	  var image = "uploads/map-" + response + ".png";
-	  accessFac.setImage(image); 
-  });  
-});
-
 myApp.controller('loginCtrl', function($scope, $http, $timeout, $location, $window, accessFac) {
   $scope.getAccess = function() {
 	var creds = $scope.username +":" + $scope.password;
@@ -516,7 +508,10 @@ refresh();
 
 
 myApp.controller('exponatCtrl', function($scope, $http, $location, $anchorScroll, $timeout, accessFac){
-	
+	$http.get('/museum/' + accessFac.getToken()).success(function(response) {	 
+	  var map = response.map;
+	  accessFac.setImage(map); 
+  }); 
 	$scope.top = function() {
       $location.hash('top');
       $anchorScroll();
