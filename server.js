@@ -851,7 +851,7 @@ app.put('/backend/:id', function(req, res) {
   var id = req.params.id;
   db.backend.findAndModify({
     query: {
-      _id: id
+      name: id
     },
     update: {
       $set: {

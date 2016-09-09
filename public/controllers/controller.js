@@ -564,7 +564,7 @@ myApp.controller('exponatCtrl', function($scope, $http, $location, $anchorScroll
       });
     }
     $scope.update = function() {
-      $http.put('/backend/' + $scope.exponat._id, $scope.exponat).success(function(response) {
+      $http.put('/backend/' + $scope.exponat.name, $scope.exponat).success(function(response) {
         document.getElementById('hinzufügen').style = "display: inline-block";
         refresh();
       });
