@@ -90,7 +90,7 @@ myApp.controller('loginCtrl', function($scope, $http, $timeout, $location, $wind
 
     } else {
       Alert.render("Falsche Zugangsdaten!");
-    }}, 2000);
+    }}, 3000);
   }
   
   
@@ -209,7 +209,7 @@ var refresh = function(){
     },
 	defaultIcon: {},
 	hover: {
-       iconUrl: 'https://www.dropbox.com/s/cyxel8hh3jddzqs/pos.png?dl=0'
+       iconUrl: 'https://dl.dropboxusercontent.com/s/cyxel8hh3jddzqs/pos.png?dl=0'
     },
     legend: {
       position: 'bottomright',
@@ -263,6 +263,35 @@ var refresh = function(){
     }
 
   });
+  
+  
+  
+  $scope.remove = function(name) {
+      $http.delete('/deleteSingleMarkers/' + name).success(function(response) {
+        refresh();
+      });
+	  //window.location.reload('museumsverwaltung');
+    }
+    $scope.changeSingleMarker = function(message) {
+      $http.get('/markersModify/' + message).success(function(response) {
+         $scope.markersHelper = response;
+		 
+      });
+    }
+    $scope.update = function() {
+	  $http.get('/orgName/' + accessFac.getToken()).success(function(response) {
+         $scope.organization = response;
+		 
+     
+      $http.put('/markers/' + $scope.organization, $scope.markersHelper).success(function(response) {
+        $scope.markersHelper = "";
+        refresh();
+      });
+	   });
+    }
+    $scope.deselect = function() {
+      $scope.markersHelper = "";
+    }
   
   
   

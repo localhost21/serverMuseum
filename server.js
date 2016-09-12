@@ -442,6 +442,17 @@ app.delete('/markers/:id', function(req, res) {
 });
 
 
+app.delete('/deleteSingleMarkers/:id', function(req, res) {
+  var id = req.params.id;
+  db.markers.remove({
+      message: id
+    },
+    function(err, doc) {
+      res.json(doc);
+    });
+});
+
+
 
 app.post('/api/photo/logo/:id', type, function(req, res) {
   var token = req.params.id;
@@ -709,6 +720,16 @@ app.get('/backendModify/:id', function(req, res) {
     });
 });
 
+app.get('/markersModify/:id', function(req, res) {
+  var id = req.params.id;    
+  db.markers.findOne({
+      message: id
+    },
+    function(err, doc) {
+      res.json(doc);
+    });
+});
+
 
 app.get('/backend_count/:id', function(req, res) {
   var token = req.params.id;
@@ -891,6 +912,36 @@ app.put('/backend/:id', function(req, res) {
     },
     nex: true
   }, function(err, doc) {
+    res.json(doc);
+  });
+});
+
+
+app.put('/markers/:id', function(req, res) {
+  var mes = req.body.message;
+  var name = req.body.name;
+  var org = req.params.id;
+  var lat = req.body.lat;
+  var lng = req.body.lng;
+  console.log(mes);
+  console.log(name);
+  db.markers.findAndModify({
+    query: {
+      lat: lat,
+	  lng: lng,
+	  org: org
+    },
+    update: {
+      $set: {
+        
+		name: name,
+		message: mes
+		
+      }
+    },
+    nex: true
+  }, function(err, doc) {
+	  
     res.json(doc);
   });
 });

@@ -71,9 +71,17 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr ng-mouseover="addHover(ma.name)" ng-mouseleave="removeHover(ma.name)" ng-repeat="ma in data|orderBy: predicate='name'|filter: greaterThan('name', 0)"> 
-					<td stlye="width: 30%;">{{ma.name}}</td>
-					<td stlye="width: 30%;">{{ma.message}}</td>
+				<tr>
+					<td><input class="form-control" ng-model="markersHelper.name" placeholder="Message"></td>
+					<td><input class="form-control" ng-model="markersHelper.message" placeholder="Name"></td>
+					<td><button style="width: 150px;" class="btn btn-default" ng-click="update()">Speichern</button>
+					<button style="width: 150px;" class="btn btn-danger" ng-click="deselect()">Leeren</button></td>
+				</tr>
+				<tr ng-repeat="ma in data|orderBy: predicate='name'|filter: greaterThan('name', 0)"> 
+					<td stlye="width: 30%;" ng-mouseover="addHover(ma.name)" ng-mouseleave="removeHover(ma.name)">{{ma.name}}</td>
+					<td stlye="width: 30%;" ng-mouseover="addHover(ma.name)" ng-mouseleave="removeHover(ma.name)">{{ma.message}}</td>
+					<td><button style="width: 150px;" class="btn btn-default" ng-click="changeSingleMarker(ma.message)">Ändern</button>
+					<button style="width: 150px;" class="btn btn-danger" ng-click="remove(ma.message)">Löschen</button></td>
 				</tr>
 			</tbody> 
 		 </table>
