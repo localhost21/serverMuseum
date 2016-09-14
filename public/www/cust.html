@@ -14,14 +14,14 @@
         <ul id="nav">
           <li><a href="/#/museumsverwaltung">Home</a></li>
           <li><a href="/#/getbeacons">Beacons</a></li>
-          <li><a href="/#/custo" class="selected">Customizing</a></li>
+          <li><a href="/#/custo" class="selected">Audioguide</a></li>
           <li><a href="/#/hilfe">Hilfe</a></li>
 
         </ul>
       </div>
       <div class="content">
-        <h1>Customizing</h1>
-        <p>Hier können Sie die den Audioguide nach Ihren Bedürfnissen anpassen.</p>
+        <h1>Audioguide</h1>
+        <p>Hier können Sie den Audioguide Ihren Bedürfnissen nach anpassen.</p>
 
 		
 		
@@ -43,7 +43,7 @@
 		  
 		  
 		  <label>Über uns- Text </label>
-        <div text-angular="text-angular" name="htmlcontent" ng-model="htmlcontent" ta-disabled='disabled'></div>
+        <div text-angular="text-angular" name="htmlcontent" ng-model="htmlcontent" ta-disabled='disabled' ></div>
         <br>
         <button class="btn btn-default" ng-click="htmlcontent=de; clickedLng='de'"> Deutsch</button> 
         <button class="btn btn-default" ng-click="htmlcontent=en; clickedLng='en'"> Englisch</button> <br><br>
@@ -75,7 +75,7 @@
 					<td><input class="form-control" ng-model="markersHelper.name" placeholder="Message"></td>
 					<td><input class="form-control" ng-model="markersHelper.message" placeholder="Name"></td>
 					<td><button style="width: 150px;" class="btn btn-default" ng-click="update()">Speichern</button>
-					<button style="width: 150px;" class="btn btn-danger" ng-click="deselect()">Leeren</button></td>
+					<!--<button style="width: 150px;" class="btn btn-danger" ng-click="deselect()">Leeren</button></td>-->
 				</tr>
 				<tr ng-repeat="ma in data|orderBy: predicate='name'|filter: greaterThan('name', 0)"> 
 					<td stlye="width: 30%;" ng-mouseover="addHover(ma.name)" ng-mouseleave="removeHover(ma.name)">{{ma.name}}</td>
@@ -143,10 +143,13 @@
       </div>
 
     </div>
-    <div id="header">
-      <div class="logo"><a href="/#/museumsverwaltung">Museumsverwaltung-<span>Software</span></a> </div>
-      <a href="/#/"><img id="logout" src="/www/img/logout.png" /></a>
-    </div>
+    <div id="header" ng-controller="exponatCtrl">
+	<div class="logo"><a href="/#/museumsverwaltung">Museumsverwaltungs-<span>Software</span></a> </div>	
+	<a href="/#/" ><img id="logout"  src="/www/img/logout.png"/></a>	
+	<div style="color: white; float: right; padding-right: 20px;">
+		<p style=" font-size: 12px;"> angemeldet als <div style="font-size: 18px; line-height: 2px;">{{org}}</div> </p>
+	</div>
+	</div>
   </body>
 
 </html>

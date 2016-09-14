@@ -28,7 +28,7 @@
 			<ul id="nav">
 				<li><a href="/#/museumsverwaltung" class="selected">Home</a></li>
 				<li><a href="/#/getbeacons">Beacons</a></li>
-				<li><a href="/#/custo" >Customizing</a></li>
+				<li><a href="/#/custo" >Audioguide</a></li>
 				<li><a href="/#/hilfe" >Hilfe</a></li>
 				
 			</ul>
@@ -44,8 +44,8 @@
 		</div>
 		
 			
-		<h1 id="top">Verf&uumlgbare Exponate</h1>
-		<p>Folgende Exponate stehen zur Verf&uumlgung: </p>		
+		<h1 id="top">Exponate</h1>
+		<p>Hier verwalten Sie Ihre Exponate. </p>		
 		
 		
 		
@@ -69,7 +69,7 @@
 					Themennummer <span ng-show="sortType == 'theme' && !sortReverse" class="fa fa-caret-down"></span><span ng-show="sortType == 'theme' && sortReverse" class="fa fa-caret-up"></span> </button></th>
 					<th>Audiofile</th>
 					<th><button class="tableButton" href="#" ng-click="sortType = 'aktion'; sortReverse = !sortReverse">
-					Aktiv <span ng-show="sortType == 'aktion' && !sortReverse" class="fa fa-caret-down"></span><span ng-show="sortType == 'aktion' && sortReverse" class="fa fa-caret-up"></span> </button></th>
+					Aktiv<span ng-show="sortType == 'aktion' && !sortReverse" class="fa fa-caret-down"></span><span ng-show="sortType == 'aktion' && sortReverse" class="fa fa-caret-up"></span> </button></th>
 					<th><button class="tableButton" href="#" ng-click="sortType = 'sprache'; sortReverse = !sortReverse">
 					Sprache <span ng-show="sortType == 'sprache' && !sortReverse" class="fa fa-caret-down"></span><span ng-show="sortType == 'sprache' && sortReverse" class="fa fa-caret-up"></span> </button></th>
 					<th>&nbsp;</th>
@@ -80,7 +80,7 @@
 			
 			<tbody>
 			<tr>
-				<td><input id="ide" class="form-control" placeholder="ID" ng-model="exponat.ide"  ></td>
+				<td><input id="ide" class="form-control" placeholder="Nr." ng-model="exponat.ide"  ></td>
 				<td><input class="form-control" placeholder='Bild-URL' ng-model="exponat.bild"></td>
 				<td><input class="form-control" ng-model="exponat.name" placeholder="Name"></td>
 				<td><input class="form-control" ng-model="exponat.position"></td>
@@ -88,14 +88,13 @@
 				<td><input class="form-control" placeholder="Audiofile-URL" ng-model="exponat.audio"></td>
 				<td><input type="checkbox" ng-model="exponat.aktion"></td>
 				<td>
-				<select ng-model="exponat.sprache" class="styled-select blue semi-square">
+				<select ng-model="exponat.sprache" class="styled-select semi-square">
 					<option >EN</option>
 					<option selected="selected">DE</option>
 				</select>
 				</td>
-				<td><button id="hinzufügen" class="btn btn-primary" ng-click="addexponat()">Hinzufügen </button></td>
-				<td><button class="btn btn-dafault" ng-click="update()">Update </button>&nbsp;&nbsp;</td>
-				<td><button class="btn btn-default" ng-click="deselect()">Leeren</button></td>
+				<td><button id="hinzufügen" class="btn btn-default" ng-click="addexponat()">Neues Exponat</button></td>
+				<td><button class="btn btn-dafault" ng-click="update()">Speichern </button>&nbsp;&nbsp;</td>
 			</tr>
 			
 		
@@ -110,10 +109,10 @@
 					<td>{{exponat.position}}</td>
 					<td>{{exponat.theme}}</td>
 					<td><audio controls  ng-src="{{exponat.audio}}">	</audio> </td>
-					<td>{{exponat.aktion}}</td>
+					<td><input type="checkbox" ng-model="exponat.aktion"></td>
 					<td>{{exponat.sprache}}</td>
-					<td><button class="btn btn-danger" ng-click="remove(exponat.name)">L&ouml;schen</button></td>
 					<td><button class="btn btn-default" ng-click="edit(exponat.name)">&Auml;ndern </button></td>
+					<td><button class="btn btn-danger" ng-click="remove(exponat.name)">L&ouml;schen</button></td>
 				</tr>
 			</tbody>
 		</table>
@@ -124,10 +123,13 @@
 	</div>
 	
 	
-	<div id="header">
-	<div class="logo"><a href="/#/museumsverwaltung">Museumsverwaltung-<span>Software</span></a> </div>
-	
-	<a href="/#/"><img id="logout" src="/www/img/logout.png"/></a></div>
+	<div id="header" ng-controller="exponatCtrl">
+	<div class="logo"><a href="/#/museumsverwaltung">Museumsverwaltungs-<span>Software</span></a> </div>	
+	<a href="/#/" ><img id="logout"  src="/www/img/logout.png"/></a>	
+	<div style="color: white; float: right; padding-right: 20px;">
+		<p style=" font-size: 12px;"> angemeldet als <div style="font-size: 18px; line-height: 2px;">{{org}}</div> </p>
+	</div>
+	</div>
 
 </body>
 </html>

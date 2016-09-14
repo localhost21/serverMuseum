@@ -7,9 +7,12 @@
 
 <body>
 
-	<div id="header">
-	<div class="logo"><a href="/#/museumsverwaltung">Museumsverwaltung-<span>Software</span></a> </div>
-	<a href="/#/"><img id="logout" src="/www/img/logout.png"/></a>
+	<div id="header" ng-controller="exponatCtrl">
+	<div class="logo"><a href="/#/museumsverwaltung">Museumsverwaltungs-<span>Software</span></a> </div>	
+	<a href="/#/" ><img id="logout"  src="/www/img/logout.png"/></a>	
+	<div style="color: white; float: right; padding-right: 20px;">
+		<p style=" font-size: 12px;"> angemeldet als <div style="font-size: 18px; line-height: 2px;">{{org}}</div> </p>
+	</div>
 	</div>
 	
 	<div id="container">
@@ -23,12 +26,12 @@
 			</ul>
 		</div>
 		<div class="content">
-		<h1>Hilfestellung und Dokumentation</h1>
-		<p>Hier wird die Dokumentation zur Software sowie Kontaktdaten für Supportanfragen preisgegeben. Springen Sie direkt zu dem gewünschten Beitrag:</p>
+		<h1 id="head1">Hilfestellung und Dokumentation</h1>
+		<p>Hier finden Sie diverse FAQ's zur Software sowie unsere Kontaktdaten.</p>
 		<ul id="inhalt">
 		<li><a ng-click="scrollTo('exponatverwaltung')">Exponatverwaltung</a></li>
 		<li><a ng-click="scrollTo('beacon')">Beaconsverwaltung</a></li>
-		<li><a ng-click="scrollTo('custo')">Customizing</a></li>
+		<li><a ng-click="scrollTo('custo')">Audioguide</a></li>
 		<li><a ng-click="scrollTo('contact')">Kontaktdaten</a></li>
 		</ul>
 		
@@ -37,7 +40,9 @@
           <br>
 		  <p id="frage"> Lässt sich die Exponatsübersicht sortieren?</p>
 		  <p id="antwort"> Ja, diese kann nach Exponatname, Nummer, Standort oder Themennummer sortiert werden. Wählen Sie dazu die Tabellenüberschrift an. Sofern diese sich grau verfärbt, lässt sich die Liste gemäss Auswahl sortieren.</p>
-        </div>
+		  <p id="frage"> Wozu dient das Kennzeichen Aktiv?</p>
+		  <p id="antwort">Über das Kennzeichen Aktiv wird gesteuert, welche Exponate im Audioguide angezeigt werden (Kennzeichen gesetzt).</p>
+	   </div>
 		
 		<div id="area">
           <h2 id="custo" style="text-align: center; font-size: 24px;color: #666666;"><div id="beacons"/><i>Beaconsverwaltung</i></h2>
@@ -54,7 +59,7 @@
 		
 		
 		<div id="area">
-          <h2 id="custo" style="text-align: center; font-size: 24px;color: #666666;"><div id="custo"/><i>Customizing</i></h2>
+          <h2 id="custo" style="text-align: center; font-size: 24px;color: #666666;"><div id="custo"/><i>Audioguide</i></h2>
           <br>
 		  <p id="frage">Wie kann eine Audioguide-Station erfasst werden? </p>
 		  <p id="antwort">Über die Major-ID des Beacons lässt dieser sich eindeutig identifizieren. Wenn Sie über das Customizing-Menu einen neuen Standort hinterlegen wollen, clicken Sie auf die entsprechende Stelle auf der Karte. Es wird automatisch ein Marker gesetzt. Schreiben Sie anschliessend den gewünschten Text, welcher auf der Audioguide-Karte angezeigt wird in das Feld "Name" und die Major- ID des entsprechenden Beacons in das Feld "Beacon-Nr." Nachdem die Schaltfläche Speichern gedrückt wurde, ist der Ort gespeichert und auf dem Audioguide angepasst. </p>
@@ -72,8 +77,8 @@
 		<div id="area">
           <h2 id="custo" style="text-align: center; font-size: 24px;color: #666666;"><div id="contact"/><i>Kontaktdaten</i></h2>
           <br>
-		  <p> 
-		  <ul id="inhalt">
+		 
+		  <ul id="inhalt" style="text-align: center">
               <li class="ng-binding">medignition AG</li>
 			  <li class="ng-binding">Herr Alexander Horst</li>
               <li class="ng-binding">Verena Conzett-Strasse 9</li>
@@ -84,11 +89,11 @@
                <li><a href="mailto:info@medignition.ch?subject=Kontakt medignition.ch">info@medignition.ch</a></li>
                <li><a href="https://medignition.com/">www.medignition.com</a></li>
            </ul>
-			</p>
+			
         </div>
 
 
-		
+		<button class="btn btn-daufalt full" ng-click="scrollTo('head1')"> zurück nach oben</button>
 		
 				</div>
 		

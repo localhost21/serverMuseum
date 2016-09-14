@@ -558,6 +558,11 @@ myApp.controller('exponatCtrl', function($scope, $http, $location, $anchorScroll
       $anchorScroll();
     };
 	
+	
+	$http.get('/orgName/' + accessFac.getToken()).success(function(response) {
+         $scope.org = response;
+	});
+	
 	var refresh = function() {
       $http.get('/backend/'+ accessFac.getToken()).success(function(response) {
         $scope.backend = response;
