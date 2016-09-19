@@ -15,10 +15,10 @@
 		</div>	
 
 
-    <div id="header" ng-controller="exponatCtrl">
+    <div id="header">
 	<div class="logo"><a href="/#/museumsverwaltung">Museumsverwaltungs-<span>Software</span></a> </div>	
 	<a href="/#/" ><img id="logout"  src="/www/img/logout.png"/></a>	
-	<div style="color: white; float: right; padding-right: 20px;">
+	<div id="headerOrg" ng-controller="orgCtrl">
 		<p style=" font-size: 12px;"> angemeldet als <div style="font-size: 18px; line-height: 2px;">{{org}}</div> </p>
 	</div>
 	</div>
@@ -47,9 +47,8 @@
 				<th>Name</th>
 				<th>Major</th>
 				<th>Minor</th>
-				<th>UUI (AnwendungsID)</th>
-				<th>RSSI-Stärke</th>
-                <th>Sendeinterval</th>
+				<th>Sendestärke</th>
+                <th>Sendeinterval in ms</th>
                 <th>Batterielaufzeit in Tagen</th>
 				<th>Farbe</th>
             </tr>
@@ -62,8 +61,21 @@
 			<td><input class="form-control" ng-model="beacon.shadow.name"/></td>
 			<td><input class="form-control" ng-model="beacon.settings.advertisers.ibeacon[0].major"/></td>
 			<td><input class="form-control" ng-model="beacon.settings.advertisers.ibeacon[0].minor"/></td>
-			<td><input class="form-control" ng-model="beacon.settings.advertisers.ibeacon[0].uuid" disabled=true/></td>
-			<td><input class="form-control" ng-model="beacon.settings.advertisers.ibeacon[0].power" disabled=true/></td>
+			<!--<td><input class="form-control" ng-model="beacon.settings.advertisers.ibeacon[0].power" disabled=true/></td>-->
+			<td><select ng-model="beacon.settings.advertisers.ibeacon[0].power" class="styled-select semi-square">
+					<option>-30</option>
+					<option>-20</option>
+					<option>-20</option>
+					<option>-16</option>
+					<option>-12</option>
+					<option>-8</option>
+					<option>-4</option>
+					<option>0</option>
+					<option>4</option>
+			</select></td>
+			
+			
+			
 			<td><input class="form-control" ng-model="beacon.settings.advertisers.ibeacon[0].interval"/></td>
 			<td><input class="form-control" ng-model="beacon.status_report.estimated_battery_lifetime" disabled=true/></td>
 			<td><input class="form-control" ng-model="beacon.color" disabled=true/></td>
@@ -75,17 +87,16 @@
 				<td>{{beacon.shadow.name}}</td>
 				<td ng-repeat="ibeacon in beacon.settings.advertisers.ibeacon">{{ibeacon.major}}</td>
 				<td ng-repeat="ibeacon in beacon.settings.advertisers.ibeacon">{{ibeacon.minor}}</td>
-				<td ng-repeat="ibeacon in beacon.settings.advertisers.ibeacon">{{ibeacon.uuid}}</td>
 				<td ng-repeat="ibeacon in beacon.settings.advertisers.ibeacon">{{ibeacon.power}}</td>
 				<td ng-repeat="ibeacon in beacon.settings.advertisers.ibeacon">{{ibeacon.interval}}</td>
 				<td>{{beacon.status_report.estimated_battery_lifetime}}</td>
 				<td>{{beacon.color}}</td>
-				<td><button class="btn btn-default"  ng-click="edit(beacon.identifier)">Ändern</button></td>
+				<td><button class="btn btn-default"  ng-click="edit(beacon.identifier)" onclick="window.scrollTo(0,0);">Ändern</button></td>
             
 			</tr>
           </tbody>
         </table>
-		
+		<button class="btn btn-daufalt full" onclick="window.scrollTo(0,0)"> zurück nach oben</button>
 
       </div>
 

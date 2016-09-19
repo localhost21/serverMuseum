@@ -23,21 +23,18 @@ var myApp = angular.module('myApp', ['ngRoute', 'ui-leaflet','textAngular', 'ui.
 	
 	
 
-myApp.factory('accessFac', function($window) {
+myApp.factory('accessFac', function($window, $http) {
   var obj = {}
   obj.access = false;
-  //obj.token = [];
-  var i = 0;
-  obj.image  = 'https://res.cloudinary.com/hhrryft6i/image/upload/v1473452985/eca5sylefpmbwy9knkou.png';
-  
- 
+  var i = 0; 
  
   obj.getImage = function(){
-	  return obj.image;
+	 return $window.localStorage['map'];
   }
   
   obj.setImage = function(image){
-	  obj.image = image;
+	 $window.localStorage['map'] = image;
+	  
   }
  
   obj.getPermission = function(helper) { //set the permission to true
@@ -54,6 +51,11 @@ myApp.factory('accessFac', function($window) {
   obj.getToken = function(){
 	 return $window.localStorage['jwtToken'];//obj.token[i - 1];
   }
+  
+   
+  
+  
+  
   return obj;
 });
 
@@ -66,6 +68,7 @@ myApp.run(function($http, accessFac){
 	});
   });  
 });
+
 
 
 myApp.controller('loginCtrl', function($scope, $http, $timeout, $location, $window, accessFac) {
@@ -90,7 +93,7 @@ myApp.controller('loginCtrl', function($scope, $http, $timeout, $location, $wind
 
     } else {
       Alert.render("Falsche Zugangsdaten!");
-    }}, 3000);
+    }}, 2500);
   }
   
   
@@ -167,8 +170,6 @@ var refresh = function(){
   
   
 
-
-	
 	
 
   var maxBounds = leafletBoundsHelpers.createBoundsFromArray([
@@ -553,15 +554,9 @@ myApp.controller('exponatCtrl', function($scope, $http, $location, $anchorScroll
 		accessFac.setImage(museumH.map);
 	});
   });  
-	$scope.top = function() {
-      $location.hash('top');
-      $anchorScroll();
-    };
+
 	
 	
-	$http.get('/orgName/' + accessFac.getToken()).success(function(response) {
-         $scope.org = response;
-	});
 	
 	var refresh = function() {
       $http.get('/backend/'+ accessFac.getToken()).success(function(response) {
@@ -620,7 +615,29 @@ myApp.controller('exponatCtrl', function($scope, $http, $location, $anchorScroll
       $scope.exponat = "";
     }
 	
-	 var startProductBarPos=-1;
+	    function CustomAlert() {
+      this.render = function(dialog) {
+        var winW = window.innerWidth;
+        var winH = window.innerHeight;
+        var dialogoverlay = document.getElementById('dialogoverlay');
+        var dialogbox = document.getElementById('dialogbox');
+        dialogoverlay.style.display = "block";
+        dialogoverlay.style.height = winH + "px";
+        dialogbox.style.left = (winW / 2) - (350 * .5) + "px";
+        dialogbox.style.top = "100px";
+        dialogbox.style.display = "block";
+        document.getElementById('dialogboxhead').innerHTML = "Fehlermeldung!";
+        document.getElementById('dialogboxbody').innerHTML = dialog;
+        document.getElementById('dialogboxfoot').innerHTML = '<a href="javascript:window.location.reload(true)" class="btn btn-primary"> ok</a>';
+      }
+
+    }
+    var Alert = new CustomAlert();	
+	
+	
+	
+	
+	var startProductBarPos=-1;
     window.onscroll=function(){
         var bar = document.getElementById('productMenuBar');
         if(startProductBarPos<0)startProductBarPos=findPosY(bar);
@@ -649,27 +666,14 @@ myApp.controller('exponatCtrl', function($scope, $http, $location, $anchorScroll
             curtop += obj.y;
         return curtop;
     }
-	    function CustomAlert() {
-      this.render = function(dialog) {
-        var winW = window.innerWidth;
-        var winH = window.innerHeight;
-        var dialogoverlay = document.getElementById('dialogoverlay');
-        var dialogbox = document.getElementById('dialogbox');
-        dialogoverlay.style.display = "block";
-        dialogoverlay.style.height = winH + "px";
-        dialogbox.style.left = (winW / 2) - (350 * .5) + "px";
-        dialogbox.style.top = "100px";
-        dialogbox.style.display = "block";
-        document.getElementById('dialogboxhead').innerHTML = "Fehlermeldung!";
-        document.getElementById('dialogboxbody').innerHTML = dialog;
-        document.getElementById('dialogboxfoot').innerHTML = '<a href="javascript:window.location.reload(true)" class="btn btn-primary"> ok</a>';
-      }
+});
 
-    }
-    var Alert = new CustomAlert();
-  
-	
-	
-	
+
+
+myApp.controller('orgCtrl',function($scope, $http, accessFac){
+	$http.get('/orgName/' + accessFac.getToken()).success(function(response) {
+         $scope.org = response;
+	});
+	 
 });
 

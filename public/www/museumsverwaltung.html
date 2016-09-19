@@ -53,7 +53,7 @@
 		
 		<br><br>
 		<input id="productMenuBar" class="form-control has-header"  placeholder="Suche nach Exponatnummer" ng-model="filterer" id="input_ea30_0"></input>
-		
+			
 		<table class="table" style="margin-top: 20px;">
 			<thead>
 				<tr>
@@ -111,12 +111,13 @@
 					<td><audio controls  ng-src="{{exponat.audio}}">	</audio> </td>
 					<td><input type="checkbox" ng-model="exponat.aktion"></td>
 					<td>{{exponat.sprache}}</td>
-					<td><button class="btn btn-default" ng-click="edit(exponat.name)">&Auml;ndern </button></td>
+					<td><button class="btn btn-default" ng-click="edit(exponat.name)" onclick="window.scrollTo(0,0);">&Auml;ndern </button></td>
 					<td><button class="btn btn-danger" ng-click="remove(exponat.name)">L&ouml;schen</button></td>
 				</tr>
 			</tbody>
 		</table>
-		<button class="btn btn-daufalt full" ng-click="top()"> zurück nach oben</button>
+		<!--<button class="btn btn-daufalt full" ng-click="top()"> zurück nach oben</button>-->
+		<button class="btn btn-daufalt full" onclick="window.scrollTo(0,0)"> zurück nach oben</button>
 				</div>
 				
 		
@@ -126,7 +127,7 @@
 	<div id="header" ng-controller="exponatCtrl">
 	<div class="logo"><a href="/#/museumsverwaltung">Museumsverwaltungs-<span>Software</span></a> </div>	
 	<a href="/#/" ><img id="logout"  src="/www/img/logout.png"/></a>	
-	<div style="color: white; float: right; padding-right: 20px;">
+	<div id="headerOrg" ng-controller="orgCtrl">
 		<p style=" font-size: 12px;"> angemeldet als <div style="font-size: 18px; line-height: 2px;">{{org}}</div> </p>
 	</div>
 	</div>

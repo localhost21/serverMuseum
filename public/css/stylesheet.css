@@ -322,7 +322,7 @@ div#area {
 	padding-bottom: 30px;
 	margin-bottom: 20px;
 	text-align: center;
-	background-color: rgba(10, 10, 177, .1);
+	background-color: #e6f2ff;
 }
 
 div#area1 {
@@ -333,7 +333,7 @@ div#area1 {
 	padding-bottom: 30px;
 	margin-bottom: 20px;
 	text-align: center;
-	background-color: rgba(10, 10, 177, .1);
+	background-color: #e6f2ff;
 	z-index: 1; position: relative;
 }
 
@@ -353,6 +353,15 @@ h1#titleLoginHidden {
 	  margin: 0 auto;	  
   }
   
+  div#merger {
+	padding-top: 10px;
+}
+  
+  
+  img#thumbnail {
+	padding-top: 0px;
+}
+  
   div#dialogbox {
 	  max-width: 350px;
   }
@@ -364,6 +373,15 @@ h1#titleLoginHidden {
   #leafletMap {
 	height: 200px;
 	width: 300px;
+}
+
+  h1#titleLoginHidden {
+	display: block;
+	padding-top: 10px;
+}
+
+div#loRight {
+  padding-top: 70px !important;
 }
 
 }
@@ -378,6 +396,10 @@ h1#titleLoginHidden {
 	padding-top: 50px;
 	z-index: 2;
 	
+  }
+  
+  div#headerOrg {
+	  display: none;
   }
   
   h1#titleLoginHidden {
@@ -452,8 +474,10 @@ div#lo {
 
 
 h2#custo {
-	color: black;
 	font-size: 20px;
+	text-align: left; 
+	font-size: 24px;
+	color: #666666;
 }
 
 /* legend */
@@ -499,11 +523,13 @@ h2#custo {
 	font: italic bold;
 	font-size: 22px;
 	text-align: left;
+	padding-top: 15px;
 }
 
 #antwort {
 	font-size: 18px;
 	text-align: left;
+	padding-left: 40px;
 }
 
 
@@ -517,6 +543,17 @@ ul#inhalt li {
   list-style: none;
   text-align: center;
   
+}
+
+ul#hilfe li {
+  list-style: none;
+  text-align: left;
+  
+}
+
+
+div#headerOrg {
+	color: white; float: right; padding-right: 20px; padding-top: 5px;
 }
 
 ul#inhalt li a {

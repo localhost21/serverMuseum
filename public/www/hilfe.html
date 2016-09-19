@@ -7,10 +7,10 @@
 
 <body>
 
-	<div id="header" ng-controller="exponatCtrl">
+	<div id="header">
 	<div class="logo"><a href="/#/museumsverwaltung">Museumsverwaltungs-<span>Software</span></a> </div>	
 	<a href="/#/" ><img id="logout"  src="/www/img/logout.png"/></a>	
-	<div style="color: white; float: right; padding-right: 20px;">
+	<div id="headerOrg" ng-controller="orgCtrl">
 		<p style=" font-size: 12px;"> angemeldet als <div style="font-size: 18px; line-height: 2px;">{{org}}</div> </p>
 	</div>
 	</div>
@@ -20,7 +20,7 @@
 			<ul id="nav">
 				<li><a href="/#/museumsverwaltung" >Home</a></li>
 				<li><a href="/#/getbeacons">Beacons</a></li>
-				<li><a href="/#/custo" >Customizing</a></li>
+				<li><a href="/#/custo" >Audioguide</a></li>
 				<li><a href="/#/hilfe" class="selected">Hilfe</a></li>
 				
 			</ul>
@@ -30,14 +30,18 @@
 		<p>Hier finden Sie diverse FAQ's zur Software sowie unsere Kontaktdaten.</p>
 		<ul id="inhalt">
 		<li><a ng-click="scrollTo('exponatverwaltung')">Exponatverwaltung</a></li>
-		<li><a ng-click="scrollTo('beacon')">Beaconsverwaltung</a></li>
+		<li><a ng-click="scrollTo('beacons')">Beaconsverwaltung</a></li>
 		<li><a ng-click="scrollTo('custo')">Audioguide</a></li>
 		<li><a ng-click="scrollTo('contact')">Kontaktdaten</a></li>
 		</ul>
 		
 		<div id="area">
-          <h2 id="custo" style="text-align: center; font-size: 24px; color: #666666;"><div id="exponatverwaltung"/><i>Exponatverwaltung</i></h2>
+          <h2 id="custo" style="text-align: center;"><div id="exponatverwaltung"/><i>Exponatverwaltung</i></h2>
           <br>
+		   <p id="frage">Kann die Exponatnummer frei vergeben werden? </p>
+		  <p id="antwort">Ja, die Exponatnummer darf beliebig vergeben werden, muss allerdings mindestens drei Ziffern enthalten und einmalig sein. Vorangestellte Nullen werden automatisch herausgefiltert (001 wird zu 1). </p>
+		  <p id="frage">Wie können die Audio- und Bild- Dateien hochgeladen werden?</p>
+		  <p id="antwort">Audio- und Bild- Dateien können über eine beliebige Cloud freigegeben werden (z.B. Dropbox, Google Drive, MyCloud etc.). Die URL der freigegebenen Datei kann via Inputfeld dem entsprechenden Exponat zugeordnet werden. </p>
 		  <p id="frage"> Lässt sich die Exponatsübersicht sortieren?</p>
 		  <p id="antwort"> Ja, diese kann nach Exponatname, Nummer, Standort oder Themennummer sortiert werden. Wählen Sie dazu die Tabellenüberschrift an. Sofern diese sich grau verfärbt, lässt sich die Liste gemäss Auswahl sortieren.</p>
 		  <p id="frage"> Wozu dient das Kennzeichen Aktiv?</p>
@@ -45,21 +49,28 @@
 	   </div>
 		
 		<div id="area">
-          <h2 id="custo" style="text-align: center; font-size: 24px;color: #666666;"><div id="beacons"/><i>Beaconsverwaltung</i></h2>
+          <h2 id="custo" style="text-align: center;"><div id="beacons"/><i>Beaconsverwaltung</i></h2>
           <br> 
 		  <br><p id="frage">Was ist ein Beacon?</p>
 		  <p id="antwort">Beacon steht stellvertretend für die Funktechnologie Bluetooth Low Energy (BLE). Während die Vorgängertechnologie einen hohen Akkuverbrauch aufwies, kann durch den Einsatz von BLE- Sendegeräten (Beacons genannt) </p>
 		  <br><p id="frage">Wozu dient die Major-ID des Beacons?</p>
-		  <p id="antwort"> </p>
+		  <p id="antwort"> TBD</p>
 		  <br><p id="frage">Wozu dient die Minor-ID des Beacons?</p>
-		  <p id="antwort"> </p>
+		  <p id="antwort">TBD </p>
+		  <p id="frage"> Wie kann die Sendereichweite der einzelnen Beacons angepassen werden? </p>
+		  <p id="antwort">Die Sendereichweite kann über das Feld Sendestärke bestimmt werden. Die Werte bedeuten folgende Reichweiten:
+			<ul id="hilfe">
+				<li>-30 rund 50cm bis 1 m</li>
+				<li>-12 rund 10 m</li>
+				<li>4 bis zu 70 m</li>
+				</ul>		  </p>		  
 		  <p id="frage"> Können die Beacons direkt aus dem Verwaltungtool angepasst werden?</p>
 		  <p id="antwort"> Zurzeit werden Ihre Beacons lediglich in Echtzeit angezeigt - somit lässt sich deren Status erfragen. Aktuell bietet der Beacon hersteller noch keine Möglichkeit, die Verwaltung extern durchzuführen - sollte allerdings bald folgen. Um die Beacon-Einstellungen anzupassen, wählen Sie ein Beacon an und Sie werden auf die Webseite des Herstellers weitergeleitet.</p>
         </div>
 		
 		
 		<div id="area">
-          <h2 id="custo" style="text-align: center; font-size: 24px;color: #666666;"><div id="custo"/><i>Audioguide</i></h2>
+          <h2 id="custo" style="text-align: center;"><div id="custo"/><i>Audioguide</i></h2>
           <br>
 		  <p id="frage">Wie kann eine Audioguide-Station erfasst werden? </p>
 		  <p id="antwort">Über die Major-ID des Beacons lässt dieser sich eindeutig identifizieren. Wenn Sie über das Customizing-Menu einen neuen Standort hinterlegen wollen, clicken Sie auf die entsprechende Stelle auf der Karte. Es wird automatisch ein Marker gesetzt. Schreiben Sie anschliessend den gewünschten Text, welcher auf der Audioguide-Karte angezeigt wird in das Feld "Name" und die Major- ID des entsprechenden Beacons in das Feld "Beacon-Nr." Nachdem die Schaltfläche Speichern gedrückt wurde, ist der Ort gespeichert und auf dem Audioguide angepasst. </p>
@@ -75,7 +86,7 @@
 		
 		
 		<div id="area">
-          <h2 id="custo" style="text-align: center; font-size: 24px;color: #666666;"><div id="contact"/><i>Kontaktdaten</i></h2>
+          <h2 id="custo" style="text-align: center;"><div id="contact"/><i>Kontaktdaten</i></h2>
           <br>
 		 
 		  <ul id="inhalt" style="text-align: center">
@@ -93,7 +104,7 @@
         </div>
 
 
-		<button class="btn btn-daufalt full" ng-click="scrollTo('head1')"> zurück nach oben</button>
+		<button class="btn btn-daufalt full" onclick="window.scrollTo(0,0);"> zurück nach oben</button>
 		
 				</div>
 		
