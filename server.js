@@ -74,7 +74,8 @@ app.get('/login/:id', function(req, res) {
         expiresIn: 60 * 60
       });
       res.json({
-        "token": token
+        "token": token,
+		"org": org
       });
     } else {
       res.json("false");
