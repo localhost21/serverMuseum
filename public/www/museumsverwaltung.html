@@ -87,7 +87,7 @@
 				
 				<td>
 				<select ng-model="exponat.position" class="styled-select semi-square">					
-					<option ng-repeat="ma in maData"> {{ma.name}} - {{ma.message}}</option>
+					<option ng-repeat="ma in maData" value="{{ma.name}}"> {{ma.name}} - {{ma.message}}</option>
 				</select>
 				</td>
 				
@@ -96,7 +96,7 @@
 				
 				<td>
 				<select ng-model="exponat.theme" class="styled-select semi-square">					
-					<option ng-repeat="thema in themaDaten">{{thema.name}} - {{thema.nummer}}</option>
+					<option ng-repeat="thema in themaDaten" value='{{thema.nummer}}'>{{thema.name}} - {{thema.nummer}}</option>
 				</select>
 				</td>				
 				<td><input class="form-control" placeholder="Audiofile-URL" ng-model="exponat.audio"></td>

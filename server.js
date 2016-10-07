@@ -271,7 +271,7 @@ app.post('/markersNew/:id', function(req, res) {
 
 
 app.put('/themenliste/:organization', function(req, res) {
-	console.log(req.params.organization);
+	
 	
 
 
@@ -383,7 +383,6 @@ app.get('/nonWalkerMarkers/:id',function(req,res){
 					  }
                 }, function(err, docs) {
                   res.json(docs);
-				  console.log(docs);
                 });
                 break;
               }
