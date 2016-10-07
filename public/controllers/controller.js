@@ -279,16 +279,19 @@ var refresh = function(){
 		 
       });
     }
-    $scope.update = function() {
-	  $http.get('/orgName/' + accessFac.getToken()).success(function(response) {
+   
+$http.get('/orgName/' + accessFac.getToken()).success(function(response) {
          $scope.organization = response;
 		 
-     
+     });
+
+   $scope.update = function() {
+	  
       $http.put('/markers/' + $scope.organization, $scope.markersHelper).success(function(response) {
         $scope.markersHelper = "";
         refresh();
       });
-	   });
+	   
     }
     $scope.deselect = function() {
       $scope.markersHelper = "";
@@ -297,6 +300,45 @@ var refresh = function(){
   
   
   
+  $http.get('/themenListe/' + accessFac.getToken()).success(function(response) {
+    $scope.themaDaten = response;
+	$scope.thema="";
+	$scope.predicate = '-nummer';
+  });
+  
+  $scope.removeThema = function(nummer) {
+      $http.delete('/deleteThemenliste/' + nummer +"/"+  $scope.organization ).success(function(response) {
+        refresh();
+      });
+    }
+	
+  //ändern	
+  $scope.changeThema = function(themennummer) {
+	  //$scope.themaNew =({"nummer":themennummer, "name":name});
+	   $http.get('/getOneTheme/' + themennummer + "/" + $scope.organization).success(function(response) {
+			document.getElementById("SaveCurrentThemeButton").style.display='inline-block';
+			document.getElementById("newThemeButton").style.display='none';
+			$scope.thema = response;
+		});
+   }
+   
+   //aktuelles Speichern
+   $scope.updateThema = function(thema) {
+	$http.put('/themenliste/'  + thema,  $scope.thema).success(function(response) {
+        $scope.thema = "";
+		document.getElementById("SaveCurrentThemeButton").style.display='none';
+		document.getElementById("newThemeButton").style.display='inline-block';
+        refresh();
+     });
+    }
+    
+  //neues speichern
+  $scope.saveNewTheme = function(){
+	  $http.post('/themenliste/' + accessFac.getToken(), $scope.thema).success(function(response) {
+			$scope.themaNew = "";
+			refresh();
+        });
+  }
   
   
   
@@ -555,6 +597,15 @@ myApp.controller('exponatCtrl', function($scope, $http, $location, $anchorScroll
 	});
   });  
 
+  
+  
+  $http.get('/nonWalkerMarkers/' + accessFac.getToken()).success(function(response) {
+    $scope.maData = response;
+    $scope.ma = "";
+	
+  });
+  
+  
 	
 	
 	
@@ -574,7 +625,11 @@ myApp.controller('exponatCtrl', function($scope, $http, $location, $anchorScroll
       });
     }
 	refresh();
-
+ 
+	$http.get('/themenListe/' + accessFac.getToken()).success(function(response) {
+		$scope.themaDaten = response;
+		$scope.thema="";
+	});
    
 		
     $scope.addexponat = function() {
@@ -588,24 +643,24 @@ myApp.controller('exponatCtrl', function($scope, $http, $location, $anchorScroll
         $http.post('/backend/' + accessFac.getToken(), $scope.exponat).success(function(response) {
 			refresh();
         });
-		//window.location.reload('museumsverwaltung');
       }
     }
     $scope.remove = function(name) {
       $http.delete('/backend/' + name).success(function(response) {
         refresh();
       });
-	  //window.location.reload('museumsverwaltung');
     }
     $scope.edit = function(name) {
       $http.get('/backendModify/' + name).success(function(response) {
         $scope.exponat = response;
-        document.getElementById('hinzufügen').style = "display: none";
+        document.getElementById('hinzufügen').style.display = "none";
+        document.getElementById('aendernButton').style.display = "inline-block";
       });
     }
     $scope.update = function() {
       $http.put('/backend/' + $scope.exponat.name, $scope.exponat).success(function(response) {
-        document.getElementById('hinzufügen').style = "display: inline-block";
+        document.getElementById('hinzufügen').style.display = "inline-block";		
+        document.getElementById('aendernButton').style.display = "none";
         refresh();
       });
 	  //window.location.reload('museumsverwaltung');

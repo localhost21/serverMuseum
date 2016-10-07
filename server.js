@@ -17,6 +17,7 @@ var jwt = require('jsonwebtoken');
 var db = mongojs(databaseUrl, collections);
 var apiRoutes = express.Router();
 var cloudinary = require('cloudinary');
+var ObjectId = require('mongodb').ObjectID;
 
 app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.json());
@@ -57,7 +58,11 @@ app.get('/credentials/:id', function(req, res) {
 });
 
 app.get('/login', function(req, res) {
-  db.museum.find(function(err, doc) {
+  db.museum.find({
+    "org": {
+		$ne: null
+	}
+  },function(err, doc) {
     res.json(doc);
   });
 });
@@ -170,6 +175,8 @@ app.post('/backend/:id', function(req, res) {
   }
 });
 
+
+
 app.post('/markers/:id', function(req, res) {
   var token = req.params.id;
   if (token === "") {
@@ -262,6 +269,133 @@ app.post('/markersNew/:id', function(req, res) {
   }
 });
 
+
+app.put('/themenliste/:organization', function(req, res) {
+	console.log(req.params.organization);
+	
+
+
+	var id = req.params.organization;       
+	var o_id = new ObjectId(id);		
+				
+				
+  var id = req.params.id;
+  db.museum.findAndModify({
+    query: {
+	  _id: o_id
+    },
+    update: {
+      $set: {
+        nummer: req.body.nummer,
+		name: req.body.name
+      }
+    },
+    nex: true
+  }, function(err, doc) {
+    res.json(doc);
+  });
+});
+
+
+app.get('/publicThemes/:org', function(req,res){
+	var org = req.params.org;
+	 db.museum.find({                
+       "zugehörigkeit": org,
+     },
+     function(err, doc) {
+       res.json(doc);
+     });	
+});
+
+app.post('/themenliste/:id', function(req, res) {
+  var token = req.params.id;
+  if (token === "") {
+    response.writeHead(302);
+    response.end();
+  } else {
+    db.credentials.count(function(err, docs) {
+      var count = docs;
+      setTimeout(function() {
+        db.credentials.find({
+          "org": {
+            $ne: null
+          }
+        }, function(err, doc) {
+          var org = [];
+          org = doc;
+          for (i = 0; i < count; i++) {
+            try {
+              var decode = jwt.decode(token, org[i].org, function(err_, decode) {
+                if (err) {
+                  return console.error(err.name, err.message);
+                }
+              });
+              decode = decode.org;
+            } catch (error) {
+              console.log("error");
+            }
+            if (decode === org[i].org) {
+              var request = JSON.stringify(req.body);
+              var h = ',"zugehörigkeit":"' + decode + '"}';
+              var helper = request.replace("}", h);
+              db.museum.insert(JSON.parse(helper), function(err, doc) {
+                res.json(doc);
+              });
+              break;
+            }
+          }
+        });
+      }, 100);
+    });
+  }
+});
+
+
+app.get('/nonWalkerMarkers/:id',function(req,res){
+	var token = req.params.id;
+  if (token === "") {
+    response.writeHead(302);
+    response.end();
+  } else {
+    db.credentials.count(function(err, docs) {
+      var count = docs;
+      setTimeout(function() {
+        db.credentials.find({
+          "org": {
+            $ne: null
+          }
+        }, function(err, doc) {
+          var org = [];
+          org = doc;
+          for (i = 0; i < count; i++) {
+            try {
+              var decode = jwt.decode(token, org[i].org, function(err_, decode) {
+                if (err) {
+                  return console.error(err.name, err.message);
+                }
+              });
+              decode = decode.org;
+              if (decode === org[i].org) {
+                db.markers.find({
+                  org: decode,
+				  name: {
+					  $ne:"walker"
+					  }
+                }, function(err, docs) {
+                  res.json(docs);
+				  console.log(docs);
+                });
+                break;
+              }
+            } catch (error) {
+              console.log("error@/museum");
+            }
+          }
+        });
+      }, 100);
+    });
+  }
+});
 
 app.get('/markers/:id', function(req, res) {    
   var token = req.params.id;
@@ -452,6 +586,8 @@ app.delete('/deleteSingleMarkers/:id', function(req, res) {
       res.json(doc);
     });
 });
+
+
 
 
 
@@ -732,6 +868,7 @@ app.get('/markersModify/:id', function(req, res) {
 });
 
 
+
 app.get('/backend_count/:id', function(req, res) {
   var token = req.params.id;
   db.credentials.count(function(err, docs) {
@@ -806,6 +943,71 @@ app.get('/deutsch/:id', function(req, res) {
 
 });
 
+
+app.delete('/deleteThemenliste/:nummer/:organization', function(req, res) {	
+  db.museum.remove({
+				"zugehörigkeit": req.params.organization,
+				nummer: req.params.nummer
+			},
+			function(err, doc) {
+				res.json(doc);
+			});
+});
+
+
+
+app.get('/themenListe/:id', function(req,res){
+	var token = req.params.id;
+  db.credentials.count(function(err, docs) {
+    var count = docs;
+    setTimeout(function() {
+      db.credentials.find({
+        "org": {
+          $ne: null
+        }
+      }, function(err, doc) {
+        var org = [];
+        org = doc;
+        for (i = 0; i < count; i++) {
+          var decode = jwt.decode(token, org[i].org, function(err_, decode) {
+            if (err) {
+              return console.error(err.name, err.message);
+            }
+          });
+          decode = decode.org;
+          if (decode === org[i].org) {
+            db.museum.find({                
+                "zugehörigkeit": decode,
+              },
+              function(err, doc) {
+                res.json(doc);
+              });
+            break;
+          }
+        }
+      });
+    }, 100);
+  });
+});
+
+
+
+app.get('/getOneTheme/:id/:organization', function(req,res){
+  db.museum.findOne({                
+       "nummer": req.params.id,
+	   "zugehörigkeit": req.params.organization
+     },
+     function(err, doc) {
+       res.json(doc);
+    });
+});
+
+
+
+
+
+
+
 app.get('/themenDE/:id', function(req, res) {    
   var token = req.params.id;
   db.credentials.count(function(err, docs) {
@@ -828,10 +1030,11 @@ app.get('/themenDE/:id', function(req, res) {
           if (decode === org[i].org) {
             db.backend.find({
                 "sprache": "DE",
-                "position": {
+                "theme": {
                   $ne: null
                 },
-                "org": decode
+                "org": decode,
+				"aktiv": true
               },
               function(err, doc) {
                 res.json(doc);
@@ -847,7 +1050,7 @@ app.get('/themenDE/:id', function(req, res) {
 app.get('/themenEN', function(req, res) {    
   db.backend.find({
       "sprache": "EN",
-      "position": {
+      "theme": {
         $ne: null
       }
     },

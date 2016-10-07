@@ -53,9 +53,54 @@
 		  
 		  
         </div>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<div id="area">
+          <h2 id="custo">Themengebiete </h2> 
+		  
+		  <table class="table" style="width: 80%; margin: 0 auto;font-size: 20px; ">
+			<thead>
+				<tr style="font-size: 22px; font-style: italic;">
+					<td>Themennummer (dreistellig)</td>
+					<td>Themenname</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td><input class="form-control" ng-model="thema.nummer" placeholder="Nummer"></td>
+					<td><input class="form-control" ng-model="thema.name" placeholder="Name"></td>
+					<td><button id="newThemeButton" style="width: 150px;" class="btn btn-default" ng-click="saveNewTheme()">Neu hinzufügen</button></td>
+					<td><button id="SaveCurrentThemeButton" style="width: 150px; display: none;" class="btn btn-default" ng-click="updateThema(thema._id)">Speichern</button></td>
+					<!--<button style="width: 150px;" class="btn btn-danger" ng-click="deselect()">Leeren</button></td>-->
+				</tr>
+				<tr ng-repeat="thema in themaDaten|orderBy: predicate='nummer'"> 
+					<td stlye="width: 30%;">{{thema.nummer}}</td>
+					<td stlye="width: 30%;">{{thema.name}}</td>
+					<td><button style="width: 150px;" class="btn btn-default" ng-click="changeThema(thema.nummer)">Ändern</button></td>
+					<td><button style="width: 150px;" class="btn btn-danger" ng-click="removeThema(thema.nummer)">Löschen</button></td>
+				</tr>
+			</tbody> 
+		 </table>
+		  
+		  
+        </div>
 
         
 
+		
+		
+		
+		
+		
+		
 
         <div id="area1" data-tap-disabled="true">
           <h2 id="custo">Karte</h2>
