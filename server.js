@@ -297,10 +297,13 @@ app.put('/themenliste/:organization', function(req, res) {
 });
 
 
-app.get('/publicThemes/:org', function(req,res){
+app.get('/getPos/:org/:theme', function(req,res){
 	var org = req.params.org;
-	 db.museum.find({                
-       "zugehörigkeit": org,
+	var theme = req.params.theme;
+	//console.log(org + theme);
+	 db.museum.findOne({ 
+	   nummer: theme,
+	   zugehörigkeit: org
      },
      function(err, doc) {
        res.json(doc);
