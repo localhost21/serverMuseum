@@ -470,7 +470,7 @@ app.put('/museumEN/:id', function(req, res) {
       $set: {
         en: req.body.en
       }
-    },C:\Users\Alexander\Google Drive\Bachelorarbeit\Audioguide\server
+    },
     nex: true
   }, function(err, doc) {
     res.json(doc);
@@ -590,7 +590,14 @@ app.delete('/deleteSingleMarkers/:id', function(req, res) {
 });
 
 
-
+app.get('/publicThemes/:organization', function(req,res){
+  db.museum.findOne({       
+	   "zugehörigkeit": req.params.organization
+     },
+     function(err, doc) {
+       res.json(doc);
+    });
+});
 
 
 app.post('/api/photo/logo/:id', type, function(req, res) {
@@ -1003,7 +1010,6 @@ app.get('/getOneTheme/:id/:organization', function(req,res){
        res.json(doc);
     });
 });
-
 
 
 
