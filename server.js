@@ -591,7 +591,7 @@ app.delete('/deleteSingleMarkers/:id', function(req, res) {
 
 
 app.get('/publicThemes/:organization', function(req,res){
-  db.museum.findOne({       
+  db.museum.find({       
 	   "zugehörigkeit": req.params.organization
      },
      function(err, doc) {
