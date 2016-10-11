@@ -1004,14 +1004,7 @@ app.get('/getOneTheme/:id/:organization', function(req,res){
     });
 });
 
-app.get('/publicThemes/:organization', function(req,res){
-  db.museum.findOne({       
-	   "zugehörigkeit": req.params.organization
-     },
-     function(err, doc) {
-       res.json(doc);
-    });
-});
+
 
 
 
