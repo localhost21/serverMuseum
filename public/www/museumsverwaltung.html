@@ -81,13 +81,13 @@
 			<tbody>
 			<tr>
 				<td><input id="ide" class="form-control" placeholder="Nr." ng-model="exponat.ide"  ></td>
-				<td><input class="form-control" placeholder='Bild-URL' ng-model="exponat.bild"></td>
-				<td><input class="form-control" ng-model="exponat.name" placeholder="Name"></td>
+				<td><input id="bildURL" class="form-control" placeholder='Bild-URL' ng-model="exponat.bild"></td>
+				<td><input id="expoName" class="form-control" ng-model="exponat.name" placeholder="Name"></td>
 				<!--<td><input class="form-control" ng-model="exponat.position"></td>-->
 				
 				<td>
 				<select ng-model="exponat.position" class="styled-select semi-square">					
-					<option ng-repeat="ma in maData" value="{{ma.name}}"> {{ma.name}} - {{ma.message}}</option>
+					<option ng-repeat="ma in maData | orderBy:'name'" value="{{ma.name}}"> {{ma.name}} - {{ma.message}}</option>
 				</select>
 				</td>
 				
@@ -96,15 +96,15 @@
 				
 				<td>
 				<select ng-model="exponat.theme" class="styled-select semi-square">					
-					<option ng-repeat="thema in themaDaten" value='{{thema.nummer}}'>{{thema.name}} - {{thema.nummer}}</option>
+					<option ng-repeat="thema in themaDaten | orderBy:'nummer'" value='{{thema.nummer}}'>{{thema.nummer}} - {{thema.name}} </option>
 				</select>
 				</td>				
 				<td><input class="form-control" placeholder="Audiofile-URL" ng-model="exponat.audio"></td>
 				<td><input type="checkbox" ng-model="exponat.aktion"></td>
 				<td>
 				<select ng-model="exponat.sprache" class="styled-select semi-square">
-					<option >EN</option>
-					<option selected="selected">DE</option>
+					<option calue="EN">Englisch</option>
+					<option selected="selected" value="DE">Deutsch</option>
 				</select>
 				</td>
 				<td><button id="hinzufügen" class="btn btn-default" ng-click="addexponat()">Neues Exponat</button></td>
@@ -125,8 +125,8 @@
 					<td><audio controls  ng-src="{{exponat.audio}}">	</audio> </td>
 					<td><input type="checkbox" ng-model="exponat.aktion"></td>
 					<td>{{exponat.sprache}}</td>
-					<td><button class="btn btn-default" ng-click="edit(exponat.name)" onclick="window.scrollTo(0,0);">&Auml;ndern </button></td>
-					<td><button class="btn btn-danger" ng-click="remove(exponat.name)">L&ouml;schen</button></td>
+					<td><button class="btn btn-default" ng-click="edit(exponat.name, exponat.bild)" onclick="window.scrollTo(0,0);">&Auml;ndern </button></td>
+					<td><button class="btn btn-danger" ng-click="remove(exponat.name, exponat.bild)">L&ouml;schen</button></td>
 				</tr>
 			</tbody>
 		</table>

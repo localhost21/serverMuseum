@@ -92,31 +92,10 @@ myApp.controller('loginCtrl', function($scope, $http, $timeout, $location, $wind
 		},100);
 
     } else {
-      Alert.render("Falsche Zugangsdaten!");
+      window.alert("Falsche Zugangsdaten!");
     }}, 2500);
   }
-  
-  
-  function CustomAlert() {
-	  
-    this.render = function(dialog) {
-      var winW = window.innerWidth;
-      var winH = window.innerHeight;
-      var dialogoverlay = document.getElementById('dialogoverlay1');
-      var dialogbox = document.getElementById('dialogbox1');
-      dialogoverlay.style.display = "block";
-      dialogoverlay.style.height = winH + "px";
-      dialogbox.style.left = (winW / 2) - (350 * .5) + "px";
-      dialogbox.style.top = "100px";
-      dialogbox.style.display = "block";
-      document.getElementById('dialogboxhead1').innerHTML = "Fehlermeldung!";
-      document.getElementById('dialogboxbody1').innerHTML = dialog;
-      document.getElementById('dialogboxfoot1').innerHTML = '<a href="javascript:window.location.reload(true)" class="btn btn-primary"> ok</a>';
-    }
-	
-	
-  }
-  var Alert = new CustomAlert();
+
 });
 
 
@@ -522,24 +501,7 @@ myApp.controller('AppCtrl',  function($scope, $http, $location, $anchorScroll) {
       document.getElementById('dialogoverlay').style.display = 'none';
     }
 
-    function CustomAlert() {
-      this.render = function(dialog) {
-        var winW = window.innerWidth;
-        var winH = window.innerHeight;
-        var dialogoverlay = document.getElementById('dialogoverlay');
-        var dialogbox = document.getElementById('dialogbox');
-        dialogoverlay.style.display = "block";
-        dialogoverlay.style.height = winH + "px";
-        dialogbox.style.left = (winW / 2) - (350 * .5) + "px";
-        dialogbox.style.top = "100px";
-        dialogbox.style.display = "block";
-        document.getElementById('dialogboxhead').innerHTML = "Fehlermeldung!";
-        document.getElementById('dialogboxbody').innerHTML = dialog;
-        document.getElementById('dialogboxfoot').innerHTML = '<a href="javascript:window.location.reload(true)" class="btn btn-primary"> ok</a>';
-      }
 
-    }
-    var Alert = new CustomAlert();
 	
 	
 });
@@ -634,8 +596,12 @@ myApp.controller('exponatCtrl', function($scope, $http, $location, $anchorScroll
 		
     $scope.addexponat = function() {
       if (3 > document.getElementById('ide').value.length) {
-        Alert.render("ID muss mindestens dreistellig sein");
-      } else {
+        window.alert("ID muss mindestens dreistellig sein");
+      } else if(1 > document.getElementById('bildURL').value.length){
+		  window.alert("Bitte geben Sie eine Bild-URL ein");
+	  } else if(1 > document.getElementById('expoName').value.length){
+		  window.alert("Bitte geben Sie einen Exponat-Namen ein");
+	  } else {
         var a = $scope.exponat.bild;
 		if(a!=""){
 			$scope.exponat.bild = a.replace(/www.dropbox/g, "dl.dropboxusercontent");
@@ -670,24 +636,7 @@ myApp.controller('exponatCtrl', function($scope, $http, $location, $anchorScroll
       $scope.exponat = "";
     }
 	
-	    function CustomAlert() {
-      this.render = function(dialog) {
-        var winW = window.innerWidth;
-        var winH = window.innerHeight;
-        var dialogoverlay = document.getElementById('dialogoverlay');
-        var dialogbox = document.getElementById('dialogbox');
-        dialogoverlay.style.display = "block";
-        dialogoverlay.style.height = winH + "px";
-        dialogbox.style.left = (winW / 2) - (350 * .5) + "px";
-        dialogbox.style.top = "100px";
-        dialogbox.style.display = "block";
-        document.getElementById('dialogboxhead').innerHTML = "Fehlermeldung!";
-        document.getElementById('dialogboxbody').innerHTML = dialog;
-        document.getElementById('dialogboxfoot').innerHTML = '<a href="javascript:window.location.reload(true)" class="btn btn-primary"> ok</a>';
-      }
-
-    }
-    var Alert = new CustomAlert();	
+	   
 	
 	
 	
