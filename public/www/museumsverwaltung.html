@@ -26,9 +26,9 @@
 	
 		<div class="sidebar">
 			<ul id="nav">
-				<li><a href="/#/museumsverwaltung" class="selected">Home</a></li>
-				<li><a href="/#/getbeacons">Beacons</a></li>
-				<li><a href="/#/custo" >Audioguide</a></li>
+				<li><a href="/#/museumsverwaltung" class="selected">Exponate</a></li>
+				<li><a href="/#/getbeacons">Lokalisierung</a></li>
+				<li><a href="/#/custo" >Audioguide- App</a></li>
 				<li><a href="/#/hilfe" >Hilfe</a></li>
 				
 			</ul>
@@ -50,18 +50,82 @@
 		
 		
 		
-		
 		<br><br>
-		<input id="productMenuBar" class="form-control has-header"  placeholder="Suche nach Exponatnummer" ng-model="filterer" id="input_ea30_0"></input>
+		
+		
+		
+		
+		 <table style="width:100%">
+			<tr>
+				<td style="width: 90%;"><input id="productMenuBar" class="form-control has-header"  placeholder="Suche nach Exponatnummer" ng-model="filterer"/></td>
+				<td style="width: 10%;"><button id="addButton" style="width: 100%;" ng-click="open()" class="btn btn-primary" >Neues Exponat</button></td>
+			</tr>
+		</table> 
+					
+		
+		
+		<a id="buttonErweiterteSuche" class="leftButton" onclick="document.getElementById('erweiterteSuche').style='display: inline-block';document.getElementById('buttonErweiterteSuche').style='display: none'; document.getElementById('productMenuBar').style='display: none';document.getElementById('addButton').style='display: none'" > erweiterte Suchoptionen anzeigen</a>
+		
+		
+		<div id="erweiterteSuche" >
+		
+		
+		
+		<p>Beschränken Sie die Suchergebnisse mit folgenden Filtern:<p>
+		 <table class="table" >			
+			<tr>
 			
-		<table class="table" style="margin-top: 20px;">
+				<td>Exponatnummer</td>
+				<td>
+				<input class="form-control has-header"  placeholder="Exponatnummer eingeben" ng-model="filterer"></input>						
+				</td>
+				<td>Name</td>
+				<td>
+				<input class="form-control has-header"  placeholder="Exponatname eingeben" ng-model="nameSort"></input>				
+				</td>
+			</tr>
+			<tr>	
+				<td>Thema</td>
+				<td>
+				<select ng-model="themeSort" class="styled-select semi-square wide">					
+					<option ng-repeat="thema in themaDaten | orderBy:'nummer'" value='{{thema.nummer}}'>{{thema.nummer}} - {{thema.name}} </option>
+				</select>			
+				</td>
+				<td>Position</td>
+				<td>
+				<select ng-model="posSort" class="styled-select semi-square wide">					
+					<option ng-repeat="ma in maData | orderBy:'name'" value="{{ma.name}}"> {{ma.name}} - {{ma.message}}</option>
+				</select>				
+				</td>
+			</tr>
+			<tr>				
+				<td>Nur Aktive zeigen</td>
+				<td>
+				<input type="checkbox" ng-model="aktionSort">
+				</td>	
+				<td>&nbsp;</td>				
+				<td>&nbsp;</td>					
+			</tr>
+		</table>
+				
+			
+		<button class="btn btn-danger rightButton" ng-click="filterer=undefined;spracheSort=undefined;nameSort=undefined;posSort=undefined;themeSort=undefined;aktionSort=undefined">Filter zurücksetzen</button>
+		
+		<a onclick="document.getElementById('addButton').style='display: inline-block';document.getElementById('productMenuBar').style='display: inline-block';document.getElementById('erweiterteSuche').style='display: none';document.getElementById('buttonErweiterteSuche').style='display: inline-block'"> erweiterte Suchoptionen ausblenden</a>
+		</div>
+			
+		
+		<br>
+		
+		<table class="table standard_p" style="margin-top: 20px;">
 			<thead>
 				<tr>
 					<th><button class="tableButton" href="#" ng-click="sortType = 'ide'; sortReverse = !sortReverse">
 					Exponat-Nr.<span ng-show="sortType == 'ide' && !sortReverse" class="fa fa-caret-down"></span><span ng-show="sortType == 'ide' && sortReverse" class="fa fa-caret-up"></span> </button></th>
-					<th style="width: 30%;">Bild</th>					
-					<th style="width: 30%;"><button class="tableButton" href="#" ng-click="sortType = 'name'; sortReverse = !sortReverse">
+					<th style="width: 10%;">Bild</th>					
+					<th style="width: 20%;"><button class="tableButton" href="#" ng-click="sortType = 'name'; sortReverse = !sortReverse">
 					Exponatname<span ng-show="sortType == 'name' && !sortReverse" class="fa fa-caret-down"></span><span ng-show="sortType == 'name' && sortReverse" class="fa fa-caret-up"></span> </button></th>					
+					<th style="width: 30%;">Beschreibung</th>
 					<th><button class="tableButton" href="#" ng-click="sortType = 'position'; sortReverse = !sortReverse">
 					Position <span ng-show="sortType == 'position' && !sortReverse" class="fa fa-caret-down"></span><span ng-show="sortType == 'position' && sortReverse" class="fa fa-caret-up"></span> </button></th>
 					 </button></th>
@@ -70,8 +134,6 @@
 					<th>Audiofile</th>
 					<th><button class="tableButton" href="#" ng-click="sortType = 'aktion'; sortReverse = !sortReverse">
 					Aktiv<span ng-show="sortType == 'aktion' && !sortReverse" class="fa fa-caret-down"></span><span ng-show="sortType == 'aktion' && sortReverse" class="fa fa-caret-up"></span> </button></th>
-					<th><button class="tableButton" href="#" ng-click="sortType = 'sprache'; sortReverse = !sortReverse">
-					Sprache <span ng-show="sortType == 'sprache' && !sortReverse" class="fa fa-caret-down"></span><span ng-show="sortType == 'sprache' && sortReverse" class="fa fa-caret-up"></span> </button></th>
 					<th>&nbsp;</th>
 					<th>&nbsp;</th>
 				</tr>
@@ -79,54 +141,46 @@
 			
 			
 			<tbody>
-			<tr>
-				<td><input id="ide" class="form-control" placeholder="Nr." ng-model="exponat.ide"  ></td>
-				<td><input id="bildURL" class="form-control" placeholder='Bild-URL' ng-model="exponat.bild"></td>
-				<td><input id="expoName" class="form-control" ng-model="exponat.name" placeholder="Name"></td>
-				<!--<td><input class="form-control" ng-model="exponat.position"></td>-->
-				
-				<td>
-				<select ng-model="exponat.position" class="styled-select semi-square">					
-					<option ng-repeat="ma in maData | orderBy:'name'" value="{{ma.name}}"> {{ma.name}} - {{ma.message}}</option>
-				</select>
-				</td>
-				
-				
-				
-				
-				<td>
-				<select ng-model="exponat.theme" class="styled-select semi-square">					
-					<option ng-repeat="thema in themaDaten | orderBy:'nummer'" value='{{thema.nummer}}'>{{thema.nummer}} - {{thema.name}} </option>
-				</select>
-				</td>				
-				<td><input class="form-control" placeholder="Audiofile-URL" ng-model="exponat.audio"></td>
-				<td><input type="checkbox" ng-model="exponat.aktion"></td>
-				<td>
-				<select ng-model="exponat.sprache" class="styled-select semi-square">
-					<option value="EN">Englisch</option>
-					<option selected="selected" value="DE">Deutsch</option>
-				</select>
-				</td>
-				<td><button id="hinzufügen" class="btn btn-default" ng-click="addexponat()">Neues Exponat</button></td>
-				<td><button id="aendernButton" class="btn btn-dafault" ng-click="update()" style="display:none;">Speichern </button>&nbsp;&nbsp;</td>
-			</tr>
+
 			
 		
 			
 			
 			<!-- ng-repeat copies content into seperate rows -->
-				<tr ng-repeat="exponat in backend | orderBy:sortType:sortReverse | filter: {'ide': filterer}">
+				<tr ng-repeat="exponat in backend | orderBy:sortType:sortReverse | filter: {'ide': filterer, 'sprache':spracheSort, 'name':nameSort, 'position':posSort,'theme':themeSort, 'aktion':aktionSort}">
 				
 					<td>{{exponat.ide}}</td>
 					<td class="item"><img ng-src="{{exponat.bild}}"></img></td>
-					<td>{{exponat.name}}</td>
+					<td>{{exponat.name_de}}</td>
+					
+					<!--eingefahren -->
+					<td ng-click="exponat.expand=true" ng-show="!exponat.expand && exponat.checkIfLong" >
+					<a class="standard_p black">{{exponat.beschreibung_de | limitTo : 40}} ... </a><p class="fa fa-caret-down" /></td>
+					
+					
+					<!--ausgefahren -->
+					<td ng-click="exponat.expand=false" ng-show="exponat.expand && exponat.checkIfLong" style="display: inline-block; word-break: break-word;">
+					<p class="fa fa-caret-up"><a class="standard_p"> verbergen</a></p><br>
+					{{exponat.beschreibung_de}}</td>
+					
+					
+					<!--nur eingefahren -->
+					<td ng-show="!exponat.checkIfLong" >
+					<a class="standard_p black">{{exponat.beschreibung_de }} </a></td>
+					
+					
+					
+					
+					
+					
+					
 					<td>{{exponat.position}}</td>
 					<td>{{exponat.theme}}</td>
 					<td><audio controls  ng-src="{{exponat.audio}}">	</audio> </td>
 					<td><input type="checkbox" ng-model="exponat.aktion"></td>
-					<td>{{exponat.sprache}}</td>
-					<td><button class="btn btn-default" ng-click="edit(exponat.name, exponat.bild)" onclick="window.scrollTo(0,0);">&Auml;ndern </button></td>
-					<td><button class="btn btn-danger" ng-click="remove(exponat.name, exponat.bild)">L&ouml;schen</button></td>
+					<!--<td><button class="btn btn-default" ng-click="edit(exponat.name, exponat.bild)" onclick="window.scrollTo(0,0);">&Auml;ndern </button></td>
+					<td><button class="btn btn-danger" ng-click="remove(exponat.name, exponat.bild)">L&ouml;schen</button></td>-->
+					<td> <button ng-click="open(exponat)" class="btn btn-default">Ändern</button></td>
 				</tr>
 			</tbody>
 		</table>

@@ -26,9 +26,9 @@
     <div id="container">
       <div class="sidebar">
         <ul id="nav">
-          <li><a href="/#/museumsverwaltung" >Home</a></li>
-				<li><a href="/#/getbeacons" class="selected">Beacons</a></li>
-				<li><a href="/#/custo" >Audioguide</a></li>
+          <li><a href="/#/museumsverwaltung" >Exponate</a></li>
+				<li><a href="/#/getbeacons" class="selected">Lokalisierung</a></li>
+				<li><a href="/#/custo" >Audioguide-App</a></li>
 				<li><a href="/#/hilfe" >Hilfe</a></li>
 				
         </ul>
@@ -41,47 +41,21 @@
         <h1>Beacons</h1>
        <p> Hier können Sie die Einstellungen Ihrer Beacons ändern oder <span><a href="http://estimote.com/#jump-to-products"> weitere Beacons bestellen.</a> </span> </p>
 	 
-       <table class="table" style="margin-top: 50px;">
+       <table class="table standard_p" style="margin-top: 50px; width: 100%;">
           <thead>
             <tr><th style="width: 70px;"></th>
-				<th>Name</th>
-				<th>Major</th>
-				<th>Minor</th>
-				<th>Sendestärke</th>
-                <th>Sendeinterval in ms</th>
-                <th>Batterielaufzeit in Tagen</th>
-				<th>Farbe</th>
+				<th style="width: 20%;">Name</th>
+				<th style="width: 10%;">Major</th>
+				<th style="width: 10%;">Minor</th>
+				<th style="width: 10%;">Sendestärke</th>
+                <th style="width: 15%;">Sendeinterval in ms</th>
+                <th style="width: 15%;">Batterielaufzeit in Tagen</th>
+				<th style="width: 10%;">Farbe</th>
             </tr>
           </thead>
 
 
           <tbody>
-		  <tr>
-			<td></td>
-			<td><input class="form-control" ng-model="beacon.shadow.name"/></td>
-			<td><input class="form-control" ng-model="beacon.settings.advertisers.ibeacon[0].major"/></td>
-			<td><input class="form-control" ng-model="beacon.settings.advertisers.ibeacon[0].minor"/></td>
-			<!--<td><input class="form-control" ng-model="beacon.settings.advertisers.ibeacon[0].power" disabled=true/></td>-->
-			<td><select ng-model="beacon.settings.advertisers.ibeacon[0].power" class="styled-select semi-square">
-					<option>-30</option>
-					<option>-20</option>
-					<option>-20</option>
-					<option>-16</option>
-					<option>-12</option>
-					<option>-8</option>
-					<option>-4</option>
-					<option>0</option>
-					<option>4</option>
-			</select></td>
-			
-			
-			
-			<td><input class="form-control" ng-model="beacon.settings.advertisers.ibeacon[0].interval"/></td>
-			<td><input class="form-control" ng-model="beacon.status_report.estimated_battery_lifetime" disabled=true/></td>
-			<td><input class="form-control" ng-model="beacon.color" disabled=true/></td>
-			<!--<td><button class="btn btn-default" ng-click="deselect()">Leeren</button>-->
-			<td><button class="btn btn-default" ng-click="saveBeaconSettings()">Speichern</button>
-		  </tr>
 			<tr ng-repeat="beacon in data track by $index">
 				<td class="item"><img style=" max-height: 80px;" ng-src='{{beacon.img}}' /></td>
 				<td>{{beacon.shadow.name}}</td>
@@ -91,7 +65,7 @@
 				<td ng-repeat="ibeacon in beacon.settings.advertisers.ibeacon">{{ibeacon.interval}}</td>
 				<td>{{beacon.status_report.estimated_battery_lifetime}}</td>
 				<td>{{beacon.color}}</td>
-				<td><button class="btn btn-default"  ng-click="edit(beacon.identifier)" onclick="window.scrollTo(0,0);">Ändern</button></td>
+				<td><button class="btn btn-default"  ng-click="open(beacon)" onclick="window.scrollTo(0,0);">Ändern</button></td>
             
 			</tr>
           </tbody>

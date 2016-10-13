@@ -1,4 +1,4 @@
-var myApp = angular.module('myApp', ['ngRoute', 'ui-leaflet','textAngular', 'ui.bootstrap','app.routes', 'app.directives']).config(function($sceDelegateProvider) {
+var myApp = angular.module('myApp', ['ngRoute', 'ui-leaflet','textAngular', 'ui.bootstrap','app.routes', 'app.directives','xeditable']).config(function($sceDelegateProvider) {
 //'leaflet-directive', 'ui-leaflet'
  $sceDelegateProvider.resourceUrlWhitelist([
     // Allow same origin resource loads.
@@ -19,9 +19,109 @@ var myApp = angular.module('myApp', ['ngRoute', 'ui-leaflet','textAngular', 'ui.
   ]);
 });
 
+
+
+myApp.controller('PopupCont', function ($scope, $rootScope, $timeout, $uibModalInstance, $http, accessFac) {
+	$scope.close = function () {
+		$uibModalInstance.dismiss('cancel');
+	};
+	
+	$http.get('/themenListe/' + accessFac.getToken()).success(function(response) {
+		$scope.themaDaten = response;
+		$scope.thema="";
+	});
+	
+	$http.get('/nonWalkerMarkers/' + accessFac.getToken()).success(function(response) {
+		$scope.maData = response;
+		$scope.ma = "";
+	});
+	
+	if(accessFac.getExponat()!=null){
+		$scope.exponat = accessFac.getExponat();
+	}else{
+		$scope.exponat = "";
+		$timeout(function(){
+			document.getElementById('buttonAdd').style="display: inline-block";
+			document.getElementById('buttonDelete').style="display: none";
+			document.getElementById('buttonModify').style="display: none";
+		},20);
+		
+	}
+	
+	$scope.de_expand=true;
+	$scope.en_expand=false;
 	
 	
+	$scope.remove = function(exponat) {
+		$http.delete('/backend/' + exponat._id);
+		$scope.close();		
+        $rootScope.$emit("refresh", {});
+    }
 	
+	
+	$scope.addexponat = function(exponat) {
+      if (3 > document.getElementById('ide').value.length) {
+        window.alert("ID muss mindestens dreistellig sein");
+      } else if(1 > document.getElementById('bildURL').value.length){
+		  window.alert("Bitte geben Sie eine Bild-URL ein");
+	  } else if(1 > document.getElementById('name_de').value.length){
+		  window.alert("Bitte geben Sie einen Exponat-Namen ein");
+	  } else {
+        var a = exponat.bild;
+		if(a!=""){
+			exponat.bild = a.replace(/www.dropbox/g, "dl.dropboxusercontent");
+		}     
+        $http.post('/backend/' + accessFac.getToken(), exponat).success(function(response) {
+			 $rootScope.$emit("refresh", {});
+			 $scope.close();
+        });
+      }
+    }
+  
+    $scope.update = function(exponat) {
+      $http.put('/backend/' + exponat._id, exponat).success(function(response) {
+         $rootScope.$emit("refresh", {});
+		 $scope.close();
+      });
+    }
+
+});
+
+
+
+
+
+myApp.controller('PopupContBeacon', function ($scope, $rootScope, $timeout, $uibModalInstance, $http, accessFac) {
+	$scope.close = function () {
+		$uibModalInstance.dismiss('cancel');
+	};
+	
+	$scope.beacon = accessFac.getBeacon();
+	
+	$scope.update = function(beacon) {
+		$http.put('/setBeacons', beacon).success(function(response) {
+			
+		});
+		$timeout(function(){
+			//$rootScope.$emit("refresh", {});
+			$scope.close();	
+			window.alert("Erfolgreich gespeichert, Daten werden demnächst aktualisiert");
+		},200);
+			
+
+    }
+	
+	
+
+
+});
+
+
+
+
+
+
+
 
 myApp.factory('accessFac', function($window, $http) {
   var obj = {}
@@ -52,6 +152,22 @@ myApp.factory('accessFac', function($window, $http) {
 	 return $window.localStorage['jwtToken'];//obj.token[i - 1];
   }
   
+  obj.setExponat = function(helper) { //set the permission to true
+    obj.exponat = helper;	
+  }
+  obj.getExponat = function() {
+	return obj.exponat;
+    
+  }
+  
+  
+    obj.setBeacon = function(helper) { //set the permission to true
+    obj.beacon = helper;	
+  }
+  obj.getBeacon = function() {
+	return obj.beacon;
+    
+  }
    
   
   
@@ -59,7 +175,9 @@ myApp.factory('accessFac', function($window, $http) {
   return obj;
 });
 
-myApp.run(function($http, accessFac){
+myApp.run(function($http, accessFac, editableOptions){
+	editableOptions.theme = 'bs3';
+	
 	$http.get('/museum/' + accessFac.getToken()).success(function(response) {
 	 var museumData = response;
 	 var museumH = "";						
@@ -103,6 +221,49 @@ myApp.controller('loginCtrl', function($scope, $http, $timeout, $location, $wind
 
 
 myApp.controller('custoCtrl', function($scope, $timeout, $location, $http, leafletData, leafletBoundsHelpers,shareClickedId,textAngularManager,accessFac) {
+	
+	
+	$scope.fu = function(){
+		consologe.log("here");
+	}
+	
+$scope.resizeTextLeft = function(multiplier) {
+  var elem = document.getElementsByClassName("fontChanger");
+  for (i = 0; i < elem.length; i++) {
+     var currentSize = elem[i].style.fontSize || 17;
+	 var currentHeight = elem[i].style.lineHeight || 17;
+     if (currentHeight != "26px") {
+       elem[i].style.lineHeight = (parseFloat(currentHeight) + (multiplier * 3)) + "px";
+       elem[i].style.fontSize = (parseFloat(currentSize) + (multiplier * 3.5)) + "px";
+     } else if (currentHeight == "26px") {
+       elem[i].style.lineHeight = (parseFloat(26) + "px");
+       elem[i].style.fontSize = (parseFloat(26) + "px");
+     } else {
+       window.alert("error");
+     }
+   }
+ 
+}
+
+$scope.resizeTextRight = function(multiplier) {
+  var elem = document.getElementsByClassName("fontChanger");
+  for (i = 0; i < elem.length; i++) {
+	var currentSize = elem[i].style.fontSize || 17;
+	var currentHeight = elem[i].style.lineHeight || 17;
+	if (currentHeight != "14px") {
+		elem[i].style.lineHeight = (parseFloat(currentHeight) + (multiplier * 3)) + "px";
+		elem[i].style.fontSize = (parseFloat(currentSize) + (multiplier * 3.5)) + "px";
+	} else if (currentHeight == "14px") {
+		elem[i].style.lineHeight = (parseFloat(14) + "px");
+		elem[i].style.fontSize = (parseFloat(14) + "px");
+	} else {
+		window.alert("error");
+	}
+  }
+}
+
+
+
 
   $http.get('/museum/' + accessFac.getToken()).success(function(response) {
 	 $scope.museumData = response;
@@ -122,9 +283,29 @@ var refresh = function(){
 				$scope.de = mn.de;
 				$scope.en = mn.en;
 				$scope.museumsname = mn.museumsname;
+				var helper = mn.de;
+				helper = helper.replace(/<p>/g, "<p class='fontChanger'>");
+				helper = helper.replace(/<li>/g, "<li class='fontChanger'>");
+				helper = helper.replace(/<h1>/g, "<h1 class='fontChanger'>");
+				helper = helper.replace(/<h2>/g, "<h2 class='fontChanger'>");
+				helper = helper.replace(/<h3>/g, "<h3 class='fontChanger'>");
+				helper = helper.replace(/<h4>/g, "<h4 class='fontChanger'>");
+				helper = helper.replace(/<h5>/g, "<h5 class='fontChanger'>");
+				helper = helper.replace(/<h6>/g, "<h6 class='fontChanger'>");
+				helper = helper.replace(/<ul>/g, "<ul class='fontChanger'>");
+				document.getElementById('helperInPhone').innerHTML = helper;
 			});
 			
 			$scope.htmlcontent = $scope.de;
+			
+			document.getElementById('helper').innerHTML = $scope.htmlcontent;
+			
+			
+			
+			
+			
+			
+			
       });
   $scope.clickedLng = "de";	
 	 
@@ -137,13 +318,8 @@ var refresh = function(){
     };
   
   
-  $scope.uploadName = function() {		
-		$http.put('/museumName/' + $scope.id, {"museumsname":$scope.newName}).success(function(response) {});
-		
-			refresh();
-			
-			
-		
+  $scope.uploadName = function(data) {		
+		return $http.put('/museumName/' + $scope.id, {"museumsname":data}).success(function(response) {});
     }
 
   
@@ -214,6 +390,14 @@ var refresh = function(){
     
   });
   
+  $scope.addHoverPhone = function(ziel){
+	  document.getElementById(ziel).style='color:orange';
+	  document.getElementsByClassName(ziel).style='color:orange';
+  }
+  $scope.removeHoverPhone = function(ziel){
+	  document.getElementById(ziel).style='color:black';
+	  document.getElementsByClassName(ziel).style='color:black';
+  }
 
   $scope.$on("leafletDirectiveMap.leafletMap.click", function(event, args) {
     var leafEvent = args.leafletEvent;
@@ -444,6 +628,11 @@ $http.post('/markersNew/' + accessFac.getToken(), markersInsert).success(functio
 
 refresh();
 
+
+
+
+
+
 });
 
 
@@ -506,7 +695,36 @@ myApp.controller('AppCtrl',  function($scope, $http, $location, $anchorScroll) {
 	
 });
 
-myApp.controller('beaconsCtrl', function($scope, $http){
+myApp.controller('beaconsCtrl', function($scope, $rootScope, $http, $uibModal, accessFac){
+	
+	
+	$rootScope.$on("refresh", function(){		  
+		  refresh();	
+	  });
+ 
+$scope.open = function ( helper) {
+	console.log(helper);
+	accessFac.setBeacon(helper);
+	var modalInstance = $uibModal.open({
+		templateUrl: 'www/popup_beacon.html',
+		controller: 'PopupContBeacon',
+		size: "lg"
+	});
+	
+	modalInstance.result.then(
+        //close
+        function (result) {
+            var a = result;
+        },
+        //dismiss
+        function (result) {
+            var a = result;
+        });
+}
+		
+	
+	
+	
 var refresh = function(){
 	
 
@@ -549,7 +767,36 @@ refresh();
 
 
 
-myApp.controller('exponatCtrl', function($scope, $http, $location, $anchorScroll, $timeout, accessFac){
+myApp.controller('exponatCtrl', function($scope,$rootScope, $http, $uibModal, $location, $anchorScroll, $timeout, accessFac){
+
+
+
+
+
+
+
+$scope.open = function ( helper) {
+	accessFac.setExponat(helper);
+	var modalInstance = $uibModal.open({
+		templateUrl: 'www/popup_exponat.html',
+		controller: 'PopupCont',
+		size: "lg"
+	});
+	
+	modalInstance.result.then(
+        //close
+        function (result) {
+            var a = result;
+        },
+        //dismiss
+        function (result) {
+            var a = result;
+        });
+}
+	
+
+	
+	
 	$http.get('/museum/' + accessFac.getToken()).success(function(response) {
 	 $scope.museumData = response;
 	$scope.museumH = "";						
@@ -568,18 +815,44 @@ myApp.controller('exponatCtrl', function($scope, $http, $location, $anchorScroll
   });
   
   
-	
-	
-	
+	  $rootScope.$on("refresh", function(){		  
+		  refresh();	
+	  });
+ 
+ 
+ 
 	var refresh = function() {
       $http.get('/backend/'+ accessFac.getToken()).success(function(response) {
         $scope.backend = response;
         $scope.exponat = "";
         $scope.sortType = 'ide';
         $scope.sortReverse = false;
-        $scope.searchName = '';
+        $scope.searchName = '';	
+		
+		
         angular.forEach($scope.backend, function(exponat) {
           exponat.ide = parseFloat(exponat.ide);
+		  exponat.expand = true
+		 try {
+			var length = exponat.beschreibung_de.length;		  
+		  }catch(e){}
+		  
+		  
+		  if(exponat.beschreibung_de===undefined){
+			  exponat.beschreibung_de="noch keine Beschreibung hinzugefügt";
+			
+		  }else if(length>40){
+			   exponat.expand = false;
+			   exponat.checkIfLong=true;
+				
+		  }else if(length<=40){
+			   exponat.checkIfLong = false;
+				
+		  }
+		  
+		  
+		  
+		  
         });
         $http.get('/backend_count/'+accessFac.getToken()).success(function(response) {
           $scope.number = response;
@@ -587,89 +860,18 @@ myApp.controller('exponatCtrl', function($scope, $http, $location, $anchorScroll
       });
     }
 	refresh();
- 
 	$http.get('/themenListe/' + accessFac.getToken()).success(function(response) {
 		$scope.themaDaten = response;
 		$scope.thema="";
 	});
    
 		
-    $scope.addexponat = function() {
-      if (3 > document.getElementById('ide').value.length) {
-        window.alert("ID muss mindestens dreistellig sein");
-      } else if(1 > document.getElementById('bildURL').value.length){
-		  window.alert("Bitte geben Sie eine Bild-URL ein");
-	  } else if(1 > document.getElementById('expoName').value.length){
-		  window.alert("Bitte geben Sie einen Exponat-Namen ein");
-	  } else {
-        var a = $scope.exponat.bild;
-		if(a!=""){
-			$scope.exponat.bild = a.replace(/www.dropbox/g, "dl.dropboxusercontent");
-		}        
-        $http.post('/backend/' + accessFac.getToken(), $scope.exponat).success(function(response) {
-			refresh();
-        });
-      }
-    }
-    $scope.remove = function(name) {
-      $http.delete('/backend/' + name).success(function(response) {
-        refresh();
-      });
-    }
-    $scope.edit = function(name) {
-      $http.get('/backendModify/' + name).success(function(response) {
-        $scope.exponat = response;
-        document.getElementById('hinzufügen').style.display = "none";
-        document.getElementById('aendernButton').style.display = "inline-block";
-      });
-    }
-    $scope.update = function() {
-      $http.put('/backend/' + $scope.exponat.name, $scope.exponat).success(function(response) {
-        document.getElementById('hinzufügen').style.display = "inline-block";		
-        document.getElementById('aendernButton').style.display = "none";
-        refresh();
-      });
-	  //window.location.reload('museumsverwaltung');
-    }
-    $scope.deselect = function() {
-      document.getElementById('hinzufügen').style = "display: inline-block";
-      $scope.exponat = "";
-    }
+    
 	
 	   
 	
 	
 	
-	
-	var startProductBarPos=-1;
-    window.onscroll=function(){
-        var bar = document.getElementById('productMenuBar');
-        if(startProductBarPos<0)startProductBarPos=findPosY(bar);
-
-        if(pageYOffset>startProductBarPos){
-            bar.style.position='fixed';
-            bar.style.top="50px";
-        }else{
-            bar.style.position='relative';
-			bar.style.top="0px";
-        }
-
-    };
-
-
-    function findPosY(obj) {
-        var curtop = -50;
-        if (typeof (obj.offsetParent) != 'undefined' && obj.offsetParent) {
-            while (obj.offsetParent) {
-                curtop += obj.offsetTop;
-                obj = obj.offsetParent;
-            }
-            curtop += obj.offsetTop;
-        }
-        else if (obj.y)
-            curtop += obj.y;
-        return curtop;
-    }
 });
 
 

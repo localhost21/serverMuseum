@@ -17,7 +17,8 @@ var jwt = require('jsonwebtoken');
 var db = mongojs(databaseUrl, collections);
 var apiRoutes = express.Router();
 var cloudinary = require('cloudinary');
-var ObjectId = require('mongodb').ObjectID;
+//var ObjectId = require('mongodb').ObjectID;
+var mongo = require('mongodb');
 
 app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.json());
@@ -849,17 +850,27 @@ app.get('/orgName/:id', function(req, res) {
 app.delete('/backend/:id', function(req, res) {
   var id = req.params.id;
   db.backend.remove({
-      name: id
+      _id: id
     },
     function(err, doc) {
-      res.json(doc);
+      //res.json(doc);
+    });
+	
+	
+	
+	var o_id = new mongo.ObjectID(id);
+	 db.backend.remove({
+      _id: o_id
+    },
+    function(err, doc) {
+      //res.json(doc);
     });
 });
 
 app.get('/backendModify/:id', function(req, res) {
   var id = req.params.id;    
   db.backend.findOne({
-      name: id
+      name_de: id
     },
     function(err, doc) {
       res.json(doc);
@@ -1109,16 +1120,46 @@ app.put('/backend/:id', function(req, res) {
   var id = req.params.id;
   db.backend.findAndModify({
     query: {
-      name: id
+      _id: id
     },
     update: {
       $set: {
         ide: req.body.ide,
         bild: req.body.bild,
-        name: req.body.name,
+        name_de: req.body.name_de,
+        name_en: req.body.name_en,
+		beschreibung_de: req.body.beschreibung_de,
+		beschreibung_en: req.body.beschreibung_en,
         position: req.body.position,
         theme: req.body.theme,
-        audio: req.body.audio,
+        audio_de: req.body.audio_de,
+        audio_en: req.body.audio_en,
+        aktion: req.body.aktion,
+        sprache: req.body.sprache
+      }
+    },
+    nex: true
+  }, function(err, doc) {
+    
+  });
+  
+    var o_id = new mongo.ObjectID(id);
+  db.backend.findAndModify({
+    query: {
+      _id: o_id
+    },
+    update: {
+      $set: {
+        ide: req.body.ide,
+        bild: req.body.bild,
+        name_de: req.body.name_de,
+        name_en: req.body.name_en,
+		beschreibung_de: req.body.beschreibung_de,
+		beschreibung_en: req.body.beschreibung_en,
+        position: req.body.position,
+        theme: req.body.theme,
+        audio_de: req.body.audio_de,
+        audio_en: req.body.audio_en,
         aktion: req.body.aktion,
         sprache: req.body.sprache
       }

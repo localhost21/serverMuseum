@@ -12,9 +12,9 @@
     <div id="container">
       <div class="sidebar">
         <ul id="nav">
-          <li><a href="/#/museumsverwaltung">Home</a></li>
-          <li><a href="/#/getbeacons">Beacons</a></li>
-          <li><a href="/#/custo" class="selected">Audioguide</a></li>
+          <li><a href="/#/museumsverwaltung">Exponate</a></li>
+          <li><a href="/#/getbeacons">Lokalisierung</a></li>
+          <li><a href="/#/custo" class="selected">Audioguide-App</a></li>
           <li><a href="/#/hilfe">Hilfe</a></li>
 
         </ul>
@@ -25,22 +25,80 @@
 
 		
 		
-		<div id="area">
+		<div class="area" style="min-heigth: 500px;">
           <h2 id="custo">Allgemeine Angaben </h2> 
 		  
-		  <div style="max-width: 300px;margin: 0 auto;">
-		 <div ng-controller="custoCtrl"><label style="width: 300px;"> Aktueller Name: <br><input id="inputName" ng-repeat="mn in datalicous" type="text" class="form-control" placeholder="{{museumsname}}" disabled=true  />
-		</label>
 		  
-              <label style="margin-top: 30px; width: 300px;">Neuer Name:<input type="text" class="form-control" ng-model="newName"/> </label>
-			  <button class="btn btn-default" ng-click="uploadName()"> Speichern</button>
 		  
-		  </div></div><br><br>
+		 	<div id="phone">
+				<img src="www/img/iPhone-5.png" id="phoneImg">
+				<div id="headerPhone"><i class="fa fa-bars fa-2x" aria-hidden="true" style="color: white; float: left; margin-left: 9px; margin-top: 6px;"></i>
+					<p style="color: white; line-height: 44px;">Über uns </p>					
+				</div>
+				
+				<div id="scrollingContent">	
+					<h1 style="color: black;"> Herzlich Willkommen im <span id="namePhone">{{museumsname}}</span></h1>
+					<p id="helperInPhone" style="display:block;font-size: 15px;"/>				
+				</div>
+				
+				<div id="footerPhone">
+					<button class="button-large footer-button left" ng-click="resizeTextLeft(1)" style="font-size: 18px;"> +A </button>
+					<button class="button-large footer-button right" ng-click="resizeTextRight(-1)" style="font-size: 13px;"> -A </button>
+				</div>
+				
+				
+			</div>
+			
+			
+			
+			
+			<div class="nextToPhone">
+		  
+
+			<span  editable-text="museumsname" onaftersave="uploadName($data)" e-form="textBtnForm" style="display: inline;" ng-mouseover="addHoverPhone('namePhone')" ng-mouseleave="removeHoverPhone('namePhone')"> {{ museumsname || "empty" }}</span>
+			<button class="btn btn-primary" style="display: inline-block" ng-click="textBtnForm.$show()" ng-hide="textBtnForm.$visible">&Auml;ndern</button>
+				
+	
+				
+			<div id="showerText" >	
+				<table>
+					<tr><td><p id="helper" style="display:block;font-size: 15px;" ng-mouseover="addHoverPhone('scrollingContent')" ng-mouseleave="removeHoverPhone('scrollingContent')"/></td><td> <button class="btn btn-primary" onclick="document.getElementById('showerText').style='display:none';document.getElementById('editText').style='display:block';" >&Auml;ndern</button></td></tr>
+				</table>
+			</div>
+				
+				
+			<div id="editText" style="display:none">
+				<text-angular name="htmlcontent" ng-model="htmlcontent" ta-disabled='disabled' ta-text-editor-class="form-content" ta-html-editor-class="form-content" ></text-angular>
+				
+				<button class="btn btn-default" ng-click="htmlcontent=de; clickedLng='de'"> Deutsch</button> 
+				<button class="btn btn-default" ng-click="htmlcontent=en; clickedLng='en'"> Englisch</button> <br><br>
+				<button class="btn btn-primary" ng-click="uploadText(htmlcontent)" onclick="document.getElementById('showerText').style='display:block';document.getElementById('editText').style='display:none';"> Speichern</button> 
+				
+				
+				
+			</div>
+			</div>
+			
+
+			
+			
+			
+			
+		
+				
+			
+			</div>
+				
+		
+		  
+
+		  
+		  <br><br>
 		  
 		  
 		  
 		
-		  
+		  <!--
 		  
 		  <label>Über uns- Text </label>
         <div text-angular="text-angular" name="htmlcontent" ng-model="htmlcontent" ta-disabled='disabled' ></div>
@@ -54,7 +112,7 @@
 		  
         </div>
 		
-		
+		-->
 		
 		
 		

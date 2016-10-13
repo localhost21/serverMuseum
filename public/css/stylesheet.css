@@ -91,6 +91,25 @@ button.full {
   text-decoration: none;
 }
 
+
+
+div#erweiterteSuche{
+	display: none; 
+	width: 100%;
+	margin: 0 auto;
+}
+
+a.left{
+ float:left;
+ margin-top: 5px; 
+ margin-left: 5px;
+}
+
+.rightButton{
+ float:right;	
+}
+
+
 div#container {
   width: 100%;
   height: 100%;
@@ -166,6 +185,7 @@ div#box {
   height:150px;
   float: right;
   position: relative;
+  z-index: 0;
   
 }
 
@@ -325,6 +345,19 @@ div#area {
 	background-color: #e6f2ff;
 }
 
+.area {
+	border: 1px solid #2c3e50;
+	border-radius: 10px;
+	padding-left: 30px;
+	padding-top: 10px;
+	padding-bottom: 30px;
+	margin-bottom: 20px;
+	text-align: center;
+	background-color: #e6f2ff;
+	display: block;
+	min-height: 750px;
+}
+
 div#area1 {
 	border: 1px solid #2c3e50;
 	border-radius: 10px;
@@ -387,7 +420,11 @@ div#loRight {
 }
 
 
-@media screen and (max-width: 1500px) {
+.black {
+	color: black;
+}
+
+@media screen and (max-width: 1200px) {
   .sidebar {
     position: absolute;
 	height: 231px;
@@ -609,13 +646,12 @@ ul#contact li a:hover {
   padding-left: 3px;
 }
 
+
+
 #productMenuBar {
     z-index:99;
-    width:100%;
-    margin: 0 auto;
-	margin-top: 0px;
+	width: 100%;
 }
-
 
 .styled-select {
 background-color: white;
@@ -647,6 +683,37 @@ color: grey;
    border-radius: 5px;
 }
 
+.wide {
+	width: 200px;
+}
+
+.medium {
+	max-height: 400px;
+	max-width: 600px;
+}
+
+.bold {
+	font-weight: bold;
+	
+}
+
+.light {
+	color: grey;
+    padding: 0 50px 0 50px;
+}
+
+.standard_p{
+	font-size: 15px;
+	font-family: 'Open Sans';
+	display: inline;
+}
+
+p.standard_p{
+	font-size: 15px;
+	font-family: 'Open Sans';
+	display: inline;
+	color: 
+}
 
 .blue    { background-color: #1c567d; }
 .blue select    { color: #fff; }
@@ -657,4 +724,122 @@ color: grey;
 	
 }
 
+.nextToPhone {
+	margin-top: 90px;
+	margin-right: 400px;
+}
+
+div#phone {
+	height: 429px;
+	width: 295px;
+	border: 1px solid black;
+	background: white;
+	border-radius: 6px;
+	position: relative;
+	float:right;
+	right: 45px;
+	z-index: 1;
+	margin-top: 60px;
+	
+}
+
+div#headerPhone {
+	height: 48px;
+	top: 0;
+	left: 0;
+	width: 100%;
+	text-align: center;
+	background-color: #1c567d;
+	position:absolute;
+	z-index: 200;
+}
+
+img#phoneImg {
+	width: 115%; 
+	margin-top: -80px;
+	margin-left: -23px;
+	position: absolute;
+	z-index: 20;
+}
+
+.leftButton{
+	float:left;
+	margin-top:5px;
+	margin-left:5px;
+}
+
+.left {
+	float: left;
+	font-size: 18px;
+	border-top: white solid .5px;
+	border-right: white solid .5px;
+	width: 49%; 
+	height: 100%;
+}
+
+
+.right {
+	float: right;
+	font-size: 13px;
+	border-top: white solid .5px;
+	border-left: white solid .5px;
+	width: 49%; 
+	height: 100%;
+}
+
+
+.button-large {
+  padding: 0 16px;
+  min-width: 68px;
+  min-height: 50px;
+  font-size: 20px;
+  line-height: 53px;
+ background-color: #1c567d;
+ color:white;
+ }
+
+	
+div#scrollingContent {
+	display: inline-block;
+    width: 100%;
+    height: 112%;
+    line-height: 20px;
+    background-color: white;
+    overflow: scroll;
+	margin-top: 44px;
+	z-index: 200;
+	position:relative;
+	margin-bottom: 50px;
+}
+
+div#footerPhone {
+	height: 50px;
+	bottom: -100px;
+	left: 0;
+	width: 100%;
+	text-align: center;
+	background-color: #1c567d;
+	position:absolute;
+	z-index: 200;
+}
+
+
+
+div#allBeacon {
+	position: relative;
+	height: inherit;
+	display:block;
+}
+	
+div#leftBeacon {
+	left: 10px;
+	position: relative;
+	width: 78%;
+}
+
+div#rightBeacon {
+	float: right;
+	position: relative;
+	width: 20%;
+}
 
