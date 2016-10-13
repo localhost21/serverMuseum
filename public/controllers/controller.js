@@ -131,18 +131,37 @@ myApp.controller('PopupCont', function ($scope, $rootScope, $timeout, $uibModalI
 	  } else if(1 > document.getElementById('name_de').value.length){
 		  window.alert("Bitte geben Sie einen Exponat-Namen ein");
 	  } else {
-        var a = exponat.bild;
-		if(a!=""){
-			exponat.bild = a.replace(/www.dropbox/g, "dl.dropboxusercontent");
-		}     
+		exponat = approval(exponat);
+			
         $http.post('/backend/' + accessFac.getToken(), exponat).success(function(response) {
 			 $rootScope.$emit("refresh", {});
 			 $scope.close();
         });
       }
     }
+	
+	
+	var approval = function(exponat){
+		var a = exponat.bild;
+		var b = exponat.audio_de;
+		var c = exponat.audio_en;
+		if(a!=null){
+			exponat.bild = a.replace(/www.dropbox/g, "dl.dropboxusercontent");
+		}  
+		if(b!=null){
+			exponat.audio_de = b.replace(/www.dropbox/g, "dl.dropboxusercontent");
+		}
+		if(c!=null){
+			exponat.audio_en = c.replace(/www.dropbox/g, "dl.dropboxusercontent");
+		}
+		console.log("done");
+		return exponat;
+	}
   
     $scope.update = function(exponat) {
+		exponat = approval(exponat);
+		
+		
       $http.put('/backend/' + exponat._id, exponat).success(function(response) {
          $rootScope.$emit("refresh", {});
 		 $scope.close();
