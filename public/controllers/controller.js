@@ -1,4 +1,4 @@
-var myApp = angular.module('myApp', ['ngRoute', 'ui-leaflet','textAngular', 'ui.bootstrap','app.routes', 'app.directives','xeditable']).config(function($sceDelegateProvider) {
+var myApp = angular.module('myApp', ['ngRoute', 'ui-leaflet','angularTrix', 'ui.bootstrap','app.routes', 'app.directives','xeditable']).config(function($sceDelegateProvider) {
 //'leaflet-directive', 'ui-leaflet'
  $sceDelegateProvider.resourceUrlWhitelist([
     // Allow same origin resource loads.
@@ -19,8 +19,72 @@ var myApp = angular.module('myApp', ['ngRoute', 'ui-leaflet','textAngular', 'ui.
   ]);
 });
 
+//factories
+myApp.factory('accessFac', function($window, $http) {
+  var obj = {}
+  obj.access = false;
+  var i = 0; 
+ 
+  obj.getImage = function(){
+	 return $window.localStorage['map'];
+  }
+  
+  obj.setImage = function(image){
+	 $window.localStorage['map'] = image;
+	  
+  }
+ 
+  obj.getPermission = function(helper) { //set the permission to true
+    obj.access = true;
+	
+	 $window.localStorage['jwtToken'] = helper;
+	i++;
+	
+  }
+  obj.checkPermission = function() {
+	return obj.access;
+    
+  }
+  obj.getToken = function(){
+	 return $window.localStorage['jwtToken'];//obj.token[i - 1];
+  }
+  
+  obj.setExponat = function(helper) { //set the permission to true
+    obj.exponat = helper;	
+  }
+  obj.getExponat = function() {
+	return obj.exponat;
+    
+  }
+  
+  
+    obj.setBeacon = function(helper) { //set the permission to true
+    obj.beacon = helper;	
+  }
+  obj.getBeacon = function() {
+	return obj.beacon;
+    
+  }
+   
+  
+  
+  
+  return obj;
+});
 
+myApp.run(function($http, accessFac, editableOptions){
+	editableOptions.theme = 'bs3';
+	
+	$http.get('/museum/' + accessFac.getToken()).success(function(response) {
+	 var museumData = response;
+	 var museumH = "";						
+	angular.forEach( museumData, function(museumH) {
+		accessFac.setImage(museumH.map);
+	});
+  });  
+});
 
+//controllers
 myApp.controller('PopupCont', function ($scope, $rootScope, $timeout, $uibModalInstance, $http, accessFac) {
 	$scope.close = function () {
 		$uibModalInstance.dismiss('cancel');
@@ -88,9 +152,6 @@ myApp.controller('PopupCont', function ($scope, $rootScope, $timeout, $uibModalI
 });
 
 
-
-
-
 myApp.controller('PopupContBeacon', function ($scope, $rootScope, $timeout, $uibModalInstance, $http, accessFac) {
 	$scope.close = function () {
 		$uibModalInstance.dismiss('cancel');
@@ -107,87 +168,8 @@ myApp.controller('PopupContBeacon', function ($scope, $rootScope, $timeout, $uib
 			$scope.close();	
 			window.alert("Erfolgreich gespeichert, Daten werden demnächst aktualisiert");
 		},200);
-			
-
-    }
-	
-	
-
-
+	}
 });
-
-
-
-
-
-
-
-
-myApp.factory('accessFac', function($window, $http) {
-  var obj = {}
-  obj.access = false;
-  var i = 0; 
- 
-  obj.getImage = function(){
-	 return $window.localStorage['map'];
-  }
-  
-  obj.setImage = function(image){
-	 $window.localStorage['map'] = image;
-	  
-  }
- 
-  obj.getPermission = function(helper) { //set the permission to true
-    obj.access = true;
-	
-	 $window.localStorage['jwtToken'] = helper;
-	i++;
-	
-  }
-  obj.checkPermission = function() {
-	return obj.access;
-    
-  }
-  obj.getToken = function(){
-	 return $window.localStorage['jwtToken'];//obj.token[i - 1];
-  }
-  
-  obj.setExponat = function(helper) { //set the permission to true
-    obj.exponat = helper;	
-  }
-  obj.getExponat = function() {
-	return obj.exponat;
-    
-  }
-  
-  
-    obj.setBeacon = function(helper) { //set the permission to true
-    obj.beacon = helper;	
-  }
-  obj.getBeacon = function() {
-	return obj.beacon;
-    
-  }
-   
-  
-  
-  
-  return obj;
-});
-
-myApp.run(function($http, accessFac, editableOptions){
-	editableOptions.theme = 'bs3';
-	
-	$http.get('/museum/' + accessFac.getToken()).success(function(response) {
-	 var museumData = response;
-	 var museumH = "";						
-	angular.forEach( museumData, function(museumH) {
-		accessFac.setImage(museumH.map);
-	});
-  });  
-});
-
-
 
 myApp.controller('loginCtrl', function($scope, $http, $timeout, $location, $window, accessFac) {
   $scope.getAccess = function() {
@@ -220,12 +202,13 @@ myApp.controller('loginCtrl', function($scope, $http, $timeout, $location, $wind
 
 
 
-myApp.controller('custoCtrl', function($scope, $timeout, $location, $http, leafletData, leafletBoundsHelpers,shareClickedId,textAngularManager,accessFac) {
+myApp.controller('custoCtrl', function($scope, $timeout, $location, $http, leafletData, leafletBoundsHelpers,shareClickedId,accessFac) {
 	
 	
-	$scope.fu = function(){
-		consologe.log("here");
-	}
+	
+	
+	
+	
 	
 $scope.resizeTextLeft = function(multiplier) {
   var elem = document.getElementsByClassName("fontChanger");
@@ -284,15 +267,17 @@ var refresh = function(){
 				$scope.en = mn.en;
 				$scope.museumsname = mn.museumsname;
 				var helper = mn.de;
-				helper = helper.replace(/<p>/g, "<p class='fontChanger'>");
-				helper = helper.replace(/<li>/g, "<li class='fontChanger'>");
-				helper = helper.replace(/<h1>/g, "<h1 class='fontChanger'>");
-				helper = helper.replace(/<h2>/g, "<h2 class='fontChanger'>");
-				helper = helper.replace(/<h3>/g, "<h3 class='fontChanger'>");
-				helper = helper.replace(/<h4>/g, "<h4 class='fontChanger'>");
-				helper = helper.replace(/<h5>/g, "<h5 class='fontChanger'>");
-				helper = helper.replace(/<h6>/g, "<h6 class='fontChanger'>");
+				helper = helper.replace(/<dib>/g, "<div class='fontChanger'>");
+				helper = helper.replace(/<strong>/g, "<strong class='fontChanger'>");
+				helper = helper.replace(/<em>/g, "<em class='fontChanger'>");				helper = helper.replace(/<dib>/g, "<div class='fontChanger'>");
+				helper = helper.replace(/<figure>/g, "<figure class='fontChanger'>");
+				helper = helper.replace(/<img>/g, "<img class='fontChanger'>");
 				helper = helper.replace(/<ul>/g, "<ul class='fontChanger'>");
+				helper = helper.replace(/<ol>/g, "<ol class='fontChanger'>");
+				helper = helper.replace(/<li>/g, "<li class='fontChanger'>");
+				helper = helper.replace(/<span>/g, "<span class='fontChanger'>");
+				helper = helper.replace(/<del>/g, "<del class='fontChanger'>");
+				helper = helper.replace(/<a>/g, "<a class='fontChanger'>");
 				document.getElementById('helperInPhone').innerHTML = helper;
 			});
 			
@@ -395,8 +380,11 @@ var refresh = function(){
 	  document.getElementsByClassName(ziel).style='color:orange';
   }
   $scope.removeHoverPhone = function(ziel){
-	  document.getElementById(ziel).style='color:black';
-	  document.getElementsByClassName(ziel).style='color:black';
+	  $timeout(function(){
+		document.getElementById(ziel).style='color:black';
+		document.getElementsByClassName(ziel).style='color:black';
+	  }, 1500);
+	  
   }
 
   $scope.$on("leafletDirectiveMap.leafletMap.click", function(event, args) {
@@ -726,8 +714,6 @@ $scope.open = function ( helper) {
 	
 	
 var refresh = function(){
-	
-
 	$http.get('/getBeacons').success(function(response) {
       $scope.data = response;
       $scope.beacon = "";
@@ -742,25 +728,7 @@ var refresh = function(){
 			beacon.img = "https://dl.dropboxusercontent.com/s/q75k71vzwf9gdbu/mint.png?dl=0";
 		}
       });
-    });
-	
-	$scope.edit = function(id) {
-      $http.get('/beaconModify/' + id).success(function(response) {
-        $scope.beacon = response;
-      });
-    }
-	
-	$scope.deselect = function() {
-      $scope.beacon = "";
-    }
-	
-	$scope.saveBeaconSettings = function(){
-		$http.put('/setBeacons', $scope.beacon).success(function(response) {
-		});
-		$scope.beacon = "";
-		window.alert("Erfolgreich gespeichert, Daten werden demnächst aktualiert");
-	}
-	
+    });	
 };
 refresh();	
 });
@@ -769,18 +737,12 @@ refresh();
 
 myApp.controller('exponatCtrl', function($scope,$rootScope, $http, $uibModal, $location, $anchorScroll, $timeout, accessFac){
 
-
-
-
-
-
-
-$scope.open = function ( helper) {
-	accessFac.setExponat(helper);
-	var modalInstance = $uibModal.open({
-		templateUrl: 'www/popup_exponat.html',
-		controller: 'PopupCont',
-		size: "lg"
+	$scope.open = function ( helper) {
+		accessFac.setExponat(helper);
+		var modalInstance = $uibModal.open({
+			templateUrl: 'www/popup_exponat.html',
+			controller: 'PopupCont',
+			size: "lg"
 	});
 	
 	modalInstance.result.then(
@@ -815,9 +777,9 @@ $scope.open = function ( helper) {
   });
   
   
-	  $rootScope.$on("refresh", function(){		  
-		  refresh();	
-	  });
+	$rootScope.$on("refresh", function(){		  
+	refresh();	
+	});
  
  
  
@@ -827,51 +789,35 @@ $scope.open = function ( helper) {
         $scope.exponat = "";
         $scope.sortType = 'ide';
         $scope.sortReverse = false;
-        $scope.searchName = '';	
-		
-		
+        $scope.searchName = '';			
         angular.forEach($scope.backend, function(exponat) {
           exponat.ide = parseFloat(exponat.ide);
 		  exponat.expand = true
 		 try {
 			var length = exponat.beschreibung_de.length;		  
-		  }catch(e){}
-		  
-		  
-		  if(exponat.beschreibung_de===undefined){
-			  exponat.beschreibung_de="noch keine Beschreibung hinzugefügt";
-			
-		  }else if(length>40){
+		  }catch(e){}		  
+		if(exponat.beschreibung_de===undefined){
+				exponat.beschreibung_de="noch keine Beschreibung";
+		}else if(length>40){
 			   exponat.expand = false;
-			   exponat.checkIfLong=true;
-				
+			   exponat.checkIfLong=true;				
 		  }else if(length<=40){
-			   exponat.checkIfLong = false;
-				
+			   exponat.checkIfLong = false;	
 		  }
-		  
-		  
-		  
-		  
-        });
+		});
         $http.get('/backend_count/'+accessFac.getToken()).success(function(response) {
           $scope.number = response;
         });
       });
     }
 	refresh();
+	
 	$http.get('/themenListe/' + accessFac.getToken()).success(function(response) {
 		$scope.themaDaten = response;
 		$scope.thema="";
 	});
    
-		
-    
-	
-	   
-	
-	
-	
+
 });
 
 
