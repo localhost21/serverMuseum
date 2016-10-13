@@ -1,6 +1,8 @@
 var express = require('express');
-var multer = require('multer');
 var app = express();
+
+
+var multer = require('multer');
 var bodyParser = require('body-parser');
 var multer = require('multer');
 var upload = multer({
@@ -35,14 +37,15 @@ cloudinary.config({
   api_secret: 'p06oF8E-x9ngJYgBTgsW0dSRxFc' 
 });
 
+var forceSsl = function (req, res, next) {
+    if (req.headers['x-forwarded-proto'] !== 'https') {
+        return res.redirect(['https://', req.get('Host'), req.url].join(''));
+    }
+    return next();
+ };
+ 
+   app.use(forceSsl);
 
-
-app.get('*',function(req,res,next){
-  if(req.headers['x-forwarded-proto']!='https')
-    res.redirect('https://'+req.url)
-  else
-    next() /* Continue to other routes if we're not redirecting */
-})
 
 
 
