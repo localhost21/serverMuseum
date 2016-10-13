@@ -147,7 +147,7 @@
 			
 			
 			<!-- ng-repeat copies content into seperate rows -->
-				<tr ng-repeat="exponat in backend | orderBy:sortType:sortReverse | filter: {'ide': filterer, 'sprache':spracheSort, 'name':nameSort, 'position':posSort,'theme':themeSort, 'aktion':aktionSort}">
+				<tr ng-repeat="exponat in backend | orderBy:sortType:sortReverse | filter: {'ide': filterer, 'sprache':spracheSort, 'name_de':nameSort, 'position':posSort,'theme':themeSort, 'aktion':aktionSort}">
 				
 					<td>{{exponat.ide}}</td>
 					<td class="item"><img ng-src="{{exponat.bild}}"></img></td>
@@ -176,7 +176,7 @@
 					
 					<td>{{exponat.position}}</td>
 					<td>{{exponat.theme}}</td>
-					<td><audio controls  ng-src="{{exponat.audio}}">	</audio> </td>
+					<td><audio controls  ng-src="{{exponat.audio_de}}">	</audio> </td>
 					<td><input type="checkbox" ng-model="exponat.aktion"></td>
 					<!--<td><button class="btn btn-default" ng-click="edit(exponat.name, exponat.bild)" onclick="window.scrollTo(0,0);">&Auml;ndern </button></td>
 					<td><button class="btn btn-danger" ng-click="remove(exponat.name, exponat.bild)">L&ouml;schen</button></td>-->
