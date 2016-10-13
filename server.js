@@ -36,6 +36,17 @@ cloudinary.config({
 });
 
 
+
+app.get('*',function(req,res,next){
+  if(req.headers['x-forwarded-proto']!='https')
+    res.redirect('https://'+req.url)
+  else
+    next() /* Continue to other routes if we're not redirecting */
+})
+
+
+
+
 app.get('/credentials/:id', function(req, res) {    
   var hashedValue = sha256(req.params.id);
   db.credentials.find({
