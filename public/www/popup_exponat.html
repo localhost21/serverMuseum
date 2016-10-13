@@ -54,12 +54,12 @@
 
 			<tr><td class="bold">BildURL</td><td><input id="bildURL" class="form-control" ng-model="exponat.bild"/><br> <img class="medium item" ng-src={{exponat.bild}} ></td></tr>
 			<tr><td class="bold">Position</td><td>
-				<select ng-model="exponat.position" class="styled-select semi-square">					
+				<select ng-model="exponat.position" class="styled-select semi-square full">					
 					<option ng-repeat="ma in maData | orderBy:'name'" value="{{ma.name}}"> {{ma.name}} - {{ma.message}}</option>
 				</select>
 			</td></tr>
 			<tr><td class="bold">Themennummer</td><td>
-				<select ng-model="exponat.theme" class="styled-select semi-square">					
+				<select ng-model="exponat.theme" class="styled-select semi-square full">					
 					<option ng-repeat="thema in themaDaten | orderBy:'nummer'" value='{{thema.nummer}}'>{{thema.nummer}} - {{thema.name}} </option>
 				</select>
 			</td></tr>

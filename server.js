@@ -37,17 +37,6 @@ cloudinary.config({
   api_secret: 'p06oF8E-x9ngJYgBTgsW0dSRxFc' 
 });
 
-var forceSsl = function (req, res, next) {
-    if (req.headers['x-forwarded-proto'] !== 'https') {
-        return res.redirect(['https://', req.get('Host'), req.url].join(''));
-    }
-    return next();
- };
- 
-   app.use(forceSsl);
-
-
-
 
 
 app.get('/credentials/:id', function(req, res) {    

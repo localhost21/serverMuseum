@@ -690,6 +690,10 @@ color: grey;
 	width: 200px;
 }
 
+.full {
+	width: 95%;
+}
+
 .medium {
 	max-height: 400px;
 	max-width: 600px;
