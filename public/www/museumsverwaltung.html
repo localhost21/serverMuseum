@@ -57,17 +57,18 @@
 		
 		 <table style="width:100%">
 			<tr>
-				<td style="width: 90%;"><input id="productMenuBar" class="form-control has-header"  placeholder="Suche nach Exponatnummer" ng-model="filterer"/></td>
-				<td style="width: 10%;"><button id="addButton" style="width: 100%;" ng-click="open()" class="btn btn-primary" >Neues Exponat</button></td>
+				<td style="width: 90%;"><input id="productMenuBar" name="productMenuBar" class="form-control has-header"  placeholder="Suche nach Exponatnummer" ng-model="filterer"/></td>
+				<td style="width: 10%;"><button id="addButton" name="addButton" style="width: 100%;" ng-click="open()" class="btn btn-primary" >Neues Exponat</button></td>
 			</tr>
 		</table> 
 					
 		
+		<a id="buttonErweiterteSuche" ng-click="showStuff(false)" ng-show="showErweiterteSuche" class="leftButton" href="javascript:void(0)"> erweiterte Suchoptionen anzeigen</a>	
 		
-		<a id="buttonErweiterteSuche" class="leftButton" onclick="document.getElementById('erweiterteSuche').style='display: inline-block';document.getElementById('buttonErweiterteSuche').style='display: none'; document.getElementById('productMenuBar').style='display: none';document.getElementById('addButton').style='display: none'" > erweiterte Suchoptionen anzeigen</a>
 		
 		
-		<div id="erweiterteSuche" >
+		
+		<div id="erweiterteSuche" ng-show="!showErweiterteSuche" >
 		
 		
 		
@@ -111,9 +112,9 @@
 			
 		<button class="btn btn-danger rightButton" ng-click="filterer=undefined;spracheSort=undefined;nameSort=undefined;posSort=undefined;themeSort=undefined;aktionSort=undefined">Filter zurücksetzen</button>
 		
-		<a onclick="document.getElementById('addButton').style='display: inline-block';document.getElementById('productMenuBar').style='display: inline-block';document.getElementById('erweiterteSuche').style='display: none';document.getElementById('buttonErweiterteSuche').style='display: inline-block'"> erweiterte Suchoptionen ausblenden</a>
+		<a ng-click="showErweiterteSuche=true"> erweiterte Suchoptionen ausblenden</a>
 		</div>
-			
+		
 		
 		<br>
 		

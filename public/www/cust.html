@@ -54,25 +54,25 @@
 			
 			
 			<div class="nextToPhone">
-			<table class="table" id="showerText">
+			<table class="table" id="showerText" ng-show="showText">
 				<tr>
 					<td><p  editable-text="museumsname" onaftersave="uploadName($data)" e-form="textBtnForm" style="display: inline;" ng-mouseover="addHoverPhone('namePhone')" ng-mouseleave="removeHoverPhone('namePhone')"> {{ museumsname || "empty" }}</p></td>
 					<td><button class="btn btn-primary" style="display: inline-block" ng-click="textBtnForm.$show()" ng-hide="textBtnForm.$visible">&Auml;ndern</button></td>
 				</tr>				
 				<tr>
 					<td> <p id="helper" style="display:block;font-size: 15px;" ng-mouseover="addHoverPhone('phone')" ng-mouseleave="removeHoverPhone('scrollingContent')"/></td>
-					<td> <button class="btn btn-primary" onclick="document.getElementById('editText').style='display:inline-block';document.getElementById('showerText').style='display:none';" id="showHelper">&Auml;ndern</button></td>
+					<td> <button class="btn btn-primary" ng-click="showText=false" id="showHelper">&Auml;ndern</button></td>
 				</tr>
 			</table>
 			
 			
 			
 			
-			<div id="editText" style="display:none">
+			<div id="editText" ng-show="!showText">
 				<trix-editor ng-model-options="{ updateOn: 'blur' }" spellcheck="false" class="trix-content" ng-model="htmlcontent" angular-trix trix-initialize="trixInitialize(e, editor);" trix-change="trixChange(e, editor);" trix-selection-change="trixSelectionChange(e, editor);" trix-focus="trixFocus(e, editor);" trix-blur="trixBlur(e, editor);" trix-file-accept="trixFileAccept(e, editor);" trix-attachment-add="trixAttachmentAdd(e, editor);" trix-attachment-remove="trixAttachmentRemove(e, editor);" placeholder="Write something.."></trix-editor>
 				<button class="btn btn-default" ng-click="htmlcontent=de; clickedLng='de'"> Deutsch</button> 
 				<button class="btn btn-default" ng-click="htmlcontent=en; clickedLng='en'"> Englisch</button> <br><br>
-				<button class="btn btn-primary" ng-click="uploadText(htmlcontent)" onclick="document.getElementById('showerText').style='display:block';document.getElementById('editText').style='display:none';window.scrollTo(0,0);" > Speichern</button> 	
+				<button class="btn btn-primary" ng-click="showText=true; uploadText(htmlcontent)" onclick="window.scrollTo(0,0);"> Speichern</button> 	
 			</div>
 		</div>
 			

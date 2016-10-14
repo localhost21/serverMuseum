@@ -223,8 +223,7 @@ myApp.controller('loginCtrl', function($scope, $http, $timeout, $location, $wind
 
 myApp.controller('custoCtrl', function($scope, $timeout, $location, $http, leafletData, leafletBoundsHelpers,shareClickedId,accessFac) {
 	
-	
-	
+	$scope.showText = true;
 	
 	
 	
@@ -286,7 +285,7 @@ var refresh = function(){
 				$scope.en = mn.en;
 				$scope.museumsname = mn.museumsname;
 				var helper = mn.de;
-				helper = helper.replace(/<dib>/g, "<div class='fontChanger'>");
+				helper = helper.replace(/<div>/g, "<div class='fontChanger'>");
 				helper = helper.replace(/<strong>/g, "<strong class='fontChanger'>");
 				helper = helper.replace(/<em>/g, "<em class='fontChanger'>");				helper = helper.replace(/<dib>/g, "<div class='fontChanger'>");
 				helper = helper.replace(/<figure>/g, "<figure class='fontChanger'>");
@@ -756,6 +755,13 @@ refresh();
 
 myApp.controller('exponatCtrl', function($scope,$rootScope, $http, $uibModal, $location, $anchorScroll, $timeout, accessFac){
 
+
+	$scope.showErweiterteSuche = true;
+	$scope.showStuff = function(helper){
+		$scope.showErweiterteSuche = helper;
+		console.log(helper);
+	}
+	
 	$scope.open = function ( helper) {
 		accessFac.setExponat(helper);
 		var modalInstance = $uibModal.open({
