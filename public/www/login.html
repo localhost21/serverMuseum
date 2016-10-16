@@ -6,7 +6,7 @@
 <body>
 
 	<div id="loLeft">
-	<h1 id="titleLogin" style="padding: 15%; padding-top: 20%; z-index: 200; color: white; position: fixed; width: 100px; text-align: center;"> {{'loginText' | translate }} </h1>
+	<h1 id="titleLogin" style="padding: 15%; padding-top: 20%; z-index: 200; color: white; position: fixed; width: 100px; padding-left: 23%;"> Login </h1>
 	<div id="lo">dsa</div>
 	</div>
 	
@@ -21,7 +21,8 @@
 	</div>
 
 	<div>
-	<img src="/www/img/thumbnail.png" id="thumbnail"></img>
+	<img id="gif" src="/www/img/lego.gif" />
+	
 	<h1 id="titleLoginHidden"> {{ 'loginText' | translate }} </h1>
 
 		<div id="merger">
@@ -36,9 +37,9 @@
 		
 	
 		
-		<div ng-controller="LangCtrl">
-			<a href="" ng-click="changeLang('en_US')">English</a>
-			<a href="" ng-click="changeLang('de_DE')">Deutsch</a>
+		<div ng-controller="LangCtrl" style="margin-top: 40px;">
+			<a href="" ng-click="changeLang('EN')">English</a> /
+			<a href="" ng-click="changeLang('DE')">Deutsch</a>
 		</div>
 		</div>
 		

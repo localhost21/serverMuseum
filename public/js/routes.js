@@ -3,7 +3,8 @@ angular.module('app.routes', [])
 	$routeProvider
 	.when('/', {
 		templateUrl: '/www/login.html',
-		controller: 'loginCtrl'
+		controller: 'loginCtrl',
+		reload: true
 	})
 	.when('/museumsverwaltung', {
 		templateUrl: '/www/museumsverwaltung.html',

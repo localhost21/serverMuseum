@@ -394,7 +394,7 @@ app.get('/nonWalkerMarkers/:id',function(req,res){
                 break;
               }
             } catch (error) {
-              console.log("error@/museum");
+              console.log("1:error@/museum");
             }
           }
         });
@@ -436,7 +436,7 @@ app.get('/markers/:id', function(req, res) {
                 break;
               }
             } catch (error) {
-              console.log("error@/museum");
+              console.log("2:error@/museum");
             }
           }
         });
@@ -534,8 +534,8 @@ app.get('/museum/:id', function(req, res) {
                 });
                 break;
               }
-            } catch (error) {
-              console.log("error@/museum");
+            }catch (error) {
+              console.log("8:error@/museum");
             }
           }
         });
@@ -573,7 +573,7 @@ app.delete('/markers/:id', function(req, res) {
                 break;
               }
             } catch (error) {
-              console.log("error@/museum");
+              console.log("3:error@/museum");
             }
           }
         });
@@ -649,7 +649,7 @@ app.post('/api/photo/logo/:id', type, function(req, res) {
                 break;
               }
             } catch (error) {
-              console.log("error@/museum");
+              console.log("4:error@/museum");
             }
           }
         });
@@ -703,7 +703,7 @@ app.post('/api/photo/map/:id', type, function(req, res) {
                 break;
               }
             } catch (error) {
-              console.log("error@/museum");
+              console.log("5:error@/museum");
             }
           }
         });
@@ -752,7 +752,7 @@ app.post('/archiveMarkers/:id', function(req, res) {
                 break;
               }
             } catch (error) {
-              console.log("error@/museum");
+              console.log("6:error@/museum");
             }
           }
         });
@@ -793,7 +793,7 @@ app.get('/archived/:id', function(req, res) {
                 break;
               }
             } catch (error) {
-              console.log("error@/museum");
+              console.log("7:error@/museum");
             }
           }
         });

@@ -124,7 +124,7 @@ var myApp = angular.module('myApp', ['ngRoute','pascalprecht.translate', 'ui-lea
 	Museumsverwaltung: 'Museum',
 	exponate: 'Exhibits',
 	lokalisierung: 'Localization',
-	hilfe: 'Hilfe',
+	hilfe: 'Help',
 	englisch: 'english',
 	german: 'german',
 	anzExpo: 'number of exhibits',
@@ -287,13 +287,13 @@ myApp.service('fehlermeldungFac', ['$uibModal', function ($uibModal) {
 myApp.run(function($http, accessFac, editableOptions){
 	editableOptions.theme = 'bs3';
 	
-	$http.get('/museum/' + accessFac.getToken()).success(function(response) {
+	/*$http.get('/museum/' + accessFac.getToken()).success(function(response) {
 	 var museumData = response;
 	 var museumH = "";						
 	angular.forEach( museumData, function(museumH) {
 		accessFac.setImage(museumH.map);
 	});
-  });  
+  });  */
 });
 
 //controllers
@@ -304,7 +304,6 @@ myApp.controller('LangCtrl', function ($scope, $translate,$rootScope, accessFac)
   
   $scope.changeLang = function (key) {
     $translate.use(key).then(function (key) {
-      console.log("Sprache zu " + key + " gewechselt.");
 	  accessFac.setLng(key);
 	  $rootScope.$emit("changeLng", {key});
     }, function (key) {
@@ -387,7 +386,6 @@ myApp.controller('PopupCont', function ($scope, $rootScope, $timeout, $uibModalI
 		if(c!=null){
 			exponat.audio_en = c.replace(/www.dropbox/g, "dl.dropboxusercontent");
 		}
-		console.log("done");
 		return exponat;
 	}
   
@@ -424,7 +422,14 @@ myApp.controller('PopupContBeacon', function ($scope, $rootScope, $timeout, $uib
 });
 
 myApp.controller('loginCtrl', function($scope, $http, $timeout, $location, $window, accessFac) {
- $scope.getAccess = function() {
+   var gifSource = $('#gif').attr('src'); //get the source in the var
+    $('#gif').attr('src', ""); //erase the source     
+    $('#gif').attr('src', gifSource+"?"+new Date().getTime());
+	
+	
+	
+	
+  $scope.getAccess = function() {
 	var creds = $scope.username +":" + $scope.password;
 	
 	$http.get('/credentials/' + creds, {
