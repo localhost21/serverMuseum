@@ -11,16 +11,7 @@
 	
 	
 	
-	
-	
-	<div id="dialogoverlay"></div>
-		<div id="dialogbox">
-			<div ng-controller="AppCtrl">
-				<div id="dialogboxhead"></div>
-				<div id="dialogboxbody"></div>
-				<div id="dialogboxfoot"></div>
-			</div>
-		</div>
+
 	
 	<div id="container">
 	
@@ -36,14 +27,14 @@
 			</ul>
 		</div>
 		
-		
-		<div class="content">
 		<div id="box">
 			<div class="box-top">
 			{{'anzExpo' | translate }}
 			<div class="box-panel">{{number}}</div>
 			</div>
 		</div>
+		<div class="content">
+		
 		
 			
 		<h1 id="top">{{'exponate' | translate }}</h1>
@@ -282,7 +273,7 @@
 	
 	
 	<div id="header" ng-controller="orgCtrl">
-	<div class="logo"><a href="/#/museumsverwaltung">Museumsverwaltungs-<span>Software</span></a> </div>	
+	<div id="classler" class="logo"><a href="/#/museumsverwaltung">Museumsverwaltungs-<span>Software</span></a> </div>	
 	<a href="/#/" ><img id="logout"  src="/www/img/logout.png"/ ng-click="logout()"></a>	
 	<div id="headerOrg" >
 		<p style=" font-size: 12px;"> {{'angAls'|translate}} <div style="font-size: 18px; line-height: 2px;">{{org}}</div> </p>
