@@ -1,12 +1,12 @@
 <html lang="de">
 <head>
-	<title>Museumsverwaltung - Login</title>
+	<title>{{'loginText' | translate }}</title>
 </head>
 
 <body>
 
 	<div id="loLeft">
-	<h1 id="titleLogin" style="padding: 15%; padding-top: 20%; z-index: 200; color: white; position: fixed; float: left;"> Login <br> Museumsverwaltung </h1>
+	<h1 id="titleLogin" style="padding: 15%; padding-top: 20%; z-index: 200; color: white; position: fixed; width: 100px; text-align: center;"> {{'loginText' | translate }} </h1>
 	<div id="lo">dsa</div>
 	</div>
 	
@@ -20,9 +20,9 @@
 		</div>
 	</div>
 
-	<div ng-controller="loginCtrl" >
+	<div>
 	<img src="/www/img/thumbnail.png" id="thumbnail"></img>
-	<h1 id="titleLoginHidden"> Login Museumsverwaltung </h1>
+	<h1 id="titleLoginHidden"> {{ 'loginText' | translate }} </h1>
 
 		<div id="merger">
 			<form action="/" id="myLogin" >
@@ -32,7 +32,14 @@
 			</form>
 			<br>
 			
-		<a href="mailto:info@medignition.ch?subject=Kontakt medignition.ch">Kontakt</a>
+		<a href="mailto:info@medignition.ch?subject=Kontakt medignition.ch">{{ 'contact' | translate }}</a>
+		
+	
+		
+		<div ng-controller="LangCtrl">
+			<a href="" ng-click="changeLang('en_US')">Englisch</a>
+			<a href="" ng-click="changeLang('de_DE')">German</a>
+		</div>
 		</div>
 		
 	</div>

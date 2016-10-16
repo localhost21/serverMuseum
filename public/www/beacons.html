@@ -1,7 +1,7 @@
 <html lang="de">
 
   <head >
-    <title>Museumsverwaltung</title>
+    <title>{{'Museumsverwaltung' | translate }}</title>
     
   </head>
 
@@ -9,48 +9,50 @@
   
   <div id="box">
 			<div class="box-top">
-			Anzahl Beacons
+			{{'countB' | translate }}
 			<div class="box-panel">{{i}}</div>
 			</div>
 		</div>	
 
 
-    <div id="header">
+   <div id="header" ng-controller="orgCtrl">
 	<div class="logo"><a href="/#/museumsverwaltung">Museumsverwaltungs-<span>Software</span></a> </div>	
-	<a href="/#/" ><img id="logout"  src="/www/img/logout.png"/></a>	
-	<div id="headerOrg" ng-controller="orgCtrl">
-		<p style=" font-size: 12px;"> angemeldet als <div style="font-size: 18px; line-height: 2px;">{{org}}</div> </p>
+	<a href="/#/" ><img id="logout"  src="/www/img/logout.png"/ ng-click="logout()"></a>	
+	<div id="headerOrg" >
+		<p style=" font-size: 12px;"> {{'angAls'|translate}} <div style="font-size: 18px; line-height: 2px;">{{org}}</div> </p>
 	</div>
 	</div>
 
     <div id="container">
-      <div class="sidebar">
-        <ul id="nav">
-          <li><a href="/#/museumsverwaltung" >Exponate</a></li>
-				<li><a href="/#/getbeacons" class="selected">Lokalisierung</a></li>
-				<li><a href="/#/custo" >Audioguide-App</a></li>
-				<li><a href="/#/hilfe" >Hilfe</a></li>
-				
-        </ul>
-      </div>
+      <div class="sidebar" ng-controller="LangCtrl" >
+			<ul id="nav">
+				<li ng-show="!showLng"><a href="/#/museumsverwaltung">{{'exponate' | translate }}</a></li>
+				<li ng-show="!showLng"><a href="/#/getbeacons" class="selected">{{'lokalisierung' | translate }}</a></li>
+				<li ng-show="!showLng"><a href="/#/custo" >Audioguide- App</a></li>
+				<li ng-show="!showLng"><a href="/#/hilfe" >{{'hilfe' | translate }}</a></li>
+				<li ng-show="!showLng" ng-click="showLng=!showLng"><a>Sprachen / Languages</a></li>
+				<li ng-show="showLng"><a ng-click="changeLang('EN');showLng=!showLng">{{'englisch' | translate }}</a></li>
+				<li ng-show="showLng"><a ng-click="changeLang('DE');showLng=!showLng">{{'german' | translate }}</a></li>
+			</ul>
+		</div>
 <!--onclick="window.location='https://cloud.estimote.com/'" -->
 
       <div class="content" >
 	  
 	  
         <h1>Beacons</h1>
-       <p> Hier können Sie die Einstellungen Ihrer Beacons ändern oder <span><a href="http://estimote.com/#jump-to-products"> weitere Beacons bestellen.</a> </span> </p>
+       <p> {{'descB'|translate}} <span><a href="http://estimote.com/#jump-to-products"> {{'descBe'|translate}}</a> </span> </p>
 	 
        <table class="table standard_p" style="margin-top: 50px; width: 100%;">
           <thead>
             <tr><th style="width: 70px;"></th>
-				<th style="width: 20%;">Name</th>
-				<th style="width: 10%;">Major</th>
-				<th style="width: 10%;">Minor</th>
-				<th style="width: 10%;">Sendestärke</th>
-                <th style="width: 15%;">Sendeinterval in ms</th>
-                <th style="width: 15%;">Batterielaufzeit in Tagen</th>
-				<th style="width: 10%;">Farbe</th>
+				<th style="width: 20%;">{{'name'|translate}}</th>
+				<th style="width: 10%;">{{'major'|translate}}</th>
+				<th style="width: 10%;">{{'minor'|translate}}</th>
+				<th style="width: 10%;">{{'sendestarke'|translate}}</th>
+                <th style="width: 15%;">{{'sendeinterval'|translate}}</th>
+                <th style="width: 15%;">{{'battery'|translate}}</th>
+				<th style="width: 10%;">{{'color'|translate}}</th>
             </tr>
           </thead>
 
@@ -65,12 +67,12 @@
 				<td ng-repeat="ibeacon in beacon.settings.advertisers.ibeacon">{{ibeacon.interval}}</td>
 				<td>{{beacon.status_report.estimated_battery_lifetime}}</td>
 				<td>{{beacon.color}}</td>
-				<td><button class="btn btn-default"  ng-click="open(beacon)" onclick="window.scrollTo(0,0);">Ändern</button></td>
+				<td><button class="btn btn-default"  ng-click="open(beacon)" onclick="window.scrollTo(0,0);">{{'change'|translate}}</button></td>
             
 			</tr>
           </tbody>
         </table>
-		<button class="btn btn-daufalt full" onclick="window.scrollTo(0,0)"> zurück nach oben</button>
+		<button class="btn btn-daufalt full" onclick="window.scrollTo(0,0)"> {{'toTop'|translate}}</button>
 
       </div>
 

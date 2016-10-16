@@ -16,10 +16,10 @@
 <table class="table">
 		
 			<tbody>
-			<tr><td class="bold">Bezeichnung / Name</td><td><input id="ide" class="form-control" ng-model="beacon.shadow.name"  ></td> </tr>
+			<tr><td class="bold">Name</td><td><input id="ide" class="form-control" ng-model="beacon.shadow.name"  ></td> </tr>
 			<tr><td class="bold">Major</td><td><input class="form-control" ng-model="beacon.settings.advertisers.ibeacon[0].major"  ></td> </tr>
 			<tr><td class="bold">Minor</td><td><input class="form-control" ng-model="beacon.settings.advertisers.ibeacon[0].minor"  ></td> </tr>
-			<tr><td class="bold">Sendestärke</td>
+			<tr><td class="bold">{{'sendestarke'|translate}}</td>
 			<td><select ng-model="beacon.settings.advertisers.ibeacon[0].power" class="styled-select semi-square">
 					<option>-30</option>
 					<option>-20</option>
@@ -32,9 +32,9 @@
 					<option>4</option>
 			</select></td>
 			</tr>
-			<tr><td class="bold">Sendeinvervall</td><td><p ng-model="beacon.settings.advertisers.ibeacon[0].interval">alle {{beacon.settings.advertisers.ibeacon[0].interval}} Milisekunden <span style="color: gray; font-size: 13px;">(zwischen 100 und 10'000)</span></p><input class="form-control" type="range" min="100" max="10000" ng-model="beacon.settings.advertisers.ibeacon[0].interval"  ></td> </tr>
-			<tr><td class="bold">Batterielaufzeit in Tagen</td><td><input class="form-control" ng-model="beacon.status_report.estimated_battery_lifetime" disabled=true/></td>			</tr>
-			<tr><td class="bold">Farbe</td><td><input class="form-control" ng-model="beacon.color" disabled=true/></td></tr>
+			<tr><td class="bold">{{'inverval'|translate}}</td><td><p ng-model="beacon.settings.advertisers.ibeacon[0].interval">{{'alle'|translate}} {{beacon.settings.advertisers.ibeacon[0].interval}} {{'milisek'|translate}} <span style="color: gray; font-size: 13px;">{{'beschr'|translate}}</span></p><input class="form-control" type="range" min="100" max="10000" ng-model="beacon.settings.advertisers.ibeacon[0].interval"  ></td> </tr>
+			<tr><td class="bold">{{'battery'|translate}}</td><td><input class="form-control" ng-model="beacon.status_report.estimated_battery_lifetime" disabled=true/></td>			</tr>
+			<tr><td class="bold">{{'color'|translate}}</td><td><input class="form-control" ng-model="beacon.color" disabled=true/></td></tr>
 
 			</tbody>
 		</table>
@@ -45,7 +45,7 @@
 <div class="modal-footer" style="background-color: #1c567d;">
 
 
-<button class="btn btn-primary" ng-click="update(beacon)" style="float: left;">Speichern </button>
+<button class="btn btn-primary" ng-click="update(beacon)" style="float: left;">{{'save'|translate}} </button>
 <button class="btn btn-default" type="button" ng-click="close()" style="margin-right: 25px;">Abbrechen</button>
 
 </div>

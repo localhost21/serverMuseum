@@ -1,5 +1,150 @@
-var myApp = angular.module('myApp', ['ngRoute', 'ui-leaflet','angularTrix', 'ui.bootstrap','app.routes', 'app.directives','xeditable']).config(function($sceDelegateProvider) {
+var myApp = angular.module('myApp', ['ngRoute','pascalprecht.translate', 'ui-leaflet','angularTrix', 'ui.bootstrap','app.routes', 'app.directives','xeditable','ngSanitize']).config(function($sceDelegateProvider, $translateProvider) {
 //'leaflet-directive', 'ui-leaflet'
+  // deutsche Sprache
+  $translateProvider.useSanitizeValueStrategy('sanitizeParameters');
+  $translateProvider.translations('DE', {
+	contact:		'Kontakt',
+	loginText: 'Login Museumsverwaltung',
+	Museumsverwaltung: 'Museumsverwaltung',
+	exponate: 'Exponate',
+	lokalisierung: 'Lokalisierung',
+	hilfe: 'Hilfe',
+	englisch: 'Englisch',
+	german: 'Deutsch',
+	anzExpo: 'Anzahl Exponate',
+	expoText: 'Hier verwalten Sie Ihre Exponate.',
+	newExpo: 'Neues Exponat',
+	erwSuchOpt: ' erweiterte Suchoptionen anzeigen',
+	suchOpt: 'Beschränken Sie die Suchergebnisse mit folgenden Filtern:',
+	suchOptAus: 'erweiterte Suchoptionen ausblenden',
+	exhNum: 'Exponat-Nr.',
+	exhNumLong: 'Exponat-Nummer.',
+	bild: 'Bild',
+	theme: 'Thema',
+	activ: 'Aktiv',
+	toTop: 'zurück nach oben',
+	angAls: ' angemeldet als',
+	expVer: 'Exponat verwalten',
+	expDesc: 'Beschreibung',
+	audioUrl: 'Audiofile- URL',
+	imgUrl: 'Bild- URL',
+	themeNr: 'Themen- Nummer',
+	deletee: 'Löschen',
+	hinzu: 'Hinzufügen',
+	abbr: 'Abbrechen',
+	verbergen: 'verbergen',
+	anzeigen: 'anzeigen',
+	sendestarke: 'Sendestärke',
+	interval: 'Sendeintervall',
+	battery: 'Batterielaufzeit in Tagen',
+	color: 'Farbe',
+	alle: 'alle',
+	milisek: 'Milisekunden',
+	beschr: '(zwischen 100 und 10\'000)',
+	change: 'Ändern',
+	countB: 'Anzahl Beacons',
+	descB: 'Hier können Sie die Einstellungen Ihrer Beacons &auml;ndern oder',
+	descBe: 'weitere Beacons bestellen.',
+	name: 'Name',
+	major: 'Major',
+	minor: 'Minor',
+	sendeinterval: 'Interval in ms',
+	custoDesc: 'Hier können Sie den Audioguide Ihren Bedürfnissen nach anpassen.',
+	allgAng: 'Allgemeine Angaben',
+	aboutUs: 'Passen Sie den Namen und den \"Über uns\"- Text an',
+	ueberUns: 'Über uns',
+	welcome: 'Herzlich Willkommen im',
+	themeg: 'Themengebiete',
+	themegn: 'Themennummer (dreistellig) ',
+	newOne: 'Neu hinzufügen',
+	map: 'Karte',
+	erkl:'Fahren Sie mit der Maustaste über die einzelnen Positionen um den aktuellen Standort auf der Karte anzuzeigen',
+	bemanu: 'Beacon Major Nummer',
+	deletemarkers: 'Alle Standorte löschen',
+	archive: 'Standorte Archivieren',
+	getarchive: 'archivierte Standorte',
+	speichern: 'Speichern'
+	
+	
+	
+	
+	
+ });
+
+  // englische Sprache
+  $translateProvider.translations('EN', {
+	deletemarkers: 'delete all markers',
+	archive: 'archive markers',
+	getarchive: 'archived postions',
+	speichern: 'save',
+	  
+	  
+	  
+	  
+	  
+	  
+	allgAng: 'General information',
+	aboutUs: 'Change the name of your museum and the about us section',
+	ueberUns: 'About us',
+	welcome: 'Welcome to the',
+	themeg: 'exhibitions',
+	themegn: 'Theme number (three digits)',
+	newOne: 'add new',
+	map: 'map',
+	erkl: 'hover the cursor over the positions to show them on the map',
+	bemanu: 'beacon major number',	  
+	custoDesc: 'Here you can modify the content of the app.',
+	interval: 'interval',
+	battery: 'remaining batterylifetime in days',
+	color: 'color',
+	alle: 'all',
+	milisek: 'miliseconds',
+	beschr: '(between 100 and 10\'000)',
+	change: 'change',
+	descB: 'Here you can change the settings of your beacons or',
+	countB: 'Number of beacons',
+	descBe: 'order more Beacons.',
+	name: 'Name',
+	major: 'Major',
+	minor: 'Minor',
+	sendeinterval: 'Interval in ms',	
+	sendestarke: 'Range',
+	verbergen: 'hide',
+	anzeigen: 'show',
+	abbr: 'quit',
+	hinzu: 'save',
+	deletee: 'delete',
+	themeNr: 'Theme- Number',
+	imgUrl: 'Image- URL',
+	audioUrl: 'Audiofile- URL',
+	expDesc: 'Description',
+	expVer: 'Manage exhibit',
+    contact:		'Contact us',
+	loginText: 'Login Museum',
+	Museumsverwaltung: 'Museum',
+	exponate: 'Exhibits',
+	lokalisierung: 'Localization',
+	hilfe: 'Hilfe',
+	englisch: 'english',
+	german: 'german',
+	anzExpo: 'number of exhibits',
+	expoText: 'Manage your exhibits',
+	newExpo: 'new exhibit',
+	erwSuchOpt: ' more filters',
+	suchOpt: 'choose of the following filters',
+	suchOptAus: 'less filters',
+	exhNum: 'Exhibition-ID',
+	exhNumLong: 'Exhibit Number',
+	bild: 'Image',
+	theme: 'Theme',
+	activ: 'Activ',
+	toTop: 'to top',
+	angAls: 'logged in as'
+	
+  });
+
+  $translateProvider.preferredLanguage('DE');
+ 
  $sceDelegateProvider.resourceUrlWhitelist([
     // Allow same origin resource loads.
     'self',
@@ -24,6 +169,7 @@ myApp.factory('accessFac', function($window, $http) {
   var obj = {}
   obj.access = false;
   var i = 0; 
+  obj.lng = "DE"
  
   obj.getImage = function(){
 	 return $window.localStorage['map'];
@@ -58,11 +204,19 @@ myApp.factory('accessFac', function($window, $http) {
   }
   
   
-    obj.setBeacon = function(helper) { //set the permission to true
+  obj.setBeacon = function(helper) { //set the permission to true
     obj.beacon = helper;	
   }
   obj.getBeacon = function() {
 	return obj.beacon;
+    
+  }
+  
+  obj.setLng = function(helper) { //set the permission to true
+    obj.lng = helper;	
+  }
+  obj.getLng = function() {
+	return obj.lng;
     
   }
    
@@ -71,6 +225,64 @@ myApp.factory('accessFac', function($window, $http) {
   
   return obj;
 });
+
+
+
+
+
+
+
+
+myApp.service('fehlermeldungFac', ['$uibModal', function ($uibModal) {
+
+    var openCustomModal = function () {
+			
+
+        var modalInstance = $uibModal.open({
+			templateUrl: 'www/popup_nonReg.html',
+			controller: 'PopupCont'
+        });
+		
+		modalInstance.result.then(
+        //close
+        function (result) {
+            var a = result;
+        },
+        //dismiss
+        function (result) {
+            var a = result;
+        });
+		window.location="/#/";
+		
+    };
+
+    return {
+        openCustomModal: openCustomModal
+    };
+}]);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 myApp.run(function($http, accessFac, editableOptions){
 	editableOptions.theme = 'bs3';
@@ -85,6 +297,27 @@ myApp.run(function($http, accessFac, editableOptions){
 });
 
 //controllers
+
+myApp.controller('LangCtrl', function ($scope, $translate,$rootScope, accessFac) {
+
+  $scope.showLng = false;
+  
+  $scope.changeLang = function (key) {
+    $translate.use(key).then(function (key) {
+      console.log("Sprache zu " + key + " gewechselt.");
+	  accessFac.setLng(key);
+	  $rootScope.$emit("changeLng", {key});
+    }, function (key) {
+      console.log("Irgendwas lief schief.");
+    });
+  };
+});
+
+
+
+
+
+
 myApp.controller('PopupCont', function ($scope, $rootScope, $timeout, $uibModalInstance, $http, accessFac) {
 	$scope.close = function () {
 		$uibModalInstance.dismiss('cancel');
@@ -191,7 +424,7 @@ myApp.controller('PopupContBeacon', function ($scope, $rootScope, $timeout, $uib
 });
 
 myApp.controller('loginCtrl', function($scope, $http, $timeout, $location, $window, accessFac) {
-  $scope.getAccess = function() {
+ $scope.getAccess = function() {
 	var creds = $scope.username +":" + $scope.password;
 	
 	$http.get('/credentials/' + creds, {
@@ -199,7 +432,8 @@ myApp.controller('loginCtrl', function($scope, $http, $timeout, $location, $wind
 	  $scope.data = response;
 
   });
-		
+  
+  		
 	$timeout(function(){
 	 
     if ($scope.data.status === "true") {		
@@ -214,6 +448,11 @@ myApp.controller('loginCtrl', function($scope, $http, $timeout, $location, $wind
       window.alert("Falsche Zugangsdaten!");
     }}, 2500);
   }
+  
+  
+  
+  
+  
 
 });
 
@@ -221,11 +460,19 @@ myApp.controller('loginCtrl', function($scope, $http, $timeout, $location, $wind
 
 
 
-myApp.controller('custoCtrl', function($scope, $timeout, $location, $http, leafletData, leafletBoundsHelpers,shareClickedId,accessFac) {
+myApp.controller('custoCtrl', function($scope, $rootScope, $timeout, $location, $http, leafletData, leafletBoundsHelpers,shareClickedId,accessFac) {
 	
 	$scope.showText = true;
 	
+	$scope.lng= accessFac.getLng();
 	
+	$rootScope.$on("changeLng", function(){		  
+		$scope.changeLng();	
+	});
+	
+	$scope.changeLng = function(){
+		$scope.lng= accessFac.getLng();
+	}
 	
 	
 $scope.resizeTextLeft = function(multiplier) {
@@ -284,10 +531,11 @@ var refresh = function(){
 				$scope.de = mn.de;
 				$scope.en = mn.en;
 				$scope.museumsname = mn.museumsname;
+				
 				var helper = mn.de;
 				helper = helper.replace(/<div>/g, "<div class='fontChanger'>");
 				helper = helper.replace(/<strong>/g, "<strong class='fontChanger'>");
-				helper = helper.replace(/<em>/g, "<em class='fontChanger'>");				helper = helper.replace(/<dib>/g, "<div class='fontChanger'>");
+				helper = helper.replace(/<em>/g, "<em class='fontChanger'>");				
 				helper = helper.replace(/<figure>/g, "<figure class='fontChanger'>");
 				helper = helper.replace(/<img>/g, "<img class='fontChanger'>");
 				helper = helper.replace(/<ul>/g, "<ul class='fontChanger'>");
@@ -709,7 +957,6 @@ myApp.controller('beaconsCtrl', function($scope, $rootScope, $http, $uibModal, a
 	  });
  
 $scope.open = function ( helper) {
-	console.log(helper);
 	accessFac.setBeacon(helper);
 	var modalInstance = $uibModal.open({
 		templateUrl: 'www/popup_beacon.html',
@@ -754,13 +1001,19 @@ refresh();
 
 
 myApp.controller('exponatCtrl', function($scope,$rootScope, $http, $uibModal, $location, $anchorScroll, $timeout, accessFac){
-
-
-	$scope.showErweiterteSuche = true;
-	$scope.showStuff = function(helper){
-		$scope.showErweiterteSuche = helper;
-		console.log(helper);
+	$scope.lng= accessFac.getLng();
+	
+	$rootScope.$on("changeLng", function(){		  
+		$scope.changeLng();	
+	});
+	
+	$scope.changeLng = function(){
+		$scope.lng= accessFac.getLng();
 	}
+	
+	
+	$scope.showErweiterteSuche = true;
+	
 	
 	$scope.open = function ( helper) {
 		accessFac.setExponat(helper);
@@ -817,18 +1070,33 @@ myApp.controller('exponatCtrl', function($scope,$rootScope, $http, $uibModal, $l
         $scope.searchName = '';			
         angular.forEach($scope.backend, function(exponat) {
           exponat.ide = parseFloat(exponat.ide);
-		  exponat.expand = true
+		  exponat.expand = true;
+		  exponat.expandEn = true;
+	
 		 try {
-			var length = exponat.beschreibung_de.length;		  
+			var lengthDE = exponat.beschreibung_de.length;		  
+			var lengthEN = exponat.beschreibung_en.length;		  
 		  }catch(e){}		  
 		if(exponat.beschreibung_de===undefined){
 				exponat.beschreibung_de="noch keine Beschreibung";
-		}else if(length>40){
+		}
+		if(exponat.beschreibung_en===undefined){
+				exponat.beschreibung_en="no description yet";
+		}
+		
+		if(lengthDE>40){
 			   exponat.expand = false;
 			   exponat.checkIfLong=true;				
-		  }else if(length<=40){
+		}else if(lengthDE<=40){
 			   exponat.checkIfLong = false;	
-		  }
+		}
+		
+		if(lengthEN>40){
+			   exponat.expandEn = false;
+			   exponat.checkIfLongEn=true;				
+		  }else if(lengthEN<=40){
+			   exponat.checkIfLongEn = false;	
+		}
 		});
         $http.get('/backend_count/'+accessFac.getToken()).success(function(response) {
           $scope.number = response;
@@ -847,10 +1115,14 @@ myApp.controller('exponatCtrl', function($scope,$rootScope, $http, $uibModal, $l
 
 
 
-myApp.controller('orgCtrl',function($scope, $http, accessFac){
+myApp.controller('orgCtrl',function($scope, $http,$window, accessFac){
 	$http.get('/orgName/' + accessFac.getToken()).success(function(response) {
          $scope.org = response;
 	});
+	
+	$scope.logout = function(){
+		 $window.localStorage['jwtToken'] = "";
+	}
 	 
 });
 

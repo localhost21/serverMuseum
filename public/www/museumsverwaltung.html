@@ -1,7 +1,7 @@
 <html lang="de">
 <head>
 	<meta charset="UTF-8">
-	<title>Museumsverwaltung</title>
+	<title>{{'Museumsverwaltung' | translate }}</title>
 	
 </head>
 
@@ -24,13 +24,15 @@
 	
 	<div id="container">
 	
-		<div class="sidebar">
+		<div class="sidebar" ng-controller="LangCtrl" >
 			<ul id="nav">
-				<li><a href="/#/museumsverwaltung" class="selected">Exponate</a></li>
-				<li><a href="/#/getbeacons">Lokalisierung</a></li>
-				<li><a href="/#/custo" >Audioguide- App</a></li>
-				<li><a href="/#/hilfe" >Hilfe</a></li>
-				
+				<li ng-show="!showLng"><a href="/#/museumsverwaltung" class="selected">{{'exponate' | translate }}</a></li>
+				<li ng-show="!showLng"><a href="/#/getbeacons">{{'lokalisierung' | translate }}</a></li>
+				<li ng-show="!showLng"><a href="/#/custo" >Audioguide- App</a></li>
+				<li ng-show="!showLng"><a href="/#/hilfe" >{{'hilfe' | translate }}</a></li>
+				<li ng-show="!showLng" ng-click="showLng=!showLng"><a>Sprachen / Languages</a></li>
+				<li ng-show="showLng"><a ng-click="changeLang('EN');showLng=!showLng">{{'englisch' | translate }}</a></li>
+				<li ng-show="showLng"><a ng-click="changeLang('DE');showLng=!showLng">{{'german' | translate }}</a></li>
 			</ul>
 		</div>
 		
@@ -38,14 +40,14 @@
 		<div class="content">
 		<div id="box">
 			<div class="box-top">
-			Anzahl Exponate
+			{{'anzExpo' | translate }}
 			<div class="box-panel">{{number}}</div>
 			</div>
 		</div>
 		
 			
-		<h1 id="top">Exponate</h1>
-		<p>Hier verwalten Sie Ihre Exponate. </p>		
+		<h1 id="top">{{'exponate' | translate }}</h1>
+		<p>{{'expoText' | translate }} </p>		
 		
 		
 		
@@ -55,24 +57,31 @@
 		
 		
 		
-		 <table style="width:100%">
+		 <table style="width:100%" ng-show="lng==='DE' && showErweiterteSuche">
 			<tr>
 				<td style="width: 90%;"><input id="productMenuBar" name="productMenuBar" class="form-control has-header"  placeholder="Suche nach Exponatnummer" ng-model="filterer"/></td>
-				<td style="width: 10%;"><button id="addButton" name="addButton" style="width: 100%;" ng-click="open()" class="btn btn-primary" >Neues Exponat</button></td>
+				<td style="width: 10%;"><button id="addButton" name="addButton" style="width: 100%;" ng-click="open()" class="btn btn-primary" >{{'newExpo' | translate }}</button></td>
+			</tr>
+		</table> 
+		
+		<table style="width:100%" ng-show="lng==='EN' && showErweiterteSuche">
+			<tr>
+				<td style="width: 90%;"><input id="productMenuBar" name="productMenuBar" class="form-control has-header"  placeholder="enter exhibitnumber" ng-model="filterer"/></td>
+				<td style="width: 10%;"><button id="addButton" name="addButton" style="width: 100%;" ng-click="open()" class="btn btn-primary" >{{'newExpo' | translate }}</button></td>
 			</tr>
 		</table> 
 					
 		
-		<a id="buttonErweiterteSuche" ng-click="showStuff(false)" ng-show="showErweiterteSuche" class="leftButton" href="javascript:void(0)"> erweiterte Suchoptionen anzeigen</a>	
+		<a id="buttonErweiterteSuche" ng-click="showErweiterteSuche=!showErweiterteSuche" ng-show="showErweiterteSuche" class="leftButton">{{'erwSuchOpt' | translate }}</a>	
 		
 		
 		
 		
-		<div id="erweiterteSuche" ng-show="!showErweiterteSuche" >
+		<div id="erweiterteSuche" ng-show="!showErweiterteSuche && lng==='DE'" >
 		
 		
 		
-		<p>Beschränken Sie die Suchergebnisse mit folgenden Filtern:<p>
+		<p>{{'suchOpt'|translate}}<p>
 		 <table class="table" >			
 			<tr>
 			
@@ -110,9 +119,56 @@
 		</table>
 				
 			
-		<button class="btn btn-danger rightButton" ng-click="filterer=undefined;spracheSort=undefined;nameSort=undefined;posSort=undefined;themeSort=undefined;aktionSort=undefined">Filter zurücksetzen</button>
+		<button class="btn btn-danger rightButton" ng-click="filterer=undefined;spracheSort=undefined;nameSort=undefined;posSort=undefined;themeSort=undefined;aktionSort=undefined;nameSortEn=undefined;">Filter zurücksetzen</button>
 		
-		<a ng-click="showErweiterteSuche=true"> erweiterte Suchoptionen ausblenden</a>
+		<a ng-click="showErweiterteSuche=!showErweiterteSuche"> erweiterte Suchoptionen ausblenden</a>
+		</div>
+		
+		<div id="erweiterteSuche" ng-show="!showErweiterteSuche && lng==='EN'" >
+		
+		
+		
+		<p>{{'suchOpt'|translate}}<p>
+		 <table class="table" >			
+			<tr>
+			
+				<td>Exhibitnumber</td>
+				<td>
+				<input class="form-control has-header"  placeholder="enter exhibitnumber" ng-model="filterer"></input>						
+				</td>
+				<td>Name</td>
+				<td>
+				<input class="form-control has-header"  placeholder="enter name" ng-model="nameSortEn"></input>				
+				</td>
+			</tr>
+			<tr>	
+				<td>Theme</td>
+				<td>
+				<select ng-model="themeSort" class="styled-select semi-square wide">					
+					<option ng-repeat="thema in themaDaten | orderBy:'nummer'" value='{{thema.nummer}}'>{{thema.nummer}} - {{thema.name}} </option>
+				</select>			
+				</td>
+				<td>Position</td>
+				<td>
+				<select ng-model="posSort" class="styled-select semi-square wide">					
+					<option ng-repeat="ma in maData | orderBy:'name'" value="{{ma.name}}"> {{ma.name}} - {{ma.message}}</option>
+				</select>				
+				</td>
+			</tr>
+			<tr>				
+				<td>Show only active exhibits</td>
+				<td>
+				<input type="checkbox" ng-model="aktionSort">
+				</td>	
+				<td>&nbsp;</td>				
+				<td>&nbsp;</td>					
+			</tr>
+		</table>
+				
+			
+		<button class="btn btn-danger rightButton" ng-click="filterer=undefined;spracheSort=undefined;nameSort=undefined;posSort=undefined;themeSort=undefined;aktionSort=undefined;nameSortEn=undefined;">reset filter</button>
+		
+		<a ng-click="showErweiterteSuche=!showErweiterteSuche"> {{'suchOptAus'|translate}}</a>
 		</div>
 		
 		
@@ -122,19 +178,32 @@
 			<thead>
 				<tr>
 					<th><button class="tableButton" href="#" ng-click="sortType = 'ide'; sortReverse = !sortReverse">
-					Exponat-Nr.<span ng-show="sortType == 'ide' && !sortReverse" class="fa fa-caret-down"></span><span ng-show="sortType == 'ide' && sortReverse" class="fa fa-caret-up"></span> </button></th>
-					<th style="width: 10%;">Bild</th>					
-					<th style="width: 20%;"><button class="tableButton" href="#" ng-click="sortType = 'name_de'; sortReverse = !sortReverse">
-					Exponatname<span ng-show="sortType == 'name_de' && !sortReverse" class="fa fa-caret-down"></span><span ng-show="sortType == 'name_de' && sortReverse" class="fa fa-caret-up"></span> </button></th>					
-					<th style="width: 30%;">Beschreibung</th>
+					{{'exhNum'|translate}}<span ng-show="sortType == 'ide' && !sortReverse" class="fa fa-caret-down"></span><span ng-show="sortType == 'ide' && sortReverse" class="fa fa-caret-up"></span> </button></th>
+					<th style="width: 10%;">{{'bild'|translate}}</th>					
+					
+					
+					<th ng-show="lng==='DE'" style="width: 20%;"><button class="tableButton" href="#" ng-click="sortType = 'name_de'; sortReverse = !sortReverse">
+					Exponatname<span ng-show="sortType == 'name_de' && !sortReverse" class="fa fa-caret-down"></span><span ng-show="sortType == 'name_de' && sortReverse" class="fa fa-caret-up"></span> </button></th>				
+					<th style="width: 20%;" ng-show="lng==='EN'"><button class="tableButton" href="#" ng-click="sortType = 'name_en'; sortReverse = !sortReverse">
+					Name<span ng-show="sortType == 'name_en' && !sortReverse" class="fa fa-caret-down"></span><span ng-show="sortType == 'name_en' && sortReverse" class="fa fa-caret-up"></span> </button></th>				
+
+
+
+
+
+
+					
+					<th ng-show="lng==='DE'" style="width: 30%;">Beschreibung</th>
+					<th ng-show="lng==='EN'" style="width: 30%;">Description</th>
 					<th><button class="tableButton" href="#" ng-click="sortType = 'position'; sortReverse = !sortReverse">
 					Position <span ng-show="sortType == 'position' && !sortReverse" class="fa fa-caret-down"></span><span ng-show="sortType == 'position' && sortReverse" class="fa fa-caret-up"></span> </button></th>
 					 </button></th>
 					<th><button class="tableButton" href="#" ng-click="sortType = 'theme'; sortReverse = !sortReverse">
-					Thema <span ng-show="sortType == 'theme' && !sortReverse" class="fa fa-caret-down"></span><span ng-show="sortType == 'theme' && sortReverse" class="fa fa-caret-up"></span> </button></th>
-					<th>Audiofile</th>
+					{{'theme'|translate}} <span ng-show="sortType == 'theme' && !sortReverse" class="fa fa-caret-down"></span><span ng-show="sortType == 'theme' && sortReverse" class="fa fa-caret-up"></span> </button></th>
+					<th id="headerAudioDe">Audiofile</th>
+					<th id="headerAudioEn" style="display:none;">Audiofile</th>
 					<th><button class="tableButton" href="#" ng-click="sortType = 'aktion'; sortReverse = !sortReverse">
-					Aktiv<span ng-show="sortType == 'aktion' && !sortReverse" class="fa fa-caret-down"></span><span ng-show="sortType == 'aktion' && sortReverse" class="fa fa-caret-up"></span> </button></th>
+					{{'activ'|translate}}<span ng-show="sortType == 'aktion' && !sortReverse" class="fa fa-caret-down"></span><span ng-show="sortType == 'aktion' && sortReverse" class="fa fa-caret-up"></span> </button></th>
 					<th>&nbsp;</th>
 					<th>&nbsp;</th>
 				</tr>
@@ -148,28 +217,42 @@
 			
 			
 			<!-- ng-repeat copies content into seperate rows -->
-				<tr ng-repeat="exponat in backend | orderBy:sortType:sortReverse | filter: {'ide': filterer, 'sprache':spracheSort, 'name_de':nameSort, 'position':posSort,'theme':themeSort, 'aktion':aktionSort}">
+				<tr ng-repeat="exponat in backend | orderBy:sortType:sortReverse | filter: {'ide': filterer, 'sprache':spracheSort, 'name_de':nameSort, 'name_en':nameSortEn,'position':posSort,'theme':themeSort, 'aktion':aktionSort}">
 				
 					<td>{{exponat.ide}}</td>
 					<td class="item"><img ng-src="{{exponat.bild}}"></img></td>
-					<td>{{exponat.name_de}}</td>
+					<td ng-show="lng==='DE'">{{exponat.name_de}}</td>
+					<td ng-show="lng==='EN'">{{exponat.name_en}}</td>
+					
 					
 					<!--eingefahren -->
-					<td ng-click="exponat.expand=true" ng-show="!exponat.expand && exponat.checkIfLong">
+					<td ng-click="exponat.expand=true" ng-show="!exponat.expand && exponat.checkIfLong && lng==='DE'">
 					<a class="standard_p black">{{exponat.beschreibung_de | limitTo : 40}} ... </a><p class="fa fa-caret-down" /></td>
-					
-					
+											
 					<!--ausgefahren -->
-					<td ng-click="exponat.expand=false" ng-show="exponat.expand && exponat.checkIfLong" style="display: inline-block; word-break: break-word;">
+					<td ng-click="exponat.expand=false" ng-show="exponat.expand && exponat.checkIfLong && lng==='DE'" style="display: inline-block; word-break: break-word;">
 					<p class="fa fa-caret-up"><a class="standard_p"> verbergen</a></p><br>
 					{{exponat.beschreibung_de}}</td>
-					
-					
+	
 					<!--nur eingefahren -->
-					<td ng-show="!exponat.checkIfLong" >
+					<td ng-show="!exponat.checkIfLong && lng==='DE'" >
 					<a class="standard_p black">{{exponat.beschreibung_de }} </a></td>
 					
 					
+					<!--eingefahren -->
+					<td ng-click="exponat.expandEn=true" ng-show="!exponat.expandEn && exponat.checkIfLongEn && lng==='EN'">
+					<a class="standard_p black">{{exponat.beschreibung_en | limitTo : 40}} ... </a><p class="fa fa-caret-down" /></td>
+					
+					
+					<!--ausgefahren -->
+					<td ng-click="exponat.expandEn=false" ng-show="exponat.expandEn && exponat.checkIfLongEn && lng==='EN'" style="display: inline-block; word-break: break-word;">
+					<p class="fa fa-caret-up"><a class="standard_p"> hide</a></p><br>
+					{{exponat.beschreibung_en}}</td>
+					
+					
+					<!--nur eingefahren -->
+					<td ng-show="!exponat.checkIfLongEn && lng==='EN'" >
+					<a class="standard_p black">{{exponat.beschreibung_en}} </a></td>
 					
 					
 					
@@ -177,27 +260,33 @@
 					
 					<td>{{exponat.position}}</td>
 					<td>{{exponat.theme}}</td>
-					<td><audio controls  ng-src="{{exponat.audio_de}}">	</audio> </td>
+					<td id="audioEn"><audio controls  ng-src="{{exponat.audio_de}}">	</audio> </td>
+					<td id="audioEn" style="display:none;"><audio controls  ng-src="{{exponat.audio_en}}">	</audio> </td>
 					<td><input type="checkbox" ng-model="exponat.aktion"></td>
 					<!--<td><button class="btn btn-default" ng-click="edit(exponat.name, exponat.bild)" onclick="window.scrollTo(0,0);">&Auml;ndern </button></td>
 					<td><button class="btn btn-danger" ng-click="remove(exponat.name, exponat.bild)">L&ouml;schen</button></td>-->
-					<td> <button ng-click="open(exponat)" class="btn btn-default">Ändern</button></td>
+					<td> <button ng-click="open(exponat)" class="btn btn-default">{{'change'|translate}}</button></td>
 				</tr>
 			</tbody>
 		</table>
+		
+		
+		
+		
+		
 		<!--<button class="btn btn-daufalt full" ng-click="top()"> zurück nach oben</button>-->
-		<button class="btn btn-daufalt full" onclick="window.scrollTo(0,0)"> zurück nach oben</button>
+		<button class="btn btn-daufalt full" onclick="window.scrollTo(0,0)">{{'toTop'|translate}}</button>
 				</div>
 				
 		
 	</div>
 	
 	
-	<div id="header" ng-controller="exponatCtrl">
+	<div id="header" ng-controller="orgCtrl">
 	<div class="logo"><a href="/#/museumsverwaltung">Museumsverwaltungs-<span>Software</span></a> </div>	
-	<a href="/#/" ><img id="logout"  src="/www/img/logout.png"/></a>	
-	<div id="headerOrg" ng-controller="orgCtrl">
-		<p style=" font-size: 12px;"> angemeldet als <div style="font-size: 18px; line-height: 2px;">{{org}}</div> </p>
+	<a href="/#/" ><img id="logout"  src="/www/img/logout.png"/ ng-click="logout()"></a>	
+	<div id="headerOrg" >
+		<p style=" font-size: 12px;"> {{'angAls'|translate}} <div style="font-size: 18px; line-height: 2px;">{{org}}</div> </p>
 	</div>
 	</div>
 

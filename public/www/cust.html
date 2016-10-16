@@ -1,7 +1,7 @@
 <html ng-app="myApp">
 
   <head lang="de">
-    <title>Museumsverwaltung</title>
+    <title>{{'Museumsverwaltung' | translate }}</title>
 
   </head>
 
@@ -10,35 +10,37 @@
 
 
     <div id="container">
-      <div class="sidebar">
-        <ul id="nav">
-          <li><a href="/#/museumsverwaltung">Exponate</a></li>
-          <li><a href="/#/getbeacons">Lokalisierung</a></li>
-          <li><a href="/#/custo" class="selected">Audioguide-App</a></li>
-          <li><a href="/#/hilfe">Hilfe</a></li>
-
-        </ul>
-      </div>
+     <div class="sidebar" ng-controller="LangCtrl" >
+			<ul id="nav">
+				<li ng-show="!showLng"><a href="/#/museumsverwaltung">{{'exponate' | translate }}</a></li>
+				<li ng-show="!showLng"><a href="/#/getbeacons">{{'lokalisierung' | translate }}</a></li>
+				<li ng-show="!showLng"><a href="/#/custo" class="selected">Audioguide- App</a></li>
+				<li ng-show="!showLng"><a href="/#/hilfe" >{{'hilfe' | translate }}</a></li>
+				<li ng-show="!showLng" ng-click="showLng=!showLng"><a>Sprachen / Languages</a></li>
+				<li ng-show="showLng"><a ng-click="changeLang('EN');showLng=!showLng">{{'englisch' | translate }}</a></li>
+				<li ng-show="showLng"><a ng-click="changeLang('DE');showLng=!showLng">{{'german' | translate }}</a></li>
+			</ul>
+		</div>
       <div class="content">
         <h1>Audioguide</h1>
-        <p>Hier können Sie den Audioguide Ihren Bedürfnissen nach anpassen.</p>
+        <p>{{'custoDesc' | translate }}</p>
 
 		
 		
 		<div class="area" style="min-heigth: 500px;">
-          <h2 id="custo">Allgemeine Angaben </h2> 
-			<p style="float: left;"> Passen Sie den Namen und den "Über uns"- Text an</p>
+          <h2 id="custo">{{'allgAng' | translate }}</h2> 
+			<p style="float: left;">{{'aboutUs' | translate }} </p>
 		  
 		  
-		  
+		 
 		 	<div id="phone">
 				<img src="https://dl.dropboxusercontent.com/s/tm0tcq5i8uip0dd/iPhone-5.png?dl=0" id="phoneImg">
 				<div id="headerPhone"><i class="fa fa-bars fa-2x" aria-hidden="true" style="color: white; float: left; margin-left: 9px; margin-top: 6px;"></i>
-					<p style="color: white; line-height: 44px;">Über uns </p>					
+					<p style="color: white; line-height: 44px;">{{'ueberUns' | translate }} </p>					
 				</div>
 				
 				<div id="scrollingContent">	
-					<h1 style="color: black;"> Herzlich Willkommen im <span id="namePhone">{{museumsname}}</span></h1>
+					<h1 style="color: black;">{{'welcome' | translate }}  <span id="namePhone">{{museumsname}}</span></h1>
 					<p id="helperInPhone" style="display:block;font-size: 15px;"/>				
 				</div>
 				
@@ -57,11 +59,11 @@
 			<table class="table" id="showerText" ng-show="showText">
 				<tr>
 					<td><p  editable-text="museumsname" onaftersave="uploadName($data)" e-form="textBtnForm" style="display: inline;" ng-mouseover="addHoverPhone('namePhone')" ng-mouseleave="removeHoverPhone('namePhone')"> {{ museumsname || "empty" }}</p></td>
-					<td><button class="btn btn-primary" style="display: inline-block" ng-click="textBtnForm.$show()" ng-hide="textBtnForm.$visible">&Auml;ndern</button></td>
-				</tr>				
+					<td><button class="btn btn-primary" style="display: inline-block" ng-click="textBtnForm.$show()" ng-hide="textBtnForm.$visible">{{'change' | translate }}</button></td>
 				<tr>
+				</tr>				
 					<td> <p id="helper" style="display:block;font-size: 15px;" ng-mouseover="addHoverPhone('phone')" ng-mouseleave="removeHoverPhone('scrollingContent')"/></td>
-					<td> <button class="btn btn-primary" ng-click="showText=false" id="showHelper">&Auml;ndern</button></td>
+					<td> <button class="btn btn-primary" ng-click="showText=false" id="showHelper">{{'change' | translate }}</button></td>
 				</tr>
 			</table>
 			
@@ -70,9 +72,9 @@
 			
 			<div id="editText" ng-show="!showText">
 				<trix-editor ng-model-options="{ updateOn: 'blur' }" spellcheck="false" class="trix-content" ng-model="htmlcontent" angular-trix trix-initialize="trixInitialize(e, editor);" trix-change="trixChange(e, editor);" trix-selection-change="trixSelectionChange(e, editor);" trix-focus="trixFocus(e, editor);" trix-blur="trixBlur(e, editor);" trix-file-accept="trixFileAccept(e, editor);" trix-attachment-add="trixAttachmentAdd(e, editor);" trix-attachment-remove="trixAttachmentRemove(e, editor);" placeholder="Write something.."></trix-editor>
-				<button class="btn btn-default" ng-click="htmlcontent=de; clickedLng='de'"> Deutsch</button> 
-				<button class="btn btn-default" ng-click="htmlcontent=en; clickedLng='en'"> Englisch</button> <br><br>
-				<button class="btn btn-primary" ng-click="showText=true; uploadText(htmlcontent)" onclick="window.scrollTo(0,0);"> Speichern</button> 	
+				<button class="btn btn-default" ng-click="htmlcontent=de; clickedLng='de'"> {{'german' | translate }}</button> 
+				<button class="btn btn-default" ng-click="htmlcontent=en; clickedLng='en'"> {{'englisch' | translate }}</button> <br><br>
+				<button class="btn btn-primary" ng-click="showText=true; uploadText(htmlcontent)" onclick="window.scrollTo(0,0);"> {{'save' | translate }}</button> 	
 			</div>
 		</div>
 			
@@ -95,23 +97,6 @@
 		  
 		  
 		
-		  <!--
-		  
-		  <label>Über uns- Text </label>
-        <div text-angular="text-angular" name="htmlcontent" ng-model="htmlcontent" ta-disabled='disabled' ></div>
-        <br>
-        <button class="btn btn-default" ng-click="htmlcontent=de; clickedLng='de'"> Deutsch</button> 
-        <button class="btn btn-default" ng-click="htmlcontent=en; clickedLng='en'"> Englisch</button> <br><br>
-		<button class="btn btn-default" ng-click="uploadText(htmlcontent)"> Speichern</button> 
-		
-		
-		  
-		  
-        </div>
-		
-		-->
-		
-		
 		
 		
 		
@@ -119,14 +104,14 @@
 		
 		
 		<div id="area">
-          <h2 id="custo">Themengebiete </h2> 
+          <h2 id="custo">{{'themeg' | translate }} </h2> 
 		  
 		  <table class="table" style="width: 80%; margin: 0 auto;font-size: 20px; ">
 			<thead>
 				<tr style="font-size: 22px; font-style: italic;">
-					<td>Themennummer (dreistellig)</td>
-					<td>Dazugehörige Position</td>
-					<td>Themenname</td>
+					<td>{{'themegn' | translate }}</td>
+					<td>{{'position' | translate }}</td>
+					<td>{{'name' | translate }}</td>
 				</tr>
 			</thead>
 			<tbody>
@@ -134,16 +119,16 @@
 					<td><input class="form-control" ng-model="thema.nummer" placeholder="Nummer"></td>
 					<td><input class="form-control" ng-model="thema.pos" placeholder="Position"></td>
 					<td><input class="form-control" ng-model="thema.name" placeholder="Name"></td>
-					<td><button id="newThemeButton" style="width: 150px;" class="btn btn-default" ng-click="saveNewTheme()">Neu hinzufügen</button></td>
-					<td><button id="SaveCurrentThemeButton" style="width: 150px; display: none;" class="btn btn-default" ng-click="updateThema(thema._id)">Speichern</button></td>
+					<td><button id="newThemeButton" style="width: 150px;" class="btn btn-default" ng-click="saveNewTheme()">{{'newOne' | translate }}</button></td>
+					<td><button id="SaveCurrentThemeButton" style="width: 150px; display: none;" class="btn btn-default" ng-click="updateThema(thema._id)">{{'hinzu' | translate }}</button></td>
 					<!--<button style="width: 150px;" class="btn btn-danger" ng-click="deselect()">Leeren</button></td>-->
 				</tr>
 				<tr ng-repeat="thema in themaDaten|orderBy: predicate='nummer'"> 
 					<td stlye="width: 30%;">{{thema.nummer}}</td>
 					<td stlye="width: 30%;">{{thema.pos}}</td>
 					<td stlye="width: 30%;">{{thema.name}}</td>
-					<td><button style="width: 150px;" class="btn btn-default" ng-click="changeThema(thema.nummer)">Ändern</button></td>
-					<td><button style="width: 150px;" class="btn btn-danger" ng-click="removeThema(thema.nummer)">Löschen</button></td>
+					<td><button style="width: 150px;" class="btn btn-default" ng-click="changeThema(thema.nummer)">{{'change' | translate }}</button></td>
+					<td><button style="width: 150px;" class="btn btn-danger" ng-click="removeThema(thema.nummer)">{{'deletee' | translate }}</button></td>
 				</tr>
 			</tbody> 
 		 </table>
@@ -161,42 +146,42 @@
 		
 
         <div id="area1" data-tap-disabled="true">
-          <h2 id="custo">Karte</h2>
+          <h2 id="custo">{{'map' | translate }}</h2>
 
             <leaflet defaults="defaults" legend="legend" layers="layers" maxBounds="maxBounds" markers="markers" event-broadcast="events" id="leafletMap"></leaflet>
             <br>
-          <p> Fahren Sie mit der Maustaste über die einzelnen Positionen um den aktuellen Standort auf der Karte anzuzeigen</p>
+          <p>{{'erkl'|translate}} </p>
 		  <table class="table" style="width: 80%; margin: 0 auto;font-size: 20px; ">
 			<thead>
 				<tr style="font-size: 22px; font-style: italic;">
-					<td>Beacon-Major Nummer</td>
-					<td>Name</td>
+					<td>{{'bemanu'|translate}} </td>
+					<td>{{'name'|translate}}</td>
 				</tr>
 			</thead>
 			<tbody>
 				<tr>
 					<td><input class="form-control" ng-model="markersHelper.name" placeholder="Message"></td>
 					<td><input class="form-control" ng-model="markersHelper.message" placeholder="Name"></td>
-					<td><button style="width: 150px;" class="btn btn-default" ng-click="update()">Speichern</button></td>
+					<td><button style="width: 150px;" class="btn btn-default" ng-click="update()">{{'save'|translate}}</button></td>
 					<!--<button style="width: 150px;" class="btn btn-danger" ng-click="deselect()">Leeren</button></td>-->
 				</tr>
 				<tr ng-repeat="ma in data|orderBy: predicate='name'|filter: greaterThan('name', 0)"> 
 					<td stlye="width: 30%;" ng-mouseover="addHover(ma.name)" ng-mouseleave="removeHover(ma.name)">{{ma.name}}</td>
 					<td stlye="width: 30%;" ng-mouseover="addHover(ma.name)" ng-mouseleave="removeHover(ma.name)">{{ma.message}}</td>
-					<td><button style="width: 150px;" class="btn btn-default" ng-click="changeSingleMarker(ma.message)">Ändern</button>
-					<td><button style="width: 150px;" class="btn btn-danger" ng-click="remove(ma.message)">Löschen</button></td>
+					<td><button style="width: 150px;" class="btn btn-default" ng-click="changeSingleMarker(ma.message)">{{'change'|translate}}</button>
+					<td><button style="width: 150px;" class="btn btn-danger" ng-click="remove(ma.message)">{{'deletee'|translate}}</button></td>
 				</tr>
 			</tbody> 
 		 </table>
 		  <br>
 
-		  <button class="btn btn-default btn-file" ng-click="deleteMarkers()">Alle Standorte löschen</button>
-		  <button class="btn btn-default btn-file" ng-click="archiveMarkerJSON()">Standorte Archivieren</button>
+		  <button class="btn btn-default btn-file" ng-click="deleteMarkers()">{{'deletemarkers'|translate}}</button>
+		  <button class="btn btn-default btn-file" ng-click="archiveMarkerJSON()">{{'archive'|translate}}</button>
 		  
 		 <div ng-repeat="receivedMarkers in h | myFilter track by $index" id="godzilla" style="display:none;">{{receivedMarkers.blup}}</div>
 
 			<span class="btn btn-default" id="toggler" uib-dropdown>
-    <a uib-dropdown-toggle style="color: #424242;">archivierte Standorte <span class="caret"></span></a>
+    <a uib-dropdown-toggle style="color: #424242;">{{'getarchive'|translate}} <span class="caret"></span></a>
     <ul uib-dropdown-menu>
         <li id="markers" ng-repeat="receivedMarkers in h track by $index" ng-click="loadMarkers(receivedMarkers._id, $index)">{{receivedMarkers.name}}</li>
     </ul>
@@ -215,7 +200,7 @@
             </label>	
 	
      <label class="btn btn-default btn-file" style="margin-top: 30px;">
-        <input type="submit" name="submit" style="display: none;"> Speichern
+        <input type="submit" name="submit" style="display: none;"> {{'save'|translate}}
      </label>
 </form>
           
@@ -234,23 +219,23 @@
             </label>	
 	
      <label class="btn btn-default btn-file" style="margin-top: 30px;">
-        <input type="submit" name="submit" style="display: none;"> Speichern
+        <input type="submit" name="submit" style="display: none;"> {{'save'|translate}}
      </label>
 </form>
 		  
 		  
           </label>
         </div>
-<button class="btn btn-daufalt full" onclick="window.scrollTo(0,0)"> zurück nach oben</button>
+<button class="btn btn-daufalt full" onclick="window.scrollTo(0,0)"> {{'toTop'|translate}}</button>
 
       </div>
 
     </div>
-    <div id="header">
+    <div id="header" ng-controller="orgCtrl">
 	<div class="logo"><a href="/#/museumsverwaltung">Museumsverwaltungs-<span>Software</span></a> </div>	
-	<a href="/#/" ><img id="logout"  src="/www/img/logout.png"/></a>	
-	<div id="headerOrg" ng-controller="orgCtrl">
-		<p style=" font-size: 12px;"> angemeldet als <div style="font-size: 18px; line-height: 2px;">{{org}}</div> </p>
+	<a href="/#/" ><img id="logout"  src="/www/img/logout.png"/ ng-click="logout()"></a>	
+	<div id="headerOrg" >
+		<p style=" font-size: 12px;"> {{'angAls'|translate}} <div style="font-size: 18px; line-height: 2px;">{{org}}</div> </p>
 	</div>
 	</div>
   </body>
