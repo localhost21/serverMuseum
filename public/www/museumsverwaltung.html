@@ -201,7 +201,6 @@
 					<th><button class="tableButton" href="#" ng-click="sortType = 'theme'; sortReverse = !sortReverse">
 					{{'theme'|translate}} <span ng-show="sortType == 'theme' && !sortReverse" class="fa fa-caret-down"></span><span ng-show="sortType == 'theme' && sortReverse" class="fa fa-caret-up"></span> </button></th>
 					<th id="headerAudioDe">Audiofile</th>
-					<th id="headerAudioEn" style="display:none;">Audiofile</th>
 					<th><button class="tableButton" href="#" ng-click="sortType = 'aktion'; sortReverse = !sortReverse">
 					{{'activ'|translate}}<span ng-show="sortType == 'aktion' && !sortReverse" class="fa fa-caret-down"></span><span ng-show="sortType == 'aktion' && sortReverse" class="fa fa-caret-up"></span> </button></th>
 					<th>&nbsp;</th>
@@ -260,8 +259,8 @@
 					
 					<td>{{exponat.position}}</td>
 					<td>{{exponat.theme}}</td>
-					<td id="audioEn"><audio controls  ng-src="{{exponat.audio_de}}">	</audio> </td>
-					<td id="audioEn" style="display:none;"><audio controls  ng-src="{{exponat.audio_en}}">	</audio> </td>
+					<td ng-show="lng==='DE'"><audio controls  ng-src="{{exponat.audio_de}}">	</audio> </td>
+					<td ng-show="lng==='EN'"><audio controls  ng-src="{{exponat.audio_en}}">	</audio> </td>
 					<td><input type="checkbox" ng-model="exponat.aktion"></td>
 					<!--<td><button class="btn btn-default" ng-click="edit(exponat.name, exponat.bild)" onclick="window.scrollTo(0,0);">&Auml;ndern </button></td>
 					<td><button class="btn btn-danger" ng-click="remove(exponat.name, exponat.bild)">L&ouml;schen</button></td>-->
