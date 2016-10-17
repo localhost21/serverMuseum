@@ -1084,7 +1084,7 @@ app.get('/themenEN', function(req, res) {
 
 
 app.get('/englisch/:id', function(req, res) {
-  var token = req.params.id;
+var token = req.params.id;
   db.credentials.count(function(err, docs) {
     var count = docs;
     setTimeout(function() {
@@ -1096,22 +1096,26 @@ app.get('/englisch/:id', function(req, res) {
         var org = [];
         org = doc;
         for (i = 0; i < count; i++) {
-          var decode = jwt.decode(token, org[i].org, function(err_, decode) {
-            if (err) {
-              return console.error(err.name, err.message);
+          try {
+            var decode = jwt.decode(token, org[i].org, function(err_, decode) {
+              if (err) {
+                return console.error(err.name, err.message);
+              }
+            });
+            decode = decode.org;
+            if (decode === org[i].org) {
+              db.backend.find({
+                  "sprache": "EN",
+                  "aktion": true,
+                  "org": decode
+                },
+                function(err, doc) {
+                  res.json(doc);
+                });
+              break;
             }
-          });
-          decode = decode.org;
-          if (decode === org[i].org) {
-            db.backend.find({
-                "sprache": "EN",
-                "aktion": true,
-                "org": decode
-              },
-              function(err, doc) {
-                res.json(doc);
-              });
-            break;
+          } catch (err) {
+            console.log(err);
           }
         }
       });
