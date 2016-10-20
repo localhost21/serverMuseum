@@ -63,8 +63,8 @@ var myApp = angular.module('myApp', ['ngRoute','pascalprecht.translate', 'ui-lea
 	deletemarkers: 'Alle Standorte löschen',
 	archive: 'Standorte Archivieren',
 	getarchive: 'archivierte Standorte',
-	speichern: 'Speichern'
-	
+	speichern: 'Speichern',
+	beaconsVer: 'Beacons verwalten'
 	
 	
 	
@@ -76,8 +76,8 @@ var myApp = angular.module('myApp', ['ngRoute','pascalprecht.translate', 'ui-lea
 	deletemarkers: 'delete all markers',
 	archive: 'archive markers',
 	getarchive: 'archived postions',
-	speichern: 'save',
-	  
+	speichern: 'save',	
+	beaconsVer: 'Manage Beacons',  
 	  
 	  
 	  
