@@ -117,7 +117,21 @@
 			<tbody>
 				<tr>
 					<td><input class="form-control" ng-model="thema.nummer" placeholder="Nummer"></td>
-					<td><input class="form-control" ng-model="thema.pos" placeholder="Position"></td>
+					<td><select ng-model="thema.pos" class="styled-select semi-square wide">					
+					<option ng-repeat="ma in maData | orderBy:'name'" value="{{ma.name}}"> {{ma.name}} - {{ma.message}}</option>
+				</select>	
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					</td>
 					<td><input class="form-control" ng-model="thema.name" placeholder="Name"></td>
 					<td><button id="newThemeButton" style="width: 150px;" class="btn btn-default" ng-click="saveNewTheme()">{{'newOne' | translate }}</button></td>
 					<td><button id="SaveCurrentThemeButton" style="width: 150px; display: none;" class="btn btn-default" ng-click="updateThema(thema._id)">{{'hinzu' | translate }}</button></td>

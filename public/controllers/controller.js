@@ -43,7 +43,7 @@ var myApp = angular.module('myApp', ['ngRoute','pascalprecht.translate', 'ui-lea
 	beschr: '(zwischen 100 und 10\'000)',
 	change: 'Ändern',
 	countB: 'Anzahl Beacons',
-	descB: 'Hier können Sie die Einstellungen Ihrer Beacons &auml;ndern oder',
+	descB: 'Hier können Sie die Einstellungen Ihrer Beacons ändern oder',
 	descBe: 'weitere Beacons bestellen.',
 	name: 'Name',
 	major: 'Major',
@@ -64,7 +64,8 @@ var myApp = angular.module('myApp', ['ngRoute','pascalprecht.translate', 'ui-lea
 	archive: 'Standorte Archivieren',
 	getarchive: 'archivierte Standorte',
 	speichern: 'Speichern',
-	beaconsVer: 'Beacons verwalten'
+	beaconsVer: 'Beacons verwalten',
+	position: 'Position'
 	
 	
 	
@@ -78,6 +79,7 @@ var myApp = angular.module('myApp', ['ngRoute','pascalprecht.translate', 'ui-lea
 	getarchive: 'archived postions',
 	speichern: 'save',	
 	beaconsVer: 'Manage Beacons',  
+	position: 'position',
 	  
 	  
 	  
@@ -466,7 +468,12 @@ myApp.controller('loginCtrl', function($scope, $http, $timeout, $location, $wind
 
 
 myApp.controller('custoCtrl', function($scope, $rootScope, $timeout, $location, $http, leafletData, leafletBoundsHelpers,shareClickedId,accessFac) {
+	$http.get('/nonWalkerMarkers/' + accessFac.getToken()).success(function(response) {
+    $scope.maData = response;
+    $scope.ma = "";
 	
+  });
+  
 	$scope.showText = true;
 	
 	$scope.lng= accessFac.getLng();

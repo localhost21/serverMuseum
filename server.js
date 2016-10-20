@@ -280,7 +280,7 @@ app.put('/themenliste/:organization', function(req, res) {
 
 
 	var id = req.params.organization;       
-	var o_id = new ObjectID(id);		
+	var o_id = new mongo.ObjectID(id);	
 				
 				
   var id = req.params.id;
