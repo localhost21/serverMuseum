@@ -441,24 +441,16 @@ h1#titleLoginHidden {
   }
   
   
-  img#gif{
-	position: fixed;
-	top: 10%;
-	width: 300px;
-	height: 200px;
-	margin-top: -100px;
-} 
-  
+	div#img {
+	width: 100% important;
+	}
   
   
   div#merger {
-	position: fixed !important;
-	top: 70% !important;
-	left: 50% !important;
-	heigth: 250px !important;
-	width: 300px !important;
-	margin-top: -125px !important;
-	margin-left: -150px !important;
+	padding-left: 30px !important;
+	padding-right: 30px !important;
+	width: 100% !important;
+	
 }
 
 button#loginButton {
@@ -514,16 +506,37 @@ div#box {
 
 @media screen and (max-width: 1200px) {
 img#gif{
-	
+	bottom: 0;
+	right: 0;
+	top: 0;
 	width: 400px;
-	heigth: 300px;
-	position: fixed;
-	top: 30%;
+	position: relative;
+	margin: 0 auto;
+	/*top: 30%;
+	left: 50%;
+	margin-left: -200px;
+	margin-top: -150px;
+	overflow: hidden;
+	display: block;*/
+	
+} 
+
+div#merger {
+	bottom: 0;
+	right: 0;
+	top: 300;
+	width: 400px;
+	position: relative;
+	margin: 0 auto;
+
+	/*position: fixed;
+	top: 60%;
 	left: 50%;
 	margin-left: -200px;
 	margin-top: -150px;
 	
-} 
+	display: block;*/
+}
 
  .sidebar {
     position: absolute;
@@ -561,6 +574,7 @@ img#gif{
   
   div#loLeft {
   display: none;
+  z-index: 1;
 }
 
 
@@ -574,13 +588,7 @@ div#loRight {
   postion: fixed;
 }
 
-div#merger {
-	position: fixed;
-	top: 60%;
-	left: 50%;
-	margin-left: -200px;
-	margin-top: -150px;
-}
+
 
   
 }
