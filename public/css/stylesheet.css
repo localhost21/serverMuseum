@@ -441,21 +441,31 @@ h1#titleLoginHidden {
   }
   
   
+  img#gif{
+	position: fixed;
+	top: 10%;
+	width: 300px;
+	height: 200px;
+	margin-top: -100px;
+} 
+  
+  
   
   div#merger {
-	margin: 0 auto;
-	width: 70%;
-	padding: 15px;
+	position: fixed !important;
+	top: 70% !important;
+	left: 50% !important;
+	heigth: 250px !important;
+	width: 300px !important;
+	margin-top: -125px !important;
+	margin-left: -150px !important;
 }
 
 button#loginButton {
 	width: 100%;
 }
 
-	img#gif {
-		width:300px;
-		margin-top: 10%;
-	}
+
   
   
   img#thumbnail {
@@ -505,10 +515,13 @@ div#box {
 @media screen and (max-width: 1200px) {
 img#gif{
 	
-	max-width: 400px;
-	bottom: auto;
-	right: auto;
-	position: relative;
+	width: 400px;
+	heigth: 300px;
+	position: fixed;
+	top: 30%;
+	left: 50%;
+	margin-left: -200px;
+	margin-top: -150px;
 	
 } 
 
@@ -562,17 +575,11 @@ div#loRight {
 }
 
 div#merger {
-	bottom: auto;
-	right: auto;
-	margin: 0 auto;
-	position: relative;
-}
-
-img#gif {
-	margin: 0 auto;
-	position: relative;
-
-	
+	position: fixed;
+	top: 60%;
+	left: 50%;
+	margin-left: -200px;
+	margin-top: -150px;
 }
 
   

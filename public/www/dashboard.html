@@ -1,0 +1,57 @@
+<html lang="de">
+<head>
+	<meta charset="UTF-8">
+	<title>{{'Museumsverwaltung' | translate }}</title>
+	
+</head>
+
+<body >
+
+
+	
+	
+	
+
+	
+	<div id="container">
+	
+		<div class="sidebar" ng-controller="LangCtrl" >
+			<ul id="nav">
+				<li ng-show="!showLng"><a href="/#/museumsverwaltung">{{'exponate' | translate }}</a></li>
+				<li ng-show="!showLng"><a href="/#/getbeacons">{{'lokalisierung' | translate }}</a></li>
+				<li ng-show="!showLng"><a href="/#/custo" >Audioguide- App</a></li>
+				<li ng-show="!showLng"><a href="/#/hilfe" >{{'hilfe' | translate }}</a></li>
+				<li ng-show="!showLng&&showDashboard"><a class="selected"href="/#/dashboard" >Dashboard</a></li>
+				<li ng-show="!showLng" ng-click="showLng=!showLng"><a>Sprachen / Languages</a></li>
+				<li ng-show="showLng"><a ng-click="changeLang('EN');showLng=!showLng">{{'englisch' | translate }}</a></li>
+				<li ng-show="showLng"><a ng-click="changeLang('DE');showLng=!showLng">{{'german' | translate }}</a></li>
+				
+			</ul>
+		</div>
+		
+		
+		<div class="content">
+		
+		<table class="table table-hover table-bordered">
+			<thead>
+				<tr><th>Museumsidentifier</th><th>Ansprechsperson</th><th>Kontakt</th></tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="user in users"><td>{{user.org}}</td><td>{{user.contactPerson}}</td><td>{{user.mail}}</td></tr>
+			</tbody>
+		</table>
+				
+		</content>
+	</div>
+	
+	
+	<div id="header" ng-controller="orgCtrl">
+		<div id="classler" class="logo"><a href="/#/museumsverwaltung">Museumsverwaltungs-<span>Software</span></a> </div>	
+		<a href="/#/" ><img id="logout"  src="/www/img/logout.png"/ ng-click="logout()"></a>	
+		<div id="headerOrg" >
+			<p style=" font-size: 12px;"> {{'angAls'|translate}} <div style="font-size: 18px; line-height: 2px;">{{org}}</div> </p>
+		</div>
+	</div>
+
+</body>
+</html>
