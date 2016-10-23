@@ -1,0 +1,37 @@
+<body ng-app="myApp">
+
+
+<div class="modal-header" style="background-color: #1c567d;">
+<h3 class="modal-title" style="color: white; text-align: center; display:inline-block;">{{'singup'|translate}}</h3>
+<a class="fa fa-close fa-3x" ng-click="close()" style="float:right; display: inline-block; color: white;"></a>
+</div>
+<div class="modal-body" style="background-color: #f2f2f2;">
+
+<img ng-show="showLoader" src="https://dl.dropboxusercontent.com/s/x180clbggcug3ta/loading-circle.gif?dl=0" id="loader" />
+
+
+<table class="table">
+		
+			<tbody>
+			<tr><td class="bold">{{'firm'|translate}}</td><td><input class="form-control" ng-model="register.name" /></td> </tr>
+			<tr><td class="bold">{{'anspPers'|translate}}</td><td><input class="form-control" ng-model="register.contactPerson" /></td> </tr>
+			<tr><td class="bold">{{'emailAns'|translate}}</td><td><input type="email" class="form-control" ng-model="register.contactPersonMail" /></td> </tr>
+			<tr><td class="bold">{{'telAns'|translate}}</td><td><input type="tel" class="form-control" ng-model="register.contactPersonTel" /></td> </tr>
+			<tr><td class="bold">{{'username'|translate}}</td><td><input id="username" type="tel" class="form-control" ng-model="register.username" /></td> </tr>
+			<tr><td class="bold">{{'pw'|translate}}</td><td><input id="pw"type="password" class="form-control" ng-model="register.pw" /></td> </tr>
+			<tr><td class="bold">{{'pwR'|translate}}</td><td><input type="password" class="form-control" ng-model="register.pwR" /></td> </tr>
+			<tr><td></td><td><div vc-recaptcha key="'6Leu7AkUAAAAAAfcoZjNESxDj\-c-\bgrkbT8WjYa\-'"/></td></tr>
+			</tbody>
+		</table>
+
+</div>
+
+<div class="modal-footer" style="background-color: #1c567d;">
+<button id="buttonModify" class="btn btn-primary" ng-click="speichern()" style="float: left;">{{'speichern'|translate}} </button>
+<button class="btn btn-default" type="button" ng-click="close()" style="margin-right: 25px;">{{'abbr'|translate}}</button>
+
+</div>
+
+
+</body>
+
