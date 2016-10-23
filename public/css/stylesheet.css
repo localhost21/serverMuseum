@@ -441,15 +441,19 @@ h1#titleLoginHidden {
   }
   
   
-	div#img {
-	width: 100% important;
+	img#gif {
+	width: 100% !important;
+	top: -60px !important; 
 	}
   
   
   div#merger {
-	padding-left: 30px !important;
-	padding-right: 30px !important;
 	width: 100% !important;
+    left: 0 !important;
+	bottom: 0 !important;
+	padding: 5px !important;
+	margin-left: 0 !important;
+	
 	
 }
 
@@ -522,12 +526,11 @@ img#gif{
 } 
 
 div#merger {
-	bottom: 0;
-	right: 0;
-	top: 300;
+	bottom: 10%;
+	left: 50%;
+	margin-left: -200px;
 	width: 400px;
-	position: relative;
-	margin: 0 auto;
+	position: fixed;
 
 	/*position: fixed;
 	top: 60%;
@@ -609,6 +612,7 @@ div#loLeft{
   postion: relative;
   margin-left: -200px;
   overflow: hide;
+  z-index: 1;
 }
 
 div#lo {
