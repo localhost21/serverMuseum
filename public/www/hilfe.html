@@ -22,6 +22,7 @@
 				<li ng-show="!showLng"><a href="/#/getbeacons">{{'lokalisierung' | translate }}</a></li>
 				<li ng-show="!showLng"><a href="/#/custo" >Audioguide- App</a></li>
 				<li ng-show="!showLng"><a href="/#/hilfe" class="selected">{{'hilfe' | translate }}</a></li>
+				<li ng-show="!showLng&&showDashboard"><a href="/#/dashboard" >Dashboard</a></li>
 				<li ng-show="!showLng" ng-click="showLng=!showLng"><a>Sprachen / Languages</a></li>
 				<li ng-show="showLng"><a ng-click="changeLang('EN');showLng=!showLng">{{'englisch' | translate }}</a></li>
 				<li ng-show="showLng"><a ng-click="changeLang('DE');showLng=!showLng">{{'german' | translate }}</a></li>

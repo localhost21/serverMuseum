@@ -16,6 +16,7 @@
 				<li ng-show="!showLng"><a href="/#/getbeacons">{{'lokalisierung' | translate }}</a></li>
 				<li ng-show="!showLng"><a href="/#/custo" class="selected">Audioguide- App</a></li>
 				<li ng-show="!showLng"><a href="/#/hilfe" >{{'hilfe' | translate }}</a></li>
+				<li ng-show="!showLng&&showDashboard"><a href="/#/dashboard" >Dashboard</a></li>
 				<li ng-show="!showLng" ng-click="showLng=!showLng"><a>Sprachen / Languages</a></li>
 				<li ng-show="showLng"><a ng-click="changeLang('EN');showLng=!showLng">{{'englisch' | translate }}</a></li>
 				<li ng-show="showLng"><a ng-click="changeLang('DE');showLng=!showLng">{{'german' | translate }}</a></li>
@@ -74,81 +75,13 @@
 				<trix-editor ng-model-options="{ updateOn: 'blur' }" spellcheck="false" class="trix-content" ng-model="htmlcontent" angular-trix trix-initialize="trixInitialize(e, editor);" trix-change="trixChange(e, editor);" trix-selection-change="trixSelectionChange(e, editor);" trix-focus="trixFocus(e, editor);" trix-blur="trixBlur(e, editor);" trix-file-accept="trixFileAccept(e, editor);" trix-attachment-add="trixAttachmentAdd(e, editor);" trix-attachment-remove="trixAttachmentRemove(e, editor);" placeholder="Write something.."></trix-editor>
 				<button class="btn btn-default" ng-click="htmlcontent=de; clickedLng='de'"> {{'german' | translate }}</button> 
 				<button class="btn btn-default" ng-click="htmlcontent=en; clickedLng='en'"> {{'englisch' | translate }}</button> <br><br>
-				<button class="btn btn-primary" ng-click="showText=true; uploadText(htmlcontent)" onclick="window.scrollTo(0,0);"> {{'save' | translate }}</button> 	
+				<button class="btn btn-primary" ng-click="showText=true; uploadText(htmlcontent)" onclick="window.scrollTo(0,0);"> {{'speichern' | translate }}</button> 	
 			</div>
 		</div>
-			
-
-			
-			
-			
-			
-		
-				
-			
 			</div>
-				
+		<br><br>
 		
-		  
 
-		  
-		  <br><br>
-		  
-		  
-		  
-		
-		
-		
-		
-		
-		
-		
-		<div id="area">
-          <h2 id="custo">{{'themeg' | translate }} </h2> 
-		  
-		  <table class="table" style="width: 80%; margin: 0 auto;font-size: 20px; ">
-			<thead>
-				<tr style="font-size: 22px; font-style: italic;">
-					<td>{{'themegn' | translate }}</td>
-					<td>{{'position' | translate }}</td>
-					<td>{{'name' | translate }}</td>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td><input class="form-control" ng-model="thema.nummer" placeholder="Nummer"></td>
-					<td><select ng-model="thema.pos" class="styled-select semi-square wide">					
-					<option ng-repeat="ma in maData | orderBy:'name'" value="{{ma.name}}"> {{ma.name}} - {{ma.message}}</option>
-				</select>	
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					</td>
-					<td><input class="form-control" ng-model="thema.name" placeholder="Name"></td>
-					<td><button id="newThemeButton" style="width: 150px;" class="btn btn-default" ng-click="saveNewTheme()">{{'newOne' | translate }}</button></td>
-					<td><button id="SaveCurrentThemeButton" style="width: 150px; display: none;" class="btn btn-default" ng-click="updateThema(thema._id)">{{'hinzu' | translate }}</button></td>
-					<!--<button style="width: 150px;" class="btn btn-danger" ng-click="deselect()">Leeren</button></td>-->
-				</tr>
-				<tr ng-repeat="thema in themaDaten|orderBy: predicate='nummer'"> 
-					<td stlye="width: 30%;">{{thema.nummer}}</td>
-					<td stlye="width: 30%;">{{thema.pos}}</td>
-					<td stlye="width: 30%;">{{thema.name}}</td>
-					<td><button style="width: 150px;" class="btn btn-default" ng-click="changeThema(thema.nummer)">{{'change' | translate }}</button></td>
-					<td><button style="width: 150px;" class="btn btn-danger" ng-click="removeThema(thema.nummer)">{{'deletee' | translate }}</button></td>
-				</tr>
-			</tbody> 
-		 </table>
-		  
-		  
-        </div>
 
         
 
@@ -165,7 +98,7 @@
             <leaflet defaults="defaults" legend="legend" layers="layers" maxBounds="maxBounds" markers="markers" event-broadcast="events" id="leafletMap"></leaflet>
             <br>
           <p>{{'erkl'|translate}} </p>
-		  <table class="table" style="width: 80%; margin: 0 auto;font-size: 20px; ">
+		  <table class="table" style="width: 95%; margin: 0 auto;font-size: 20px; ">
 			<thead>
 				<tr style="font-size: 22px; font-style: italic;">
 					<td>{{'bemanu'|translate}} </td>
@@ -176,7 +109,7 @@
 				<tr>
 					<td><input class="form-control" ng-model="markersHelper.name" placeholder="Message"></td>
 					<td><input class="form-control" ng-model="markersHelper.message" placeholder="Name"></td>
-					<td><button style="width: 150px;" class="btn btn-default" ng-click="update()">{{'save'|translate}}</button></td>
+					<td><button style="width: 150px;" class="btn btn-default" ng-click="update()">{{'speichern'|translate}}</button></td>
 					<!--<button style="width: 150px;" class="btn btn-danger" ng-click="deselect()">Leeren</button></td>-->
 				</tr>
 				<tr ng-repeat="ma in data|orderBy: predicate='name'|filter: greaterThan('name', 0)"> 
@@ -214,10 +147,50 @@
             </label>	
 	
      <label class="btn btn-default btn-file" style="margin-top: 30px;">
-        <input type="submit" name="submit" style="display: none;"> {{'save'|translate}}
+        <input type="submit" name="submit" style="display: none;"> {{'speichern'|translate}}
      </label>
 </form>
           
+        </div>
+		
+		
+				<div id="area">
+          <h2 id="custo">{{'themeg' | translate }} </h2> 
+		  
+		  <table class="table" style="width: 80%; margin: 0 auto;font-size: 20px; ">
+			<thead>
+				<tr style="font-size: 22px; font-style: italic;">
+					<td>{{'themegn' | translate }}</td>
+					<td>{{'position' | translate }}</td>
+					<td>{{'name' | translate }}</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td><input class="form-control" ng-model="thema.nummer" placeholder="Nummer"></td>
+					<td><select ng-model="thema.pos" class="styled-select semi-square wide">					
+					<option ng-repeat="ma in maData | orderBy:'name'" value="{{ma.name}}"> {{ma.name}} - {{ma.message}}</option>
+				</select>				
+					
+					
+					
+					</td>
+					<td><input class="form-control" ng-model="thema.name" placeholder="Name"></td>
+					<td><button id="newThemeButton" style="width: 150px;" class="btn btn-default" ng-click="saveNewTheme()">{{'newOne' | translate }}</button></td>
+					<td><button id="SaveCurrentThemeButton" style="width: 150px; display: none;" class="btn btn-default" ng-click="updateThema(thema._id)">{{'hinzu' | translate }}</button></td>
+					<!--<button style="width: 150px;" class="btn btn-danger" ng-click="deselect()">Leeren</button></td>-->
+				</tr>
+				<tr ng-repeat="thema in themaDaten|orderBy: predicate='nummer'"> 
+					<td stlye="width: 30%;">{{thema.nummer}}</td>
+					<td stlye="width: 30%;">{{thema.pos}}</td>
+					<td stlye="width: 30%;">{{thema.name}}</td>
+					<td><button style="width: 150px;" class="btn btn-default" ng-click="changeThema(thema.nummer)">{{'change' | translate }}</button></td>
+					<td><button style="width: 150px;" class="btn btn-danger" ng-click="removeThema(thema.nummer)">{{'deletee' | translate }}</button></td>
+				</tr>
+			</tbody> 
+		 </table>
+		  
+		  
         </div>
 		
 		<div id="area">
@@ -233,13 +206,47 @@
             </label>	
 	
      <label class="btn btn-default btn-file" style="margin-top: 30px;">
-        <input type="submit" name="submit" style="display: none;"> {{'save'|translate}}
+        <input type="submit" name="submit" style="display: none;"> {{'speichern'|translate}}
      </label>
 </form>
 		  
 		  
           </label>
         </div>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+				<div id="area" style="margin: 0 auto:">
+          <h2 id="custo">{{'einstl'|translate}} </h2>
+          <br>
+		  
+		  
+      <table class="table" style="width: 50%; margin: 0 auto;font-size: 16px; ">
+		<tr> <td><p>{{'anspPers'|translate}}</p></td><td> <p editable-text="contactPerson" onaftersave="uploadContact($data)">{{ contactPerson || "empty" }}</p></td> </tr> 
+		<tr> <td><p>{{'emailAns'|translate}}</p></td><td> <p editable-text="contactPersonMail" onaftersave="uploadMail($data)">{{ contactPersonMail || "empty" }}</p></td> </tr> 
+		<tr> <td><p>{{'telAns'|translate}}</p></td><td> <p editable-text="contactPersonTel" onaftersave="uploadTel($data)">{{ contactPersonTel || "empty" }}</p></td> </tr> 
+		
+	   </table>
+		  
+		  
+          </label>
+        </div>
+		
+		
+		
+		
+		
+		
+		
+		
 <button class="btn btn-daufalt full" onclick="window.scrollTo(0,0)"> {{'toTop'|translate}}</button>
 
       </div>

@@ -23,13 +23,14 @@
 	</div>
 	</div>
 
-    <div id="container">
+    <div id="container"> <img ng-show="showLoader" src="https://dl.dropboxusercontent.com/s/x180clbggcug3ta/loading-circle.gif?dl=0" id="loader" />
       <div class="sidebar" ng-controller="LangCtrl" >
 			<ul id="nav">
 				<li ng-show="!showLng"><a href="/#/museumsverwaltung">{{'exponate' | translate }}</a></li>
 				<li ng-show="!showLng"><a href="/#/getbeacons" class="selected">{{'lokalisierung' | translate }}</a></li>
 				<li ng-show="!showLng"><a href="/#/custo" >Audioguide- App</a></li>
 				<li ng-show="!showLng"><a href="/#/hilfe" >{{'hilfe' | translate }}</a></li>
+				<li ng-show="!showLng&&showDashboard"><a href="/#/dashboard" >Dashboard</a></li>
 				<li ng-show="!showLng" ng-click="showLng=!showLng"><a>Sprachen / Languages</a></li>
 				<li ng-show="showLng"><a ng-click="changeLang('EN');showLng=!showLng">{{'englisch' | translate }}</a></li>
 				<li ng-show="showLng"><a ng-click="changeLang('DE');showLng=!showLng">{{'german' | translate }}</a></li>
@@ -38,7 +39,7 @@
 <!--onclick="window.location='https://cloud.estimote.com/'" -->
 
       <div class="content" >
-	  
+	 
 	  
         <h1>Beacons</h1>
        <p> {{'descB'|translate}} <span><a href="http://estimote.com/#jump-to-products"> {{'descBe'|translate}}</a> </span> </p>
@@ -71,8 +72,14 @@
             
 			</tr>
           </tbody>
-        </table>
-		<button class="btn btn-daufalt full" onclick="window.scrollTo(0,0)"> {{'toTop'|translate}}</button>
+        </table><br><br>
+		<div class="alert alert-info" ng-show='keineBeacons' style="width: 80%; margin: 0 auto;">
+			<p style="text-align: center;font-size: 16px;">{{'keineBeacons'|translate}}</p>
+		</div>
+		<br>
+		
+		
+		<button ng-show="!keineBeacons" class="btn btn-daufalt full" onclick="window.scrollTo(0,0)"> {{'toTop'|translate}}</button>
 
       </div>
 

@@ -12,30 +12,45 @@
 	
 <div id="loRight">
 
-	<img id="gif" src="https://dl.dropboxusercontent.com/s/yy8exil0wz4u9ln/logo-white.gif?dl=0"/>
+
+		<img src="https://dl.dropboxusercontent.com/s/vfoqi9v7pe4xyzb/logo.gif?dl=0" id="gif" />
+		<img ng-show="showLoader" src="https://dl.dropboxusercontent.com/s/x180clbggcug3ta/loading-circle.gif?dl=0" id="loader" />
+
 	
+	
+	
+
+	<!--<img id="gif" src="www/img/logo.gif" />
+	https://dl.dropboxusercontent.com/s/yy8exil0wz4u9ln/logo-white.gif?dl=0"-->
 	
 
 		<div id="merger">
 			<form action="/" id="myLogin" >
 				<input type="text"  class="form-control" id="username" ng-model="username" placeholder="username"/><br>
-				</p> <input type="password" class="form-control" id="password" ng-model="password" placeholder="password"/><br>
+				</p> <input type="password" class="form-control" id="password" ng-model="password" placeholder="password" ng-keydown="myFunct($event)"/><br>
 				<button id="loginButton" type="button" class="btn btn-primary" ng-click="getAccess()" >Login</button>	
 			</form>
 			<br>
 			
-		<a href="mailto:info@medignition.ch?subject=Kontakt medignition.ch">{{ 'contact' | translate }}</a>
+		<a href="mailto:info@medignition.ch?subject=Kontakt medignition.ch">{{ 'contact' | translate }}</a><br>
+		<a ng-click="register()" >{{ 'singup' | translate }}</a>
 		
 	
 		
-		<div ng-controller="LangCtrl" style="margin-top: 40px;">
+		<div ng-controller="languagesCtrl" style="margin-top: 40px;">
 			<a href="" ng-click="changeLang('EN')">English</a> /
 			<a href="" ng-click="changeLang('DE')">Deutsch</a>
 		</div>
 		</div>
 		
+		
+		
 	
 	
+	</div>
+	
+	<div class="alert alert-success alert-success-center" ng-show="showAlert">
+		<p class="alertP">{{ 'registiert' | translate }}</p>
 	</div>
 
 

@@ -35,7 +35,7 @@ html, body, .ng-scope {
 
 body {
   font-family: 'Open Sans' !important;
-  background-color: #FCFBFF !important;
+  background-color: #FDF9FF !important;
 }
 
 
@@ -282,16 +282,45 @@ img#thumbnail {
 	padding-top: 30px;
 }*/
 img#gif {
-	max-width: 400px;
+	max-width: 700px;
 	bottom: 58%;
-	right: 25%;
+	top: 150px;
+	right: 17%;
 	display: block;
 	position: absolute;
-	padding-top: 30px;
 
 	margin-top: -100px;
 	z-index: 10;
 }
+
+img#loader {
+	width: 50px;
+	height: 50px;
+	position: fixed;
+	top: 40%;
+	left: 50%;
+	margin-top: -25px;
+	margin-left: -25px;
+	z-index: 100;
+}
+
+.alert-success-center {
+	width: 500px;
+	height: 50px; 
+	position: fixed; 
+	z-index: 1000; 
+	top: 50%; 
+	margin-top: -205px;
+	left: 50%;
+	margin-left: -250px;
+}
+
+.alertP{
+	text-align: center;
+	font-color: green;
+}
+
+
 
 
 div#merger {
@@ -554,7 +583,7 @@ div#loRight {
   width: 75%;
   float: right;
   heigth: 100%;
-  background-color: #FCFBFF;
+  background-color: #FDF9FF;
   postion: fixed;
 }
 

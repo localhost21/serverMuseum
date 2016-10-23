@@ -7,7 +7,13 @@
 
 <body >
 
-
+	<div id="header" ng-controller="orgCtrl">
+	<div id="classler" class="logo"><a href="/#/museumsverwaltung">Museumsverwaltungs-<span>Software</span></a> </div>	
+	<a href="/#/" ><img id="logout"  src="/www/img/logout.png"/ ng-click="logout()"></a>	
+	<div id="headerOrg" >
+		<p style=" font-size: 12px;"> {{'angAls'|translate}} <div style="font-size: 18px; line-height: 2px;">{{org}}</div> </p>
+	</div>
+	</div>
 	
 	
 	
@@ -20,7 +26,8 @@
 				<li ng-show="!showLng"><a href="/#/museumsverwaltung" class="selected">{{'exponate' | translate }}</a></li>
 				<li ng-show="!showLng"><a href="/#/getbeacons">{{'lokalisierung' | translate }}</a></li>
 				<li ng-show="!showLng"><a href="/#/custo" >Audioguide- App</a></li>
-				<li ng-show="!showLng"><a href="/#/hilfe" >{{'hilfe' | translate }}</a></li>
+				<li ng-show="!showLng"><a href="/#/hilfe" >{{'hilfe' | translate }}</a></li>				
+				<li ng-show="!showLng&&showDashboard"><a href="/#/dashboard" >Dashboard</a></li>
 				<li ng-show="!showLng" ng-click="showLng=!showLng"><a>Sprachen / Languages</a></li>
 				<li ng-show="showLng"><a ng-click="changeLang('EN');showLng=!showLng">{{'englisch' | translate }}</a></li>
 				<li ng-show="showLng"><a ng-click="changeLang('DE');showLng=!showLng">{{'german' | translate }}</a></li>
@@ -165,6 +172,9 @@
 		
 		<br>
 		
+		
+		
+		
 		<table class="table standard_p" style="margin-top: 20px;">
 			<thead>
 				<tr>
@@ -259,26 +269,22 @@
 				</tr>
 			</tbody>
 		</table>
+		<br><br>
+		
+		<div class="alert alert-info" ng-show='keineExponate' style="width: 80%; margin: 0 auto;">
+			<p style="text-align: center;font-size: 16px;">{{'keineExponate'|translate}}</p>
+		</div>
+		<br>
 		
 		
-		
-		
-		
-		<!--<button class="btn btn-daufalt full" ng-click="top()"> zurück nach oben</button>-->
-		<button class="btn btn-daufalt full" onclick="window.scrollTo(0,0)">{{'toTop'|translate}}</button>
+		<button ng-show="!keineExponate" class="btn btn-daufalt full" onclick="window.scrollTo(0,0)">{{'toTop'|translate}}</button>
 				</div>
 				
 		
 	</div>
 	
 	
-	<div id="header" ng-controller="orgCtrl">
-	<div id="classler" class="logo"><a href="/#/museumsverwaltung">Museumsverwaltungs-<span>Software</span></a> </div>	
-	<a href="/#/" ><img id="logout"  src="/www/img/logout.png"/ ng-click="logout()"></a>	
-	<div id="headerOrg" >
-		<p style=" font-size: 12px;"> {{'angAls'|translate}} <div style="font-size: 18px; line-height: 2px;">{{org}}</div> </p>
-	</div>
-	</div>
+
 
 </body>
 </html>

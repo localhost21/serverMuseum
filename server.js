@@ -19,8 +19,13 @@ var jwt = require('jsonwebtoken');
 var db = mongojs(databaseUrl, collections);
 var apiRoutes = express.Router();
 var cloudinary = require('cloudinary');
-//var ObjectId = require('mongodb').ObjectID;
 var mongo = require('mongodb');
+var nodemailer = require('nodemailer');
+var transporter = nodemailer.createTransport('smtps://user%40gmail.com:pass@smtp.gmail.com');
+
+
+
+
 
 app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.json());
@@ -61,6 +66,189 @@ app.get('/credentials/:id', function(req, res) {
   });
 });
 
+var request = require('request');
+
+app.post('/register', function(req, res) {
+	var hashedValue = sha256(req.body.creds);	
+	
+	var secretKey = "	6Leu7AkUAAAAAJGgMQHfxVB3I5OxmUORgLTrKjKO";
+	
+	var verificationUrl = "https://www.google.com/recaptcha/api/siteverify?secret=" + secretKey + "&response=" + req.body.recaptcha + "&remoteip=" + req.connection.remoteAddress;
+
+  request(verificationUrl,function(error,response,body) {
+    
+    if(body.success !== undefined && !body.success) {
+      return res.json({"responseCode" : 1,"responseDesc" : "Failed captcha verification"});
+    }
+   db.museum.findAndModify({
+		query: { org: req.body.name },
+		update: {
+			$setOnInsert: { 
+				"org": req.body.name,
+				"museumsname": req.body.name,
+				"contactPerson": req.body.contactPerson,
+				"mail": req.body.contactPersonMail,
+				"tel": req.body.contactPersonTel,
+				"de": "Hier kannst du den Über uns Text anpassen",
+				"en": "Add your About us text here"
+			}
+		},
+		new: false,   // return new doc if one is upserted
+		upsert: true // insert the document if it does not exist
+
+	},  function(err, docs) {
+         if(err)
+			console.log(err);
+    })
+	
+	
+	db.credentials.findOne({org:req.body.name}, function(err,doc){
+		var nameExists = doc;
+		db.credentials.findAndModify({
+			query: { login: hashedValue },
+			update: {
+				$setOnInsert: { 
+					"org": req.body.name,
+					"contactPerson": req.body.contactPerson,
+					"mail": req.body.contactPersonMail,
+					"tel": req.body.contactPersonTel,
+					"login": hashedValue
+				}
+			},
+			new: false,   // return new doc if one is upserted
+			upsert: true // insert the document if it does not exist
+		}, function(err, docs) {
+			res.json({"login":docs, "nameExists":nameExists});
+	
+		})	
+	})
+	
+	  });
+});
+
+
+
+
+app.get('/register/:id', function(req, res) {
+  var token = req.params.id;
+  if (token === "") {
+    res.end();
+  } else {
+        db.credentials.find({
+          "org": {
+            $ne: null
+          }
+        }, function(err, doc) {
+          var org = [];
+          org = doc;
+          for (i = 0; i < i+1; i++) {
+            try {
+              var decode = jwt.decode(token, org[i].org, function(err_, decode) {
+                if (err) {
+                  return console.error(err.name, err.message);
+                }
+              });
+              decode = decode.org;
+            } catch (error) {
+              console.log("error");
+            }
+            if (decode === org[i].org) {
+              db.credentials.find({
+                org: decode
+              }, function(err, docs) {
+                res.json(docs);
+              });
+              break;
+            }
+          }
+        });
+  }
+});
+
+
+app.get('/getLogin/:id', function(req, res) {
+  var token = req.params.id;
+  if (token === "") {
+    res.end();
+  } else {
+        db.credentials.find({
+          "org": {
+            $ne: null
+          }
+        }, function(err, doc) {
+          var org = [];
+          org = doc;
+          for (i = 0; i < i+1; i++) {
+            try {
+              var decode = jwt.decode(token, org[i].org, function(err_, decode) {
+                if (err) {
+                  return console.error(err.name, err.message);
+                }
+              });
+              decode = decode.org;
+            } catch (error) {
+              console.log("error");
+            }
+            if (decode === org[i].org) {
+              db.credentials.find(function(err, docs) {
+				 
+				  var resArr = [];
+				  docs.forEach(function(login){
+					  resArr.push({
+					"org": login.org,
+					"contactPerson": login.contactPerson,
+					"mail": login.mail,
+					"rolle": login.rolle
+					});
+				  });
+                res.json(resArr);
+              });
+              break;
+            }
+          }
+        });
+  }
+});
+
+
+
+app.get('/getHashTrue/:id', function(req, res) {
+  var token = req.params.id;
+  if (token === "") {
+    res.end();
+  } else {
+        db.credentials.find({
+          "org": {
+            $ne: null
+          }
+        }, function(err, doc) {
+          var org = [];
+          org = doc;
+          for (i = 0; i < i+1; i++) {
+            try {
+              var decode = jwt.decode(token, org[i].org, function(err_, decode) {
+                if (err) {
+                  return console.error(err.name, err.message);
+                }
+              });
+              decode = decode.org;
+            } catch (error) {
+              console.log("error");
+            }
+            if (decode === org[i].org) {
+              if(org[i].login==="902baf20b5df5c6bbd4c8798b3cecca534c42b1b55334d4515303c9edfd29748"){
+				  res.json(true);
+			  }else{
+				  res.json(false);
+			  }
+              break;
+            }
+          }
+        });
+  }
+});
+
+
 app.get('/login', function(req, res) {
   db.museum.find({
     "org": {
@@ -96,20 +284,16 @@ app.get('/login/:id', function(req, res) {
 app.get('/backend/:id', function(req, res) {
   var token = req.params.id;
   if (token === "") {
-    response.writeHead(302);
-    response.end();
-  } else {
-    db.credentials.count(function(err, docs) {
-      var count = docs;
-      setTimeout(function() {
-        db.credentials.find({
+    res.end();
+  } else {			  
+	 db.credentials.find({
           "org": {
             $ne: null
           }
         }, function(err, doc) {
           var org = [];
           org = doc;
-          for (i = 0; i < count; i++) {
+          for (i = 0; i < i+1; i++) {
             try {
               var decode = jwt.decode(token, org[i].org, function(err_, decode) {
                 if (err) {
@@ -129,21 +313,15 @@ app.get('/backend/:id', function(req, res) {
               break;
             }
           }
-        });
-      }, 100);
-    });
-  }
+        });			  
+}			  			  
 });
 
 app.post('/backend/:id', function(req, res) {
   var token = req.params.id;
   if (token === "") {
-    response.writeHead(302);
-    response.end();
+    res.end();
   } else {
-    db.credentials.count(function(err, docs) {
-      var count = docs;
-      setTimeout(function() {
         db.credentials.find({
           "org": {
             $ne: null
@@ -151,7 +329,7 @@ app.post('/backend/:id', function(req, res) {
         }, function(err, doc) {
           var org = [];
           org = doc;
-          for (i = 0; i < count; i++) {
+          for (i = 0; i < i+1; i++) {
             try {
               var decode = jwt.decode(token, org[i].org, function(err_, decode) {
                 if (err) {
@@ -174,8 +352,6 @@ app.post('/backend/:id', function(req, res) {
             }
           }
         });
-      }, 100);
-    });
   }
 });
 
@@ -184,12 +360,8 @@ app.post('/backend/:id', function(req, res) {
 app.post('/markers/:id', function(req, res) {
   var token = req.params.id;
   if (token === "") {
-    response.writeHead(302);
-    response.end();
+    res.end();
   } else {
-    db.credentials.count(function(err, docs) {
-      var count = docs;
-      setTimeout(function() {
         db.credentials.find({
           "org": {
             $ne: null
@@ -197,7 +369,7 @@ app.post('/markers/:id', function(req, res) {
         }, function(err, doc) {
           var org = [];
           org = doc;
-          for (i = 0; i < count; i++) {
+          for (i = 0; i < i+1; i++) {
             try {
               var decode = jwt.decode(token, org[i].org, function(err_, decode) {
                 if (err) {
@@ -224,8 +396,6 @@ app.post('/markers/:id', function(req, res) {
               break;
             }
           }
-        });
-      }, 100);
     });
   }
 });
@@ -233,12 +403,8 @@ app.post('/markers/:id', function(req, res) {
 app.post('/markersNew/:id', function(req, res) {
   var token = req.params.id;
   if (token === "") {
-    response.writeHead(302);
-    response.end();
+    res.end();
   } else {
-    db.credentials.count(function(err, docs) {
-      var count = docs;
-      setTimeout(function() {
         db.credentials.find({
           "org": {
             $ne: null
@@ -246,7 +412,7 @@ app.post('/markersNew/:id', function(req, res) {
         }, function(err, doc) {
           var org = [];
           org = doc;
-          for (i = 0; i < count; i++) {
+          for (i = 0; i < i+1; i++) {
             try {
               var decode = jwt.decode(token, org[i].org, function(err_, decode) {
                 if (err) {
@@ -268,17 +434,11 @@ app.post('/markersNew/:id', function(req, res) {
             }
           }
         });
-      }, 100);
-    });
   }
 });
 
 
 app.put('/themenliste/:organization', function(req, res) {
-	
-	
-
-
 	var id = req.params.organization;       
 	var o_id = new mongo.ObjectID(id);	
 				
@@ -304,7 +464,6 @@ app.put('/themenliste/:organization', function(req, res) {
 app.get('/getPos/:org/:theme', function(req,res){
 	var org = req.params.org;
 	var theme = req.params.theme;
-	//console.log(org + theme);
 	 db.museum.findOne({ 
 	   nummer: theme,
 	   zugehörigkeit: org
@@ -317,20 +476,16 @@ app.get('/getPos/:org/:theme', function(req,res){
 app.post('/themenliste/:id', function(req, res) {
   var token = req.params.id;
   if (token === "") {
-    response.writeHead(302);
-    response.end();
+    res.end();
   } else {
-    db.credentials.count(function(err, docs) {
-      var count = docs;
-      setTimeout(function() {
-        db.credentials.find({
+       db.credentials.find({
           "org": {
             $ne: null
           }
         }, function(err, doc) {
           var org = [];
           org = doc;
-          for (i = 0; i < count; i++) {
+          for (i = 0; i < i+1; i++) {
             try {
               var decode = jwt.decode(token, org[i].org, function(err_, decode) {
                 if (err) {
@@ -352,8 +507,6 @@ app.post('/themenliste/:id', function(req, res) {
             }
           }
         });
-      }, 100);
-    });
   }
 });
 
@@ -361,12 +514,8 @@ app.post('/themenliste/:id', function(req, res) {
 app.get('/nonWalkerMarkers/:id',function(req,res){
 	var token = req.params.id;
   if (token === "") {
-    response.writeHead(302);
-    response.end();
+    res.end();
   } else {
-    db.credentials.count(function(err, docs) {
-      var count = docs;
-      setTimeout(function() {
         db.credentials.find({
           "org": {
             $ne: null
@@ -374,7 +523,7 @@ app.get('/nonWalkerMarkers/:id',function(req,res){
         }, function(err, doc) {
           var org = [];
           org = doc;
-          for (i = 0; i < count; i++) {
+          for (i = 0; i < i+1; i++) {
             try {
               var decode = jwt.decode(token, org[i].org, function(err_, decode) {
                 if (err) {
@@ -398,28 +547,22 @@ app.get('/nonWalkerMarkers/:id',function(req,res){
             }
           }
         });
-      }, 100);
-    });
   }
 });
 
 app.get('/markers/:id', function(req, res) {    
   var token = req.params.id;
   if (token === "") {
-    response.writeHead(302);
-    response.end();
+    res.end();
   } else {
-    db.credentials.count(function(err, docs) {
-      var count = docs;
-      setTimeout(function() {
-        db.credentials.find({
+     db.credentials.find({
           "org": {
             $ne: null
           }
         }, function(err, doc) {
           var org = [];
           org = doc;
-          for (i = 0; i < count; i++) {
+          for (i = 0; i < i+1; i++) {
             try {
               var decode = jwt.decode(token, org[i].org, function(err_, decode) {
                 if (err) {
@@ -440,8 +583,6 @@ app.get('/markers/:id', function(req, res) {
             }
           }
         });
-      }, 100);
-    });
   }
 });
 
@@ -486,7 +627,7 @@ app.put('/museumName/:id', function(req, res) {
   var id = req.params.id;
   db.museum.findAndModify({
     query: {
-      _id: id
+      org: id
     },
     update: {
       $set: {
@@ -501,24 +642,70 @@ app.put('/museumName/:id', function(req, res) {
 });
 
 
+app.put('/registerContact/:id', function(req, res) {
+  var org = req.params.id;
+  db.credentials.update({
+      org: org
+    },{
+      $set: {
+        'contactPerson': req.body.contactPerson
+	  } 
+	
+   
+  },{nex: true,
+	multi: true}, function(err, doc) {	  
+    res.json(doc);
+  });
+});
+
+app.put('/registerMail/:id', function(req, res) {
+  var org = req.params.id;
+  db.credentials.update({
+      org: org
+    },{
+      $set: {
+        'mail': req.body.mail
+	  } 
+	
+   
+  },{nex: true,
+	multi: true}, function(err, doc) {	  
+    res.json(doc);
+  });
+});
+
+
+app.put('/registerTel/:id', function(req, res) {
+  var org = req.params.id;
+ db.credentials.update({
+      org: org
+    },{
+      $set: {
+        'tel': req.body.tel
+	  } 
+	
+   
+  },{nex: true,
+	multi: true}, function(err, doc) {	  
+    res.json(doc);
+  });
+});
+
+
 
 app.get('/museum/:id', function(req, res) {    
   var token = req.params.id;
   if (token === "") {
-    response.writeHead(302);
-    response.end();
+    res.end();
   } else {
-    db.credentials.count(function(err, docs) {
-      var count = docs;
-      setTimeout(function() {
-        db.credentials.find({
+       db.credentials.find({
           "org": {
             $ne: null
           }
         }, function(err, doc) {
           var org = [];
           org = doc;
-          for (i = 0; i < count; i++) {
+          for (i = 0; i < i+1; i++) {
             try {
               var decode = jwt.decode(token, org[i].org, function(err_, decode) {
                 if (err) {
@@ -539,8 +726,6 @@ app.get('/museum/:id', function(req, res) {
             }
           }
         });
-      }, 100);
-    });
   }
 });
 
@@ -548,17 +733,14 @@ app.delete('/markers/:id', function(req, res) {
   var token = req.params.id;
   if (token === "") {
   } else {
-    db.credentials.count(function(err, docs) {
-      var count = docs;
-      setTimeout(function() {
-        db.credentials.find({
+      db.credentials.find({
           "org": {
             $ne: null
           }
         }, function(err, doc) {
           var org = [];
           org = doc;
-          for (i = 0; i < count; i++) {
+          for (i = 0; i < i+1; i++) {
             try {
               var decode = jwt.decode(token, org[i].org, function(err_, decode) {
                 if (err) {
@@ -577,8 +759,6 @@ app.delete('/markers/:id', function(req, res) {
             }
           }
         });
-      }, 100);
-    });
   }
 });
 
@@ -608,13 +788,9 @@ app.post('/api/photo/logo/:id', type, function(req, res) {
   var token = req.params.id;
   var tmp_path = req.file.path;
   if (token === "") {
-    response.writeHead(302);
-    response.end();
+    res.end();
   } else {
-    db.credentials.count(function(err, docs) {
-      var count = docs;
-      setTimeout(function() {
-        db.credentials.find({
+      db.credentials.find({
           "org": {
             $ne: null
           }
@@ -653,8 +829,6 @@ app.post('/api/photo/logo/:id', type, function(req, res) {
             }
           }
         });
-      }, 100);
-    });
   }
 });
 
@@ -662,20 +836,16 @@ app.post('/api/photo/map/:id', type, function(req, res) {
   var token = req.params.id;
   var tmp_path = req.file.path;
   if (token === "") {
-    response.writeHead(302);
-    response.end();
+    res.end();
   } else {
-    db.credentials.count(function(err, docs) {
-      var count = docs;
-      setTimeout(function() {
-        db.credentials.find({
+      db.credentials.find({
           "org": {
             $ne: null
           }
         }, function(err, doc) {
           var org = [];
           org = doc;
-          for (i = 0; i < count; i++) {
+          for (i = 0; i < i+1; i++) {
             try {
               var decode = jwt.decode(token, org[i].org, function(err_, decode) {
                 if (err) {
@@ -707,25 +877,20 @@ app.post('/api/photo/map/:id', type, function(req, res) {
             }
           }
         });
-      }, 100);
-    });
   }
 });
 app.post('/archiveMarkers/:id', function(req, res) {
   var token = req.params.id;
   if (token === "") {
   } else {
-    db.credentials.count(function(err, docs) {
-      var count = docs;
-      setTimeout(function() {
-        db.credentials.find({
+      db.credentials.find({
           "org": {
             $ne: null
           }
         }, function(err, doc) {
           var org = [];
           org = doc;
-          for (i = 0; i < count; i++) {
+          for (i = 0; i < i+1; i++) {
             try {
               var decode = jwt.decode(token, org[i].org, function(err_, decode) {
                 if (err) {
@@ -756,8 +921,6 @@ app.post('/archiveMarkers/:id', function(req, res) {
             }
           }
         });
-      }, 100);
-    });
   }
 });
 
@@ -765,17 +928,14 @@ app.get('/archived/:id', function(req, res) {
   var token = req.params.id;
   if (token === "") {
   } else {
-    db.credentials.count(function(err, docs) {
-      var count = docs;
-      setTimeout(function() {
-        db.credentials.find({
+       db.credentials.find({
           "org": {
             $ne: null
           }
         }, function(err, doc) {
           var org = [];
           org = doc;
-          for (i = 0; i < count; i++) {
+          for (i = 0; i < i+1; i++) {
             try {
               var decode = jwt.decode(token, org[i].org, function(err_, decode) {
                 if (err) {
@@ -797,8 +957,6 @@ app.get('/archived/:id', function(req, res) {
             }
           }
         });
-      }, 100);
-    });
   }
 });
 
@@ -815,20 +973,16 @@ app.get('/archiveMarkers/:id', function(req, res) {
 app.get('/orgName/:id', function(req, res) {
   var token = req.params.id;
   if (token === "") {
-    response.writeHead(302);
-    response.end();
+    res.end();
   } else {
-    db.credentials.count(function(err, docs) {
-      var count = docs;
-      setTimeout(function() {
-        db.credentials.find({
+      db.credentials.find({
           "org": {
             $ne: null
           }
         }, function(err, doc) {
           var org = [];
           org = doc;
-          for (i = 0; i < count; i++) {
+          for (i = 0; i < i+1; i++) {
             try {
               var decode = jwt.decode(token, org[i].org, function(err_, decode) {
                 if (err) {
@@ -845,8 +999,6 @@ app.get('/orgName/:id', function(req, res) {
             }
           };
         });
-      }, 100);
-    });
   }
 })
 
@@ -894,17 +1046,14 @@ app.get('/markersModify/:id', function(req, res) {
 
 app.get('/backend_count/:id', function(req, res) {
   var token = req.params.id;
-  db.credentials.count(function(err, docs) {
-    var count = docs;
-    setTimeout(function() {
-      db.credentials.find({
+     db.credentials.find({
         "org": {
           $ne: null
         }
       }, function(err, doc) {
         var org = [];
         org = doc;
-        for (i = 0; i < count; i++) {
+        for (i = 0; i < i+1; i++) {
           var decode = jwt.decode(token, org[i].org, function(err_, decode) {
             if (err) {
               return console.error(err.name, err.message);
@@ -921,23 +1070,18 @@ app.get('/backend_count/:id', function(req, res) {
           }
         }
       });
-    }, 100);
-  });
 });
 
 app.get('/deutsch/:id', function(req, res) {
   var token = req.params.id;
-  db.credentials.count(function(err, docs) {
-    var count = docs;
-    setTimeout(function() {
-      db.credentials.find({
+       db.credentials.find({
         "org": {
           $ne: null
         }
       }, function(err, doc) {
         var org = [];
         org = doc;
-        for (i = 0; i < count; i++) {
+        for (i = 0; i < i+1; i++) {
           try {
             var decode = jwt.decode(token, org[i].org, function(err_, decode) {
               if (err) {
@@ -960,8 +1104,6 @@ app.get('/deutsch/:id', function(req, res) {
           }
         }
       });
-    }, 100);
-  });
 
 });
 
@@ -980,17 +1122,14 @@ app.delete('/deleteThemenliste/:nummer/:organization', function(req, res) {
 
 app.get('/themenListe/:id', function(req,res){
 	var token = req.params.id;
-  db.credentials.count(function(err, docs) {
-    var count = docs;
-    setTimeout(function() {
-      db.credentials.find({
+       db.credentials.find({
         "org": {
           $ne: null
         }
       }, function(err, doc) {
         var org = [];
         org = doc;
-        for (i = 0; i < count; i++) {
+        for (i = 0; i < i+1; i++) {
           var decode = jwt.decode(token, org[i].org, function(err_, decode) {
             if (err) {
               return console.error(err.name, err.message);
@@ -1008,8 +1147,6 @@ app.get('/themenListe/:id', function(req,res){
           }
         }
       });
-    }, 100);
-  });
 });
 
 
@@ -1032,17 +1169,14 @@ app.get('/getOneTheme/:id/:organization', function(req,res){
 
 app.get('/themenDE/:id', function(req, res) {    
   var token = req.params.id;
-  db.credentials.count(function(err, docs) {
-    var count = docs;
-    setTimeout(function() {
-      db.credentials.find({
+     db.credentials.find({
         "org": {
           $ne: null
         }
       }, function(err, doc) {
         var org = [];
         org = doc;
-        for (i = 0; i < count; i++) {
+        for (i = 0; i < i+1; i++) {
           var decode = jwt.decode(token, org[i].org, function(err_, decode) {
             if (err) {
               return console.error(err.name, err.message);
@@ -1065,10 +1199,8 @@ app.get('/themenDE/:id', function(req, res) {
           }
         }
       });
-    }, 100);
-  });
 });
-//noch nicht benötigt
+/*noch nicht benötigt
 app.get('/themenEN', function(req, res) {    
   db.backend.find({
       "sprache": "EN",
@@ -1079,7 +1211,7 @@ app.get('/themenEN', function(req, res) {
     function(err, doc) {
       res.json(doc);
     });
-});
+});*/
 
 
 
@@ -1144,8 +1276,6 @@ app.put('/markers/:id', function(req, res) {
   var org = req.params.id;
   var lat = req.body.lat;
   var lng = req.body.lng;
-  console.log(mes);
-  console.log(name);
   db.markers.findAndModify({
     query: {
       lat: lat,
@@ -1167,14 +1297,44 @@ app.put('/markers/:id', function(req, res) {
   });
 });
 
-app.get('/getBeacons', function(req, res) {
+app.get('/getBeacons/:id', function(req, res) {
   var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
   var xmlHttp = new XMLHttpRequest();
-  xmlHttp.open("GET", "https://cloud.estimote.com/v2/devices", false);
+  xmlHttp.open("GET", "https://cloud.estimote.com/v2/devices",  false);
   xmlHttp.setRequestHeader('Authorization', 'Basic YXVkaW9ndWlkZS0weHE6NWIzOTc5MzAzZTdhMWQ2YjY0MWUzMGQ2YTA1YWM0MmM=');
-  xmlHttp.setRequestHeader('Accept', 'application/json');
+  xmlHttp.setRequestHeader('Accept', 'application/json'); 
   xmlHttp.send();
-  res.json(JSON.parse(xmlHttp.responseText));
+  var all = JSON.parse(xmlHttp.responseText);
+  var token = req.params.id;
+      db.credentials.find({
+        "org": {
+          $ne: null
+        }
+      }, function(err, doc) {
+        var org = [];
+        org = doc;
+        for (i = 0; i < i+1; i++) {
+          var decode = jwt.decode(token, org[i].org, function(err_, decode) {
+            if (err) {
+              return console.error(err.name, err.message);
+            }
+          });
+          decode = decode.org;
+          if (decode === org[i].org) {
+              var returner = [];  
+			all.forEach(function(beacon){
+				if(beacon.shadow.tags[0]==decode){
+					returner.push(beacon);
+				}
+			});
+			
+			res.json(returner);
+					
+            break;
+          }
+        }
+      });
+
 });
 
 
@@ -1191,20 +1351,16 @@ app.get('/beaconModify/:id', function(req, res) {
 
 
 app.put('/setBeacons/', function(req, res) {
-  //console.log(req.body);
   var identifier= req.body.identifier; 
-  console.log("identifier: " + identifier);
   var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
-  var xmlHttp = new XMLHttpRequest();
-   
+  var xmlHttp = new XMLHttpRequest();   
   xmlHttp.open("POST", "https://cloud.estimote.com/v2/devices/" + identifier, false);
   xmlHttp.setRequestHeader('Authorization', 'Basic YXVkaW9ndWlkZS0weHE6NWIzOTc5MzAzZTdhMWQ2YjY0MWUzMGQ2YTA1YWM0MmM=');
   xmlHttp.setRequestHeader('Accept', 'application/json');
   xmlHttp.setRequestHeader('Content-Type', 'application/json');  
-  var data = JSON.stringify({"pending_settings":{"shadow":{"name":req.body.shadow.name},"advertisers":{"ibeacon":[{"index":1,"enabled":true,"uuid":"B9407F30-F5F8-466E-AFF9-25556B57FE6D","major":req.body.settings.advertisers.ibeacon[0].major,"minor":req.body.settings.advertisers.ibeacon[0].minor,"power":req.body.settings.advertisers.ibeacon[0].power,"interval":req.body.settings.advertisers.ibeacon[0].interval,"security":{"enabled":false,"real_id":328119,"interval_scaler":10},"non_strict_mode_enabled":true}]}}});
+  var data = JSON.stringify(
+  {"shadow":{"name":req.body.shadow.name},"pending_settings": {"advertisers":{"ibeacon":[{"index":1,"enabled":true,"uuid":"B9407F30-F5F8-466E-AFF9-25556B57FE6D","major":req.body.settings.advertisers.ibeacon[0].major,"minor":req.body.settings.advertisers.ibeacon[0].minor,"power":req.body.settings.advertisers.ibeacon[0].power,"interval":req.body.settings.advertisers.ibeacon[0].interval,"security":{"enabled":false,"real_id":328119,"interval_scaler":10},"non_strict_mode_enabled":true}]}}});
   xmlHttp.send(data);
-  //console.log(" res: " + xmlHttp.responseText);
- // res.json(JSON.parse(xmlHttp.responseText));
 });
 
 

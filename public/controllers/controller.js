@@ -1,4 +1,4 @@
-var myApp = angular.module('myApp', ['ngRoute','pascalprecht.translate', 'ui-leaflet','angularTrix', 'ui.bootstrap','app.routes', 'app.directives','xeditable','ngSanitize']).config(function($sceDelegateProvider, $translateProvider) {
+var myApp = angular.module('myApp', ['ngRoute','vcRecaptcha','pascalprecht.translate', 'angularTrix', 'ui.bootstrap','app.routes', 'app.directives','xeditable','ngSanitize','ui-leaflet']).config(function($sceDelegateProvider, $translateProvider) {
 //'leaflet-directive', 'ui-leaflet'
   // deutsche Sprache
   $translateProvider.useSanitizeValueStrategy('sanitizeParameters');
@@ -65,8 +65,25 @@ var myApp = angular.module('myApp', ['ngRoute','pascalprecht.translate', 'ui-lea
 	getarchive: 'archivierte Standorte',
 	speichern: 'Speichern',
 	beaconsVer: 'Beacons verwalten',
-	position: 'Position'
-	
+	position: 'Position',
+	singup: 'Registrieren',
+	firm: 'Name des Museums',
+	anspPers: 'Name Ansprechperson',
+	emailAns: 'E-Mail Addresse',
+	telAns: 'Telefon',
+	username: 'Username',
+	pw: 'Passwort',
+	pwR: 'Passwort wiederholen',
+	einstl: 'Kontaktinformationen',
+	keineExponate: 'Sie haben noch keine Exponate erfasst.',
+	keineBeacons: 'Sie haben noch keine Beacons bestellt.',
+	registiert: 'Erfolgreich registriert!',
+	musNameVorTitel: 'Name bereits erfasst',
+	musNameVor: 'Der gewählte Museumsname wurde bereits erfasst. Falls du dein Passwort vergessen hast, kontaktiere uns bitte.',
+	usernameVorTitel: 'Username bereits vorhanden',
+	usernameVor: 'Der gewählte Username wurde bereits erfasst. Falls du dein Passwort vergessen hast, kontaktiere uns bitte.',
+	fehlerTitel: 'Anmeldeung prüfen',
+	fehlerText: 'Falsche zugangsdaten eingegeben!'
 	
 	
 	
@@ -74,17 +91,30 @@ var myApp = angular.module('myApp', ['ngRoute','pascalprecht.translate', 'ui-lea
 
   // englische Sprache
   $translateProvider.translations('EN', {
+	musNameVorTitel: 'Name already exists',
+	fehlerTitel: 'Sign in failed',
+	fehlerText: 'You have entered the wrong credentials!',
+	musNameVor: 'The name of your museum already exists. If you forgot your password, please contact us.',
+	usernameVorTitel: 'User already exists',
+	usernameVor: 'The user already exists. If you forgot your password, please contact us.',
+	username: 'Username',
+	pw: 'Password',
+	pwR: 'Repeat Password',
+	einstl: 'Contact Information',
+	keineExponate: 'You haven\'t added any exhibits yet.',
+	keineBeacons: 'You haven\'t ordered any beacons yet.',
+	registiert: 'Successfully registered!',
 	deletemarkers: 'delete all markers',
 	archive: 'archive markers',
 	getarchive: 'archived postions',
 	speichern: 'save',	
 	beaconsVer: 'Manage Beacons',  
 	position: 'position',
-	  
-	  
-	  
-	  
-	  
+	singup: 'sign up',
+	firm: 'Museum Name',
+	anspPers: 'Name of a contact person',
+	emailAns: 'E-Mail',  
+	telAns: 'Phone', 
 	allgAng: 'General information',
 	aboutUs: 'Change the name of your museum and the about us section',
 	ueberUns: 'About us',
@@ -157,7 +187,8 @@ var myApp = angular.module('myApp', ['ngRoute','pascalprecht.translate', 'ui-lea
     'https://dl.dropbox.com/**',
     'https://www.dropbox.com/**',
     'https://*.dropbox.com/**',
-    'https://cloud.estimote.com/**'
+    'https://cloud.estimote.com/**',
+	'http://res.cloudinary.com/**'
   ]);
 
   // The blacklist overrides the whitelist so the open redirect here is blocked.
@@ -172,6 +203,8 @@ myApp.factory('accessFac', function($window, $http) {
   obj.access = false;
   var i = 0; 
   obj.lng = "DE"
+   $window.localStorage['map'] = 'https://dl.dropboxusercontent.com/s/x180clbggcug3ta/loading-circle.gif?dl=0';
+
  
   obj.getImage = function(){
 	 return $window.localStorage['map'];
@@ -181,7 +214,7 @@ myApp.factory('accessFac', function($window, $http) {
 	 $window.localStorage['map'] = image;
 	  
   }
- 
+
   obj.getPermission = function(helper) { //set the permission to true
     obj.access = true;
 	
@@ -242,7 +275,7 @@ myApp.service('fehlermeldungFac', ['$uibModal', function ($uibModal) {
 
         var modalInstance = $uibModal.open({
 			templateUrl: 'www/popup_nonReg.html',
-			controller: 'PopupCont'
+			controller: 'popupNonReg'
         });
 		
 		modalInstance.result.then(
@@ -265,44 +298,28 @@ myApp.service('fehlermeldungFac', ['$uibModal', function ($uibModal) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 myApp.run(function($http, accessFac, editableOptions){
 	editableOptions.theme = 'bs3';
-	
-	/*$http.get('/museum/' + accessFac.getToken()).success(function(response) {
-	 var museumData = response;
-	 var museumH = "";						
-	angular.forEach( museumData, function(museumH) {
-		accessFac.setImage(museumH.map);
-	});
-  });  */
 });
 
 //controllers
+myApp.controller('popupNonReg', function ($scope, $uibModalInstance) {
+	$scope.close = function () {
+		$uibModalInstance.dismiss('cancel');
+	};
 
-myApp.controller('LangCtrl', function ($scope, $translate,$rootScope, accessFac) {
+});
+
+myApp.controller('LangCtrl', function ($scope, $http, $translate,$rootScope, accessFac) {
 
   $scope.showLng = false;
+
+  
+  
+  	$http.get('/getHashTrue/' + accessFac.getToken()).success(function(response) {
+		  $scope.showDashboard = response;
+	});
+	
   
   $scope.changeLang = function (key) {
     $translate.use(key).then(function (key) {
@@ -315,11 +332,27 @@ myApp.controller('LangCtrl', function ($scope, $translate,$rootScope, accessFac)
 });
 
 
+myApp.controller('languagesCtrl', function ($scope, $http, $translate,$rootScope, accessFac) {
+  $scope.changeLang = function (key) {
+    $translate.use(key).then(function (key) {
+	  accessFac.setLng(key);
+	  $rootScope.$emit("changeLng", {key});
+    }, function (key) {
+      console.log("Irgendwas lief schief.");
+    });
+  };
+});
 
 
 
+myApp.controller('dashboardCtrl', function($scope, $http, accessFac){
+	$http.get('/getLogin/' + accessFac.getToken()).success(function(response) {
+		$scope.users = response;
+		$scope.user="";
+	});	
+});
 
-myApp.controller('PopupCont', function ($scope, $rootScope, $timeout, $uibModalInstance, $http, accessFac) {
+myApp.controller('PopupCont', function ($scope, $rootScope,$uibModal, $timeout, $uibModalInstance, $http, accessFac) {
 	$scope.close = function () {
 		$uibModalInstance.dismiss('cancel');
 	};
@@ -356,16 +389,22 @@ myApp.controller('PopupCont', function ($scope, $rootScope, $timeout, $uibModalI
         $rootScope.$emit("refresh", {});
     }
 	
+	$scope.openModal = function(titel, text){
+		var modalInstance = $uibModal.open({
+			template: "<div class= \"modal-header\" style=\"background-color: #1c567d;\"><h3 class=\"modal-title\" style=\"color: white; text-align: center; display:inline-block;\">{{'"+titel+"'|translate}}</h3><a class=\"fa fa-close fa-2x\" ng-click=\"close()\" style=\"float:right; display: inline-block; color: white;\"></a></div><div class=\"modal-body\" style=\"background-color: #f2f2f2;\"><p>{{'"+text+"'|translate}}</p></div>",
+			controller: 'regCtrl',
+			size: "sm"
+		});
+	}
 	
 	$scope.addexponat = function(exponat) {
       if (3 > document.getElementById('ide').value.length) {
-        window.alert("ID muss mindestens dreistellig sein");
+		$scope.openModal('Hinweis',"ID muss mindestens dreistellig sein" );
       } else if(1 > document.getElementById('bildURL').value.length){
-		  window.alert("Bitte geben Sie eine Bild-URL ein");
+		 $scope.openModal('Hinweis',"Bitte geben Sie eine Bild URL ein" );
 	  } else if(1 > document.getElementById('name_de').value.length){
-		  window.alert("Bitte geben Sie einen Exponat-Namen ein");
+		   $scope.openModal('Hinweis',"Bitte geben Sie einen Exponat-Namen ein" );
 	  } else {
-		exponat = approval(exponat);
 			
         $http.post('/backend/' + accessFac.getToken(), exponat).success(function(response) {
 			 $rootScope.$emit("refresh", {});
@@ -373,29 +412,33 @@ myApp.controller('PopupCont', function ($scope, $rootScope, $timeout, $uibModalI
         });
       }
     }
+
 	
-	
-	var approval = function(exponat){
-		var a = exponat.bild;
-		var b = exponat.audio_de;
-		var c = exponat.audio_en;
+	$scope.removDb = function(){
+		var a = $scope.exponat.bild;
+		var b = $scope.exponat.audio_de;
+		var c = $scope.exponat.audio_en;
 		if(a!=null){
-			exponat.bild = a.replace(/www.dropbox/g, "dl.dropboxusercontent");
+			$scope.exponat.bild = a.replace(/www.dropbox/g, "dl.dropboxusercontent");
 		}  
 		if(b!=null){
-			exponat.audio_de = b.replace(/www.dropbox/g, "dl.dropboxusercontent");
+			$scope.exponat.audio_de = b.replace(/www.dropbox/g, "dl.dropboxusercontent");
 		}
 		if(c!=null){
-			exponat.audio_en = c.replace(/www.dropbox/g, "dl.dropboxusercontent");
+			$scope.exponat.audio_en = c.replace(/www.dropbox/g, "dl.dropboxusercontent");
 		}
-		return exponat;
 	}
+	
+	
+	
+	
+	
+	
+	
+	
   
     $scope.update = function(exponat) {
-		exponat = approval(exponat);
-		
-		
-      $http.put('/backend/' + exponat._id, exponat).success(function(response) {
+	  $http.put('/backend/' + exponat._id, exponat).success(function(response) {
          $rootScope.$emit("refresh", {});
 		 $scope.close();
       });
@@ -404,12 +447,19 @@ myApp.controller('PopupCont', function ($scope, $rootScope, $timeout, $uibModalI
 });
 
 
-myApp.controller('PopupContBeacon', function ($scope, $rootScope, $timeout, $uibModalInstance, $http, accessFac) {
+myApp.controller('PopupContBeacon', function ($scope, $rootScope, $timeout, $uibModalInstance,$uibModal, $http, accessFac) {
 	$scope.close = function () {
 		$uibModalInstance.dismiss('cancel');
 	};
 	
 	$scope.beacon = accessFac.getBeacon();
+	$scope.openModal = function(titel, text){
+		var modalInstance = $uibModal.open({
+			template: "<div class= \"modal-header\" style=\"background-color: #1c567d;\"><h3 class=\"modal-title\" style=\"color: white; text-align: center; display:inline-block;\">{{'"+titel+"'|translate}}</h3><a class=\"fa fa-close fa-2x\" ng-click=\"close()\" style=\"float:right; display: inline-block; color: white;\"></a></div><div class=\"modal-body\" style=\"background-color: #f2f2f2;\"><p>{{'"+text+"'|translate}}</p></div>",
+			controller: 'regCtrl',
+			size: "sm"
+		});
+	}
 	
 	$scope.update = function(beacon) {
 		$http.put('/setBeacons', beacon).success(function(response) {
@@ -418,20 +468,112 @@ myApp.controller('PopupContBeacon', function ($scope, $rootScope, $timeout, $uib
 		$timeout(function(){
 			//$rootScope.$emit("refresh", {});
 			$scope.close();	
-			window.alert("Erfolgreich gespeichert, Daten werden demnächst aktualisiert");
+			
+			$scope.openModal("Hinweis","Erfolgreich gespeichert, Daten werden demnächst aktualisiert")
 		},200);
 	}
 });
 
-myApp.controller('loginCtrl', function($scope, $http, $timeout, $location, $window, accessFac) {
+
+myApp.controller('regCtrl', function ($scope, $timeout,$rootScope, $uibModalInstance, $uibModal, $http, accessFac, vcRecaptchaService) {
+	$scope.close = function () {
+		$uibModalInstance.dismiss('cancel');
+	};
+
+	
+	$scope.showLoader = false;  
+	
+	$scope.openModal = function(titel, text){
+		var modalInstance = $uibModal.open({
+			template: "<div class= \"modal-header\" style=\"background-color: #1c567d;\"><h3 class=\"modal-title\" style=\"color: white; text-align: center; display:inline-block;\">{{'"+titel+"'|translate}}</h3><a class=\"fa fa-close fa-2x\" ng-click=\"close()\" style=\"float:right; display: inline-block; color: white;\"></a></div><div class=\"modal-body\" style=\"background-color: #f2f2f2;\"><p>{{'"+text+"'|translate}}</p></div>",
+			controller: 'regCtrl',
+			size: "sm"
+		});
+	}
+	
+	
+	$scope.register = '';
+	
+	$scope.speichern= function(){
+		$scope.showLoader = true;
+		$timeout(function(){
+		 if(vcRecaptchaService.getResponse() === ""|| vcRecaptchaService.getResponse() == null){ //if string is empty
+                $scope.openModal('recaptch','Please resolve the captcha and submit!');
+				$scope.showLoader = false;
+          }else{
+		$scope.register.recaptcha = vcRecaptchaService.getResponse()
+		
+		if($scope.register.pw!=$scope.register.pwR){
+			$scope.openModal('Hinweis','Passwörter stimmen nicht überein')
+		}else if($scope.register.pw.length<8){
+			$scope.openModal('Hinweis','Passwort muss mindestens 8 Zeichen enthalten')
+		}else{	
+			$scope.register.creds = $scope.register.username +":" + $scope.register.pw;
+			$http.post('/register', $scope.register).success(function(response) {
+				if(response.login== null && response.nameExists==null){
+					$scope.close();
+					$rootScope.$emit("showAlert");
+				}
+				if(response.login!=null) {
+					$scope.showLoader = false;
+					$scope.openModal('usernameVorTitel','usernameVor')
+				}
+				if(response.nameExists!=null) {
+					$scope.showLoader = false;
+					$scope.openModal('musNameVorTitel','musNameVor')
+				}
+			});	
+			
+		}
+
+	}
+	}, 500);
+	}
+	
+});
+
+myApp.controller('loginCtrl', function($scope, $http, $timeout,$rootScope, $location, $window, $uibModal, accessFac) {
    var gifSource = $('#gif').attr('src'); //get the source in the var
     $('#gif').attr('src', ""); //erase the source     
     $('#gif').attr('src', gifSource+"?"+new Date().getTime());
 	
+	$scope.myFunct = function(keyEvent) {
+		if (keyEvent.which === 13)
+			$scope.getAccess();
+	}
+
+	$scope.showAlert= false;
+	$scope.showLoader = false;
+	
+	$scope.openModal = function(titel, text){
+		var modalInstance = $uibModal.open({
+			template: "<div class= \"modal-header\" style=\"background-color: #1c567d;\"><h3 class=\"modal-title\" style=\"color: white; text-align: center; display:inline-block;\">{{'"+titel+"'|translate}}</h3><a class=\"fa fa-close fa-2x\" ng-click=\"close()\" style=\"float:right; display: inline-block; color: white;\"></a></div><div class=\"modal-body\" style=\"background-color: #f2f2f2;\"><p>{{'"+text+"'|translate}}</p></div>",
+			controller: 'regCtrl',
+			size: "sm"
+		});
+	}
+	
+	$rootScope.$on("showAlert", function(){		  
+		$scope.showAlert=true;
+		$timeout(function(){
+			$scope.showAlert=false;
+		}, 3500);
+	});
 	
 	
+	$scope.register = function ( helper) {
+		accessFac.setExponat(helper);
+		var modalInstance = $uibModal.open({
+			templateUrl: 'www/popup_reg.html',
+			controller: 'regCtrl',
+			size: "lg"
+	});
+	
+	}
 	
   $scope.getAccess = function() {
+	
+	$scope.showLoader = true;  
 	var creds = $scope.username +":" + $scope.password;
 	
 	$http.get('/credentials/' + creds, {
@@ -446,14 +588,11 @@ myApp.controller('loginCtrl', function($scope, $http, $timeout, $location, $wind
     if ($scope.data.status === "true") {		
 		accessFac.getPermission($scope.data.token); //call the method in acccessFac to allow the user permission.
 		$window.location.href = "/#/museumsverwaltung";
-		$timeout(function(){
-			
-			//$window.location.reload(true);
-		},100);
 
     } else {
-      window.alert("Falsche Zugangsdaten!");
-    }}, 2500);
+		$scope.openModal('fehlerTitel','fehlerText');
+		$scope.showLoader = false; 
+    }}, 2000);
   }
   
   
@@ -467,12 +606,54 @@ myApp.controller('loginCtrl', function($scope, $http, $timeout, $location, $wind
 
 
 
-myApp.controller('custoCtrl', function($scope, $rootScope, $timeout, $location, $http, leafletData, leafletBoundsHelpers,shareClickedId,accessFac) {
-	$http.get('/nonWalkerMarkers/' + accessFac.getToken()).success(function(response) {
+myApp.controller('custoCtrl', function($scope, $interval, $rootScope, $timeout, $location, $http, leafletData, leafletBoundsHelpers,shareClickedId,accessFac) {
+  $http.get('/museum/' + accessFac.getToken()).success(function(response) {
+	 $scope.museumData = response;
+	$scope.museumH = "";						
+	angular.forEach($scope.museumData, function(museumH) {
+		$scope.logo = museumH.logo;
+		accessFac.setImage(museumH.map);
+	});
+  });
+  
+$http.get('/nonWalkerMarkers/' + accessFac.getToken()).success(function(response) {
     $scope.maData = response;
-    $scope.ma = "";
+    $scope.ma = "";	
+  });
+  
+  
+  
+  $http.get('/register/' + accessFac.getToken()).success(function(response) {
+    $scope.register = response;
+	angular.forEach($scope.register, function(register) {
+		$scope.org = register.org;
+		$scope.contactPerson = register.contactPerson;
+		$scope.contactPersonTel = register.tel;
+		$scope.contactPersonMail = register.mail;
+	});
+	
 	
   });
+  
+  
+  
+  $scope.uploadName = function(data) {		
+		return $http.put('/museumName/' + $scope.org, {"museumsname":data});
+    } 
+  
+  $scope.uploadContact = function(data){
+	 return $http.put('/registerContact/' + $scope.org, {"contactPerson":data});
+  }
+  
+  $scope.uploadMail = function(data){
+	 return $http.put('/registerMail/' + $scope.org, {"mail":data});
+  }
+  
+  $scope.uploadTel = function(data){
+	 return $http.put('/registerTel/' + $scope.org, {"tel":data});
+  }
+
+		  
   
 	$scope.showText = true;
 	
@@ -525,14 +706,7 @@ $scope.resizeTextRight = function(multiplier) {
 
 
 
-  $http.get('/museum/' + accessFac.getToken()).success(function(response) {
-	 $scope.museumData = response;
-	$scope.museumH = "";						
-	angular.forEach($scope.museumData, function(museumH) {
-		$scope.logo = museumH.logo;
-		accessFac.setImage(museumH.map);
-	});
-  });  
+  
   
 var refresh = function(){
 	 $http.get('/museum/' + accessFac.getToken()).success(function(response) {
@@ -581,9 +755,6 @@ var refresh = function(){
     };
   
   
-  $scope.uploadName = function(data) {		
-		return $http.put('/museumName/' + $scope.id, {"museumsname":data}).success(function(response) {});
-    }
 
   
   
@@ -612,7 +783,7 @@ var refresh = function(){
         Gesamtansicht: {
           name: 'Gesamtansicht',
           type: 'imageOverlay',
-		  doRefresh: true,
+		  doRefresh: false,
           url: accessFac.getImage(),
           bounds: [
             [-100, -180],
@@ -652,6 +823,18 @@ var refresh = function(){
 	}
     
   });
+ var refreshIntervalInSeconds = 30;
+ var actualSeconds = 0;
+ $interval(function() {
+     if (actualSeconds === refreshIntervalInSeconds) {		 
+         $scope.layers.baselayers.Gesamtansicht.url = accessFac.getImage();
+         $scope.layers.baselayers.Gesamtansicht.doRefresh = true;
+     
+         actualSeconds = 0;
+     } else {
+         actualSeconds += 1;
+     }
+ }, 50);
   
   $scope.addHoverPhone = function(ziel){
 	  document.getElementById(ziel).style='color:orange';
@@ -664,6 +847,9 @@ var refresh = function(){
 	  }, 1500);
 	  
   }
+  
+
+		
 
   $scope.$on("leafletDirectiveMap.leafletMap.click", function(event, args) {
     var leafEvent = args.leafletEvent;
@@ -847,7 +1033,6 @@ $http.post('/markersNew/' + accessFac.getToken(), markersInsert).success(functio
   $http.get('/archived/' + accessFac.getToken()).success(function(response) {
       $scope.h= response;
 	  $scope.receivedMarkers ="";
-	  //window.alert($scope.receivedMarkers.name);
     });
  
   
@@ -963,6 +1148,8 @@ myApp.controller('AppCtrl',  function($scope, $http, $location, $anchorScroll) {
 
 myApp.controller('beaconsCtrl', function($scope, $rootScope, $http, $uibModal, accessFac){
 	
+	$scope.keineBeacons = false;
+	$scope.showLoader = true;
 	
 	$rootScope.$on("refresh", function(){		  
 		  refresh();	
@@ -991,7 +1178,8 @@ $scope.open = function ( helper) {
 	
 	
 var refresh = function(){
-	$http.get('/getBeacons').success(function(response) {
+	$http.get('/getBeacons/' + accessFac.getToken()).success(function(response) {
+	  $scope.showLoader=false;
       $scope.data = response;
       $scope.beacon = "";
       $scope.i = 0;
@@ -1005,6 +1193,11 @@ var refresh = function(){
 			beacon.img = "https://dl.dropboxusercontent.com/s/q75k71vzwf9gdbu/mint.png?dl=0";
 		}
       });
+	  if($scope.i==0)
+		  $scope.keineBeacons=true;
+	  
+	  
+	  
     });	
 };
 refresh();	
@@ -1012,8 +1205,58 @@ refresh();
 
 
 
-myApp.controller('exponatCtrl', function($scope,$rootScope, $http, $uibModal, $location, $anchorScroll, $timeout, accessFac){
+myApp.controller('exponatCtrl', function($scope,$rootScope,$window, $http, $uibModal, $location, $anchorScroll, $timeout, accessFac){
 	$scope.lng= accessFac.getLng();
+	$scope.keineExponate = false;
+	
+	
+	var refresh = function() {
+      $http.get('/backend/'+ $window.localStorage['jwtToken']).success(function(response) {
+        $scope.backend = response;
+        $scope.exponat = "";
+        $scope.sortType = 'ide';
+        $scope.sortReverse = false;
+        $scope.searchName = '';			
+        angular.forEach($scope.backend, function(exponat) {
+          exponat.ide = parseFloat(exponat.ide);
+		  exponat.expand = true;
+		  exponat.expandEn = true;
+	
+		 try {
+			var lengthDE = exponat.beschreibung_de.length;		  
+			var lengthEN = exponat.beschreibung_en.length;		  
+		  }catch(e){}		  
+		if(exponat.beschreibung_de===undefined){
+				exponat.beschreibung_de="noch keine Beschreibung";
+		}
+		if(exponat.beschreibung_en===undefined){
+				exponat.beschreibung_en="no description yet";
+		}
+		
+		if(lengthDE>40){
+			   exponat.expand = false;
+			   exponat.checkIfLong=true;				
+		}else if(lengthDE<=40){
+			   exponat.checkIfLong = false;	
+		}
+		
+		if(lengthEN>40){
+			   exponat.expandEn = false;
+			   exponat.checkIfLongEn=true;				
+		  }else if(lengthEN<=40){
+			   exponat.checkIfLongEn = false;	
+		}
+		});
+
+      });
+	  
+	  $http.get('/backend_count/'+accessFac.getToken()).success(function(response) {
+		  $scope.number = response;
+		  if($scope.number==0)
+			$scope.keineExponate = true
+      });
+    }
+	refresh();
 	
 	$rootScope.$on("changeLng", function(){		  
 		$scope.changeLng();	
@@ -1027,7 +1270,7 @@ myApp.controller('exponatCtrl', function($scope,$rootScope, $http, $uibModal, $l
 	$scope.showErweiterteSuche = true;
 	
 	
-	$scope.open = function ( helper) {
+	$scope.open = function (helper) {
 		accessFac.setExponat(helper);
 		var modalInstance = $uibModal.open({
 			templateUrl: 'www/popup_exponat.html',
@@ -1073,49 +1316,7 @@ myApp.controller('exponatCtrl', function($scope,$rootScope, $http, $uibModal, $l
  
  
  
-	var refresh = function() {
-      $http.get('/backend/'+ accessFac.getToken()).success(function(response) {
-        $scope.backend = response;
-        $scope.exponat = "";
-        $scope.sortType = 'ide';
-        $scope.sortReverse = false;
-        $scope.searchName = '';			
-        angular.forEach($scope.backend, function(exponat) {
-          exponat.ide = parseFloat(exponat.ide);
-		  exponat.expand = true;
-		  exponat.expandEn = true;
-	
-		 try {
-			var lengthDE = exponat.beschreibung_de.length;		  
-			var lengthEN = exponat.beschreibung_en.length;		  
-		  }catch(e){}		  
-		if(exponat.beschreibung_de===undefined){
-				exponat.beschreibung_de="noch keine Beschreibung";
-		}
-		if(exponat.beschreibung_en===undefined){
-				exponat.beschreibung_en="no description yet";
-		}
-		
-		if(lengthDE>40){
-			   exponat.expand = false;
-			   exponat.checkIfLong=true;				
-		}else if(lengthDE<=40){
-			   exponat.checkIfLong = false;	
-		}
-		
-		if(lengthEN>40){
-			   exponat.expandEn = false;
-			   exponat.checkIfLongEn=true;				
-		  }else if(lengthEN<=40){
-			   exponat.checkIfLongEn = false;	
-		}
-		});
-        $http.get('/backend_count/'+accessFac.getToken()).success(function(response) {
-          $scope.number = response;
-        });
-      });
-    }
-	refresh();
+
 	
 	$http.get('/themenListe/' + accessFac.getToken()).success(function(response) {
 		$scope.themaDaten = response;

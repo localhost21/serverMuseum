@@ -18,6 +18,18 @@ angular.module('app.routes', [])
 		},
 		
 	})
+	.when('/dashboard', {
+		templateUrl: '/www/dashboard.html',
+		controller: 'dashboardCtrl',
+		resolve: {					
+			check : function(accessFac, fehlermeldungFac) {
+                  if(accessFac.getToken()===""){
+						fehlermeldungFac.openCustomModal();					
+					}
+                }
+		},
+		
+	})
 	.when('/getbeacons', {
 		templateUrl: '/www/beacons.html',
 		controller: 'beaconsCtrl',
