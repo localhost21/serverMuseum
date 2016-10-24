@@ -1045,7 +1045,6 @@ app.get('/markersModify/:id', function(req, res) {
 });
 
 
-
 app.get('/backend_count/:id', function(req, res) {
   var token = req.params.id;
      db.credentials.find({
@@ -1075,8 +1074,8 @@ app.get('/backend_count/:id', function(req, res) {
 });
 
 app.get('/deutsch/:id', function(req, res) {
-  var token = req.params.id;
-       db.credentials.find({
+	  var token = req.params.id;
+	  db.credentials.find({
         "org": {
           $ne: null
         }
@@ -1084,25 +1083,20 @@ app.get('/deutsch/:id', function(req, res) {
         var org = [];
         org = doc;
         for (i = 0; i < i+1; i++) {
-          try {
-            var decode = jwt.decode(token, org[i].org, function(err_, decode) {
-              if (err) {
-                return console.error(err.name, err.message);
-              }
-            });
-            decode = decode.org;
-            if (decode === org[i].org) {
-              db.backend.find({
-                  "aktion": true,
-                  "org": decode
-                },
-                function(err, doc) {
-                  res.json(doc);
-                });
-              break;
+          var decode = jwt.decode(token, org[i].org, function(err_, decode) {
+            if (err) {
+              return console.error(err.name, err.message);
             }
-          } catch (err) {
-            console.log(err);
+          });
+          decode = decode.org;
+          if (decode === org[i].org) {
+            db.backend.find({
+              org: decode,
+			  aktion:true 
+            }, function(err, docs) {
+              res.json(docs);
+            });
+            break;
           }
         }
       });
