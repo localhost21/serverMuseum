@@ -497,17 +497,26 @@ myApp.controller('regCtrl', function ($scope, $timeout,$rootScope, $uibModalInst
 	$scope.speichern= function(){
 		$scope.showLoader = true;
 		$timeout(function(){
+		$scope.showLoader = false;
 		 if(vcRecaptchaService.getResponse() === ""|| vcRecaptchaService.getResponse() == null){ //if string is empty
                 $scope.openModal('recaptch','Please resolve the captcha and submit!');
-				$scope.showLoader = false;
+				
           }else{
 		$scope.register.recaptcha = vcRecaptchaService.getResponse()
 		
+		
+
 		if($scope.register.pw!=$scope.register.pwR){
-			$scope.openModal('Hinweis','Passwörter stimmen nicht überein')
+			$scope.openModal('Hinweis','Passwörter stimmen nicht überein. Vergewissern Sie sich, dass die beiden Passwörter identisch sind.')
+		}else if($scope.register.pw==null){			
+				$scope.openModal('Hinweis','Bitte Passwort eingeben');			
+		}else if($scope.register.name==null){			
+				$scope.openModal('Hinweis','Bitte Museumsname eingeben');			
+		}else if($scope.register.username==null){			
+				$scope.openModal('Hinweis','Bitte Username eingeben');			
 		}else if($scope.register.pw.length<8){
-			$scope.openModal('Hinweis','Passwort muss mindestens 8 Zeichen enthalten')
-		}else{	
+				$scope.openModal('Hinweis','Passwort muss mindestens 8 Zeichen enthalten');
+		} else{	
 			$scope.register.creds = $scope.register.username +":" + $scope.register.pw;
 			$http.post('/register', $scope.register).success(function(response) {
 				if(response.login== null && response.nameExists==null){
@@ -525,10 +534,12 @@ myApp.controller('regCtrl', function ($scope, $timeout,$rootScope, $uibModalInst
 			});	
 			
 		}
-
-	}
+}
+	
 	}, 500);
 	}
+		
+	
 	
 });
 
