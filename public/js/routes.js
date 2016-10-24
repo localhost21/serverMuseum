@@ -18,6 +18,7 @@ angular.module('app.routes', [])
 		},
 		
 	})
+	
 	.when('/dashboard', {
 		templateUrl: '/www/dashboard.html',
 		controller: 'dashboardCtrl',

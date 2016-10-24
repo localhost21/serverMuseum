@@ -90,7 +90,9 @@ app.post('/register', function(req, res) {
 				"mail": req.body.contactPersonMail,
 				"tel": req.body.contactPersonTel,
 				"de": "Hier kannst du den Über uns Text anpassen",
-				"en": "Add your About us text here"
+				"en": "Add your About us text here",
+				"logo":"https://res.cloudinary.com/hhrryft6i/image/upload/v1477130526/mrpa15mbvrzw2l8nk1qp.gif",
+				"map": "http://res.cloudinary.com/hhrryft6i/image/upload/v1477030797/kein_bild.300x300_dmukya.jpg"
 			}
 		},
 		new: false,   // return new doc if one is upserted
