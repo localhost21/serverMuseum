@@ -799,7 +799,7 @@ app.post('/api/photo/logo/:id', type, function(req, res) {
         }, function(err, doc) {
           var org = [];
           org = doc;
-          for (i = 0; i < count; i++) {
+          for (i = 0; i < i+1; i++) {
             try {
               var decode = jwt.decode(token, org[i].org, function(err_, decode) {
                 if (err) {

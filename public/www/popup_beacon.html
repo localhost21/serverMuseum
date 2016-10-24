@@ -20,15 +20,15 @@
 			<tr><td class="bold">Major</td><td><input class="form-control" ng-model="beacon.settings.advertisers.ibeacon[0].major"  ></td> </tr>
 			<tr><td class="bold">Minor</td><td><input class="form-control" ng-model="beacon.settings.advertisers.ibeacon[0].minor"  ></td> </tr>
 			<tr><td class="bold">{{'sendestarke'|translate}}</td>
-			<td><select ng-model="beacon.settings.advertisers.ibeacon[0].power" class="styled-select semi-square">
-					<option value="-30"> >1 Meter</option>
-					<option value="-20">bis 2 Meter</option>
-					<option value="-16">bis 4 Meter</option>
-					<option value="-12">bis 6 Meter</option>
-					<option value="-8">bis 8 Meter</option>
-					<option value="-4">bis 10 Meter</option>
-					<option value="0">bis 30 Meter</option>
-					<option value="4">bis maximal 70 Meter</option>
+			<td><select ng-model="beacon.settings.advertisers.ibeacon[0].power" class="styled-select semi-square" style="width: 250px;">
+					<option value="-30">1 Meter &rarr;         <pre>-30</pre></option>
+					<option value="-20">bis 2 Meter &rarr;     -20</option>
+					<option value="-16">bis 4 Meter &rarr;     -16</option>
+					<option value="-12">bis 6 Meter &rarr;     -12</option>
+					<option value="-8">bis 8 Meter &rarr;     - 8</option>
+					<option value="-4">bis 10 Meter &rarr;     -4</option>
+					<option value="0">bis 30 Meter &rarr;      0</option>
+					<option value="4">bis 70 Meter &rarr;      4</option>
 			</select></td></tr>
 			<tr><td class="bold">{{'inverval'|translate}}</td><td><p ng-model="beacon.settings.advertisers.ibeacon[0].interval">{{'alle'|translate}} {{beacon.settings.advertisers.ibeacon[0].interval}} {{'milisek'|translate}} <span style="color: gray; font-size: 13px;">{{'beschr'|translate}}</span></p><input class="form-control" type="range" min="100" max="10000" ng-model="beacon.settings.advertisers.ibeacon[0].interval"  ></td> </tr>
 			<tr><td class="bold">{{'battery'|translate}}</td><td><input class="form-control" ng-model="beacon.status_report.estimated_battery_lifetime" disabled=true/></td>			</tr>
