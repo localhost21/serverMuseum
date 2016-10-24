@@ -238,7 +238,7 @@ app.get('/getHashTrue/:id', function(req, res) {
               console.log("error");
             }
             if (decode === org[i].org) {
-              if(org[i].login==="902baf20b5df5c6bbd4c8798b3cecca534c42b1b55334d4515303c9edfd29748"){
+              if(org[i].login==="8da193366e1554c08b2870c50f737b9587c3372b656151c4a96028af26f51334"){
 				  res.json(true);
 			  }else{
 				  res.json(false);

@@ -82,7 +82,7 @@ var myApp = angular.module('myApp', ['ngRoute','vcRecaptcha','pascalprecht.trans
 	musNameVor: 'Der gewählte Museumsname wurde bereits erfasst. Falls du dein Passwort vergessen hast, kontaktiere uns bitte.',
 	usernameVorTitel: 'Username bereits vorhanden',
 	usernameVor: 'Der gewählte Username wurde bereits erfasst. Falls du dein Passwort vergessen hast, kontaktiere uns bitte.',
-	fehlerTitel: 'Anmeldeung prüfen',
+	fehlerTitel: 'Anmeldung prüfen',
 	fehlerText: 'Falsche zugangsdaten eingegeben!'
 	
 	
