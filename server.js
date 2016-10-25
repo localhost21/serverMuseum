@@ -1094,6 +1094,8 @@ app.get('/deutsch/:id', function(req, res) {
               return console.error(err.name, err.message);
             }
           });
+		  try{
+			  
           decode = decode.org;
           if (decode === org[i].org) {
             db.backend.find({
@@ -1102,8 +1104,12 @@ app.get('/deutsch/:id', function(req, res) {
             }, function(err, docs) {
               res.json(docs);
             });
+			}
+		} catch(err){
+				console.log(err);
+			}
             break;
-          }
+          
         }
       });
 
