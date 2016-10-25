@@ -494,15 +494,19 @@ myApp.controller('regCtrl', function ($scope, $timeout,$rootScope, $uibModalInst
 	
 	$scope.register = '';
 	
+	
+	
 	$scope.speichern= function(){
 		$scope.showLoader = true;
 		$timeout(function(){
+			
+		$scope.recaptche = vcRecaptchaService.getResponse();
 		$scope.showLoader = false;
-		 if(vcRecaptchaService.getResponse() === ""|| vcRecaptchaService.getResponse() == null){ //if string is empty
+		 if($scope.recaptche === ""|| $scope.recaptche == null){ //if string is empty
                 $scope.openModal('recaptch','Please resolve the captcha and submit!');
 				
           }else{
-		$scope.register.recaptcha = vcRecaptchaService.getResponse()
+		$scope.register.recaptcha = $scope.recaptche;
 		
 		
 

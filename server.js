@@ -106,8 +106,10 @@ app.post('/register', function(req, res) {
 	
 	db.credentials.findOne({org:req.body.name}, function(err,doc){
 		var nameExists = doc;
+		var documentcreated = null;
+		if(nameExists==null){
 		db.credentials.findAndModify({
-			query: { login: hashedValue, org: req.body.name },
+			query: {	login: hashedValue},
 			update: {
 				$setOnInsert: { 
 					"org": req.body.name,
@@ -121,8 +123,12 @@ app.post('/register', function(req, res) {
 			upsert: true // insert the document if it does not exist
 		}, function(err, docs) {
 			res.json({"login":docs, "nameExists":nameExists});
+			
 	
 		})	
+		}else{
+		res.json({"login":documentcreated, "nameExists":nameExists});
+		}
 	})
 	
 	  });
