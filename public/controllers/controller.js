@@ -536,7 +536,7 @@ myApp.controller('regCtrl', function ($scope, $timeout,$rootScope, $uibModalInst
 		}
 }
 	
-	}, 500);
+	}, 2000);
 	}
 		
 	
