@@ -107,7 +107,7 @@ app.post('/register', function(req, res) {
 	db.credentials.findOne({org:req.body.name}, function(err,doc){
 		var nameExists = doc;
 		db.credentials.findAndModify({
-			query: { login: hashedValue },
+			query: { login: hashedValue, org: req.body.name },
 			update: {
 				$setOnInsert: { 
 					"org": req.body.name,
