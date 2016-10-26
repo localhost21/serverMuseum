@@ -1099,9 +1099,7 @@ app.get('/deutsch/:id', function(req, res) {
                 }
               });
               decode = decode.org;
-            } catch (error) {
-              console.log("error");
-            }
+            
             if (decode === org[i].org) {
               db.backend.find({
                 org: decode,
@@ -1110,6 +1108,9 @@ app.get('/deutsch/:id', function(req, res) {
                 res.json(docs);
               });
               break;
+            }
+			} catch (error) {
+              console.log("error");
             }
           }
         });			  
