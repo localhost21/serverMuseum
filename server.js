@@ -269,7 +269,7 @@ app.get('/login', function(req, res) {
 
 app.get('/login/:id', function(req, res) {    
   var org = req.params.id;
-  db.museum.find({
+  db.credentials.find({
     "org": org
   }, function(err, doc) {
     if (err) {
@@ -1080,39 +1080,52 @@ app.get('/backend_count/:id', function(req, res) {
 });
 
 app.get('/deutsch/:id', function(req, res) {
-	  var token = req.params.id;
-	  db.credentials.find({
-        "org": {
-          $ne: null
-        }
-      }, function(err, doc) {
-        var org = [];
-        org = doc;
-        for (i = 0; i < i+1; i++) {
-          var decode = jwt.decode(token, org[i].org, function(err_, decode) {
-            if (err) {
-              return console.error(err.name, err.message);
+	var token = req.params.id;
+  if (token === "") {
+    res.end();
+  } else {			  
+	 db.credentials.find({
+          "org": {
+            $ne: null
+          }
+        }, function(err, doc) {
+          var org = [];
+          org = doc;
+          for (i = 0; i < i+1; i++) {
+            try {
+              var decode = jwt.decode(token, org[i].org, function(err_, decode) {
+                if (err) {
+                  return console.error(err.name, err.message);
+                }
+              });
+              decode = decode.org;
+            } catch (error) {
+              console.log("error");
             }
-          });
-		  try{
-			  
-          decode = decode.org;
-          if (decode === org[i].org) {
-            db.backend.find({
-              org: decode,
+            if (decode === org[i].org) {
+              db.backend.find({
+                org: decode,
+				aktion: true
+              }, function(err, docs) {
+                res.json(docs);
+              });
+              break;
+            }
+          }
+        });			  
+}		 
+	
+	
+
+/*
+	  console.log("org " + req.params.id);
+	  db.backend.find({
+              org: req.params.id,
 			  aktion:true 
             }, function(err, docs) {
               res.json(docs);
-            });
-			}
-		} catch(err){
-				console.log(err);
-			}
-            break;
-          
-        }
-      });
-
+            });*/
+	  
 });
 
 
