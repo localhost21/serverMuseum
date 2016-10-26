@@ -1003,7 +1003,7 @@ app.get('/orgName/:id', function(req, res) {
                 break;
               };
             } catch (error) {
-              console.log("error");
+              console.log("error 11");
             }
           };
         });
@@ -1110,7 +1110,7 @@ app.get('/deutsch/:id', function(req, res) {
               break;
             }
 			} catch (error) {
-              console.log("error");
+              console.log("error 12");
             }
           }
         });			  
