@@ -2,6 +2,10 @@ angular.module('app.routes', [])
 .config(function($locationProvider, $routeProvider){
 	$routeProvider
 	.when('/', {
+		templateUrl: '/www/home.html',
+		controller: 'homeCtrl'
+	})
+	.when('/login', {
 		templateUrl: '/www/login.html',
 		controller: 'loginCtrl',
 		reload: true

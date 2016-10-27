@@ -271,7 +271,7 @@ myApp.factory('accessFac', function($window, $http) {
 myApp.service('fehlermeldungFac', ['$uibModal', function ($uibModal) {
 
     var openCustomModal = function () {
-			
+		window.location="/#/login";	
 
         var modalInstance = $uibModal.open({
 			templateUrl: 'www/popup_nonReg.html',
@@ -287,7 +287,7 @@ myApp.service('fehlermeldungFac', ['$uibModal', function ($uibModal) {
         function (result) {
             var a = result;
         });
-		window.location="/#/";
+		
 		
     };
 
@@ -547,6 +547,65 @@ myApp.controller('regCtrl', function ($scope, $timeout,$rootScope, $uibModalInst
 	
 });
 
+
+
+
+
+myApp.controller('homeCtrl', function($scope,$timeout, $rootScope) {
+	$scope.signup = function(){
+		window.location = "/#/login";
+		$timeout(function(){		
+			$rootScope.$emit("register", {});
+		}, 1000);
+	}
+	
+	
+       $('#pre-status').fadeOut();
+	   $('#st-preloader').delay(350).fadeOut('slow');
+		
+		var $container = $('.portfolio-items');
+		// initialize
+		$container.masonry({
+		  itemSelector: '.work-grid'
+		});
+
+        $('li a[href*=#]').bind("click", function(e){
+            var anchor = $(this);
+            $('html, body').stop().animate({
+                scrollTop: $(anchor.attr('href')).offset().top -79
+            }, 1000);
+            e.preventDefault();
+        });
+
+		$(".st-testimonials").owlCarousel({
+		singleItem:true,
+		lazyLoad : true,
+		pagination:false,
+		navigation : false,
+		autoPlay: true,
+		});
+
+
+        $(window).scroll(function() {
+            if ($(this).scrollTop() > 100) {
+                $('.scroll-up').fadeIn();
+            } else {
+                $('.scroll-up').fadeOut();
+            }
+        });
+	
+
+		$(window).bind('load', function () {
+			parallaxInit();						  
+		});
+		function parallaxInit() {		
+			$("#testimonial").parallax("50%", 0.3);
+		}	
+		parallaxInit();
+});
+
+
+
 myApp.controller('loginCtrl', function($scope, $http, $timeout,$rootScope, $location, $window, $uibModal, accessFac) {
    var gifSource = $('#gif').attr('src'); //get the source in the var
     $('#gif').attr('src', ""); //erase the source     
@@ -576,15 +635,18 @@ myApp.controller('loginCtrl', function($scope, $http, $timeout,$rootScope, $loca
 	});
 	
 	
-	$scope.register = function ( helper) {
-		accessFac.setExponat(helper);
+	$scope.register = function () {
+		console.log("in");
 		var modalInstance = $uibModal.open({
 			templateUrl: 'www/popup_reg.html',
 			controller: 'regCtrl',
 			size: "lg"
-	});
-	
+		});
 	}
+	
+	$rootScope.$on("register", function(){		  
+		$scope.register();	
+	});
 	
   $scope.getAccess = function() {
 	
@@ -605,6 +667,8 @@ myApp.controller('loginCtrl', function($scope, $http, $timeout,$rootScope, $loca
 		$window.location.href = "/#/museumsverwaltung";
 
     } else {
+		
+		$window.location.href = "/#/login";
 		$scope.openModal('fehlerTitel','fehlerText');
 		$scope.showLoader = false; 
     }}, 2000);
