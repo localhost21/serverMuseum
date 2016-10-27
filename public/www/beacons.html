@@ -49,7 +49,6 @@
             <tr><th style="width: 70px;"></th>
 				<th style="width: 20%;">{{'name'|translate}}</th>
 				<th style="width: 10%;">{{'major'|translate}}</th>
-				<th style="width: 10%;">{{'minor'|translate}}</th>
 				<th style="width: 10%;">{{'sendestarke'|translate}}</th>
                 <th style="width: 15%;">{{'sendeinterval'|translate}}</th>
                 <th style="width: 15%;">{{'battery'|translate}}</th>
@@ -63,7 +62,6 @@
 				<td class="item"><img style=" max-height: 80px;" ng-src='{{beacon.img}}' /></td>
 				<td>{{beacon.shadow.name}}</td>
 				<td ng-repeat="ibeacon in beacon.settings.advertisers.ibeacon">{{ibeacon.major}}</td>
-				<td ng-repeat="ibeacon in beacon.settings.advertisers.ibeacon">{{ibeacon.minor}}</td>
 				<td ng-repeat="ibeacon in beacon.settings.advertisers.ibeacon">{{ibeacon.power}}</td>
 				<td ng-repeat="ibeacon in beacon.settings.advertisers.ibeacon">{{ibeacon.interval}}</td>
 				<td>{{beacon.status_report.estimated_battery_lifetime}}</td>

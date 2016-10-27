@@ -6,9 +6,7 @@
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
 }
-html, body, .ng-scope {
-  height: 100%;
-}
+
 .item {
   position: relative;
   margin: 2%;
@@ -344,12 +342,8 @@ h1#titleLogin {
 	padding-top: 40px;
 }
 
-button#loginButton{
-	width: 400px;
-	height: 50px;
-	margin-top: 10px;
-	background-color: #000066;
-	font-size: 22px;
+.wideer {
+	width: 100%;
 }
 
 button#logout {
@@ -442,8 +436,8 @@ h1#titleLoginHidden {
   
   
 	img#gif {
-	width: 100% !important;
-	top: -60px !important; 
+	
+	display: none !important; 
 	}
   
   
@@ -513,37 +507,7 @@ div#box {
 div#showBackView {
 	display: none;
 }
-img#gif{
-	bottom: 0;
-	right: 0;
-	top: 0;
-	width: 400px;
-	position: relative;
-	margin: 0 auto;
-	/*top: 30%;
-	left: 50%;
-	margin-left: -200px;
-	margin-top: -150px;
-	overflow: hidden;
-	display: block;*/
-	
-} 
 
-div#merger {
-	bottom: 10%;
-	left: 50%;
-	margin-left: -200px;
-	width: 400px;
-	position: fixed;
-
-	/*position: fixed;
-	top: 60%;
-	left: 50%;
-	margin-left: -200px;
-	margin-top: -150px;
-	
-	display: block;*/
-}
 
  .sidebar {
     position: absolute;
@@ -578,22 +542,14 @@ div#merger {
   div#box {
 	  float: right;
   }
-  
   div#loLeft {
-  display: none;
-  z-index: 1;
-}
-
-
+	  margin-left: -3000px !important;
+  }
   
+  div#loRight{
+	  margin-left: -10% !important;
+  }
   
-div#loRight {
-  width: 100% !important;
-  padding-top: 10px;
-  float: none;
-  heigth: 100%;
-  postion: fixed;
-}
 
 
 

@@ -4,7 +4,7 @@ var myApp = angular.module('myApp', ['ngRoute','vcRecaptcha','pascalprecht.trans
   $translateProvider.useSanitizeValueStrategy('sanitizeParameters');
   $translateProvider.translations('DE', {
 	contact:		'Kontakt',
-	loginText: 'Login Museumsverwaltung',
+	loginText: 'Login',
 	Museumsverwaltung: 'Museumsverwaltung',
 	exponate: 'Exponate',
 	lokalisierung: 'Lokalisierung',
@@ -46,7 +46,7 @@ var myApp = angular.module('myApp', ['ngRoute','vcRecaptcha','pascalprecht.trans
 	descB: 'Hier können Sie die Einstellungen Ihrer Beacons ändern oder',
 	descBe: 'weitere Beacons bestellen.',
 	name: 'Name',
-	major: 'Major',
+	major: 'Beacon Nr.',
 	minor: 'Minor',
 	sendeinterval: 'Interval in ms',
 	custoDesc: 'Hier können Sie den Audioguide Ihren Bedürfnissen nach anpassen.',
@@ -82,8 +82,8 @@ var myApp = angular.module('myApp', ['ngRoute','vcRecaptcha','pascalprecht.trans
 	musNameVor: 'Der gewählte Museumsname wurde bereits erfasst. Falls du dein Passwort vergessen hast, kontaktiere uns bitte.',
 	usernameVorTitel: 'Username bereits vorhanden',
 	usernameVor: 'Der gewählte Username wurde bereits erfasst. Falls du dein Passwort vergessen hast, kontaktiere uns bitte.',
-	fehlerTitel: 'Anmeldung prüfen',
-	fehlerText: 'Falsche zugangsdaten eingegeben!'
+	fehlerTitel: 'Fehler',
+	fehlerText: 'Falsche Zugangsdaten eingegeben!'
 	
 	
 	
@@ -137,7 +137,7 @@ var myApp = angular.module('myApp', ['ngRoute','vcRecaptcha','pascalprecht.trans
 	countB: 'Number of beacons',
 	descBe: 'order more Beacons.',
 	name: 'Name',
-	major: 'Major',
+	major: 'Beacon N°',
 	minor: 'Minor',
 	sendeinterval: 'Interval in ms',	
 	sendestarke: 'Range',
@@ -152,7 +152,7 @@ var myApp = angular.module('myApp', ['ngRoute','vcRecaptcha','pascalprecht.trans
 	expDesc: 'Description',
 	expVer: 'Manage exhibit',
     contact:		'Contact us',
-	loginText: 'Login Museum',
+	loginText: 'Login',
 	Museumsverwaltung: 'Museum',
 	exponate: 'Exhibits',
 	lokalisierung: 'Localization',
@@ -271,7 +271,7 @@ myApp.factory('accessFac', function($window, $http) {
 myApp.service('fehlermeldungFac', ['$uibModal', function ($uibModal) {
 
     var openCustomModal = function () {
-		window.location="/#/login";	
+		window.location="/#/";	
 
         var modalInstance = $uibModal.open({
 			templateUrl: 'www/popup_nonReg.html',
@@ -551,13 +551,56 @@ myApp.controller('regCtrl', function ($scope, $timeout,$rootScope, $uibModalInst
 
 
 
-myApp.controller('homeCtrl', function($scope,$timeout, $rootScope) {
-	$scope.signup = function(){
-		window.location = "/#/login";
-		$timeout(function(){		
-			$rootScope.$emit("register", {});
-		}, 1000);
+myApp.controller('homeCtrl', function($scope,$window, $timeout, $rootScope,$uibModal, accessFac) {
+
+	
+	
+	
+	
+	$scope.openModal = function(titel, text){
+		var modalInstance = $uibModal.open({
+			template: "<div class= \"modal-header\" style=\"background-color: #1c567d;\"><h3 class=\"modal-title\" style=\"color: white; text-align: center; display:inline-block;\">{{'"+titel+"'|translate}}</h3><a class=\"fa fa-close fa-2x\" ng-click=\"close()\" style=\"float:right; display: inline-block; color: white;\"></a></div><div class=\"modal-body\" style=\"background-color: #f2f2f2;\"><p>{{'"+text+"'|translate}}</p></div>",
+			controller: 'regCtrl',
+			size: "sm"
+		});
 	}
+	
+	$rootScope.$on("showAlert", function(){		  
+		$scope.showAlert=true;
+		$timeout(function(){
+			$scope.showAlert=false;
+		}, 3500);
+	});
+	
+	
+	$scope.signup = function () {
+		var modalInstance = $uibModal.open({
+			templateUrl: 'www/popup_reg.html',
+			controller: 'regCtrl',
+			size: "lg"
+		});
+	}
+	
+	
+	
+	$scope.open = function ( helper) {
+	accessFac.setBeacon(helper);
+	var modalInstance = $uibModal.open({
+		templateUrl: 'www/popup_login.html',
+		controller: 'loginCtrl',
+		size: "sm"
+	});
+	
+	modalInstance.result.then(
+        //close
+        function (result) {
+            var a = result;
+        },
+        //dismiss
+        function (result) {
+            var a = result;
+        });
+}
 	
 	
        $('#pre-status').fadeOut();
@@ -606,18 +649,10 @@ myApp.controller('homeCtrl', function($scope,$timeout, $rootScope) {
 
 
 
-myApp.controller('loginCtrl', function($scope, $http, $timeout,$rootScope, $location, $window, $uibModal, accessFac) {
+myApp.controller('loginCtrl', function($scope, $http, $timeout,$rootScope, $location, $window, $uibModalInstance, $uibModal, accessFac) {
    var gifSource = $('#gif').attr('src'); //get the source in the var
     $('#gif').attr('src', ""); //erase the source     
     $('#gif').attr('src', gifSource+"?"+new Date().getTime());
-	
-	$scope.myFunct = function(keyEvent) {
-		if (keyEvent.which === 13)
-			$scope.getAccess();
-	}
-
-	$scope.showAlert= false;
-	$scope.showLoader = false;
 	
 	$scope.openModal = function(titel, text){
 		var modalInstance = $uibModal.open({
@@ -627,27 +662,19 @@ myApp.controller('loginCtrl', function($scope, $http, $timeout,$rootScope, $loca
 		});
 	}
 	
-	$rootScope.$on("showAlert", function(){		  
-		$scope.showAlert=true;
-		$timeout(function(){
-			$scope.showAlert=false;
-		}, 3500);
-	});
-	
-	
-	$scope.register = function () {
-		console.log("in");
-		var modalInstance = $uibModal.open({
-			templateUrl: 'www/popup_reg.html',
-			controller: 'regCtrl',
-			size: "lg"
-		});
+	$scope.myFunct = function(keyEvent) {
+		if (keyEvent.which === 13)
+			$scope.getAccess();
 	}
 	
-	$rootScope.$on("register", function(){		  
-		$scope.register();	
-	});
+	$scope.close = function () {
+		$uibModalInstance.dismiss('cancel');
+	};
+
+	$scope.showAlert= false;
+	$scope.showLoader = false;
 	
+
   $scope.getAccess = function() {
 	
 	$scope.showLoader = true;  
@@ -661,14 +688,16 @@ myApp.controller('loginCtrl', function($scope, $http, $timeout,$rootScope, $loca
   
   		
 	$timeout(function(){
-	 
+	$scope.close();		
+	$scope.showLoader = false;
     if ($scope.data.status === "true") {		
 		accessFac.getPermission($scope.data.token); //call the method in acccessFac to allow the user permission.
+
 		$window.location.href = "/#/museumsverwaltung";
 
     } else {
 		
-		$window.location.href = "/#/login";
+		$window.location.href = "/#/";
 		$scope.openModal('fehlerTitel','fehlerText');
 		$scope.showLoader = false; 
     }}, 2000);
@@ -1356,6 +1385,7 @@ myApp.controller('exponatCtrl', function($scope,$rootScope,$window, $http, $uibM
 			controller: 'PopupCont',
 			size: "lg"
 	});
+	
 	
 	modalInstance.result.then(
         //close
