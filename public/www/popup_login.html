@@ -1,0 +1,28 @@
+<body ng-app="myApp">
+
+
+<div class="modal-header" style="background-color: #9da2aa;">
+<h3 class="modal-title" style="color: white; text-align: center; display:inline-block;">{{'loginText'|translate}}</h3>
+<a class="fa fa-close fa-3x" ng-click="close()" style="float:right; display: inline-block; color: white;"></a>
+</div>
+<div class="modal-body" style="background-color: #f2f2f2;">
+
+		<img ng-show="showLoader" src="https://dl.dropboxusercontent.com/s/x180clbggcug3ta/loading-circle.gif?dl=0" id="loader" />
+
+
+			<form action="/" id="myLogin" >
+				<input type="text"  class="form-control" id="username" ng-model="username" placeholder="username"/><br>
+				</p> <input type="password" class="form-control" id="password" ng-model="password" placeholder="password" ng-keydown="myFunct($event)"/><br>
+					
+			</form>
+
+</div>
+
+<div class="modal-footer" style="background-color: #9da2aa; margin-top: -10px;">
+	<button class="btn btn-default wideer" style="margin-top: 10px;" ng-click="getAccess()" >Login</button>
+
+</div>
+
+
+</body>
+
